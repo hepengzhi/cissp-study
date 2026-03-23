@@ -121,7 +121,7 @@ model ExamAttempt {
   id          String    @id @default(cuid())
   startedAt   DateTime  @default(now())
   completedAt DateTime?
-  score       Int?      // 0-100
+  score       Int?      // 0-100 (percentage; CISSP pass = 70%)
   timeSpent   Int?      // Seconds
   answers     ExamAnswer[]
 }
@@ -254,7 +254,7 @@ nextReview = now() + interval days
 4. Full-screen mode with question palette sidebar
 5. User can navigate, mark for review, change answers
 6. Submit (shows warning if unanswered questions)
-7. Calculate score (need 700/1000 to pass)
+7. Calculate score (need 70% to pass, matching CISSP's 700/1000 scale)
 8. Show detailed results: overall, by domain, time
 9. Save ExamAttempt with all answers
 
@@ -301,14 +301,13 @@ nextReview = now() + interval days
 
 - Server Actions validate inputs with Zod
 - Prisma handles database constraints
-- Generic error messages to user (no sensitive data泄露)
+- Generic error messages to user (no sensitive data leakage)
 - Error logging for debugging
 
 ### Network Errors
 
 - Auto-retry for failed fetches (3 attempts)
 - "Unable to connect. Retrying..." message
-- Fallback to cached data where available
 
 ## Testing Strategy
 
@@ -369,10 +368,10 @@ NODE_ENV=production
 - [ ] Exam simulation accurately mirrors real CISSP exam (150 questions, 4 hours)
 - [ ] Progress is tracked across all domains
 - [ ] Application is responsive on mobile devices
-- [ ] All features work offline (cached data) except sync
 
 ## Future Enhancements (Out of Scope for MVP)
 
+- Offline mode with local storage and sync on reconnect
 - User authentication for multi-user support
 - Import/export study data
 - Community question sharing
