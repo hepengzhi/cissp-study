@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  questionText  String
+  options       String[]
+  correctAnswer Int
+  explanation   String
+  domain        Domain
+  difficulty    Difficulty
+  tags          String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  examAnswers   ExamAnswer[]
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  domain    Domain
+  tags      String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Flashcard {
+  id          String   @id @default(cuid())
+  front       String
+  back        String
+  domain      Domain
+  nextReview  DateTime @default(now())
+  interval    Int      @default(0)
+  easeFactor  Float    @default(2.5)
+  repetitions Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Progress {
+  id                String   @id @default(cuid())
+  domain            Domain   @unique
+  questionsAnswered Int      @default(0)
+  correctCount      Int      @default(0)
+  lastStudied       DateTime @default(now())
+}
+
+model ExamAttempt {
+  id          String      @id @default(cuid())
+  startedAt   DateTime    @default(now())
+  completedAt DateTime?
+  score       Int?
+  timeSpent   Int?
+  answers     ExamAnswer[]
+}
+
+model ExamAnswer {
+  id            String      @id @default(cuid())
+  attemptId     String
+  questionId    String
+  selectedAnswer Int
+  isCorrect     Boolean
+  attempt       ExamAttempt @relation(fields: [attemptId], references: [id])
+  question      Question    @relation(fields: [questionId], references: [id])
+}
+
+enum Domain {
+  SECURITY_RISK_MANAGEMENT
+  ASSET_SECURITY
+  SECURITY_ARCHITECTURE
+  COMMUNICATION_NETWORK_SECURITY
+  IDENTITY_ACCESS_MANAGEMENT
+  SECURITY_ASSESSMENT
+  SECURITY_OPERATIONS
+  SOFTWARE_DEVELOPMENT_SECURITY
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
