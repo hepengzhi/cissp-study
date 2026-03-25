@@ -40,6 +40,7 @@ function QuizContent() {
   const [showResult, setShowResult] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [submittingAnswer, setSubmittingAnswer] = useState(false)
 
   const handleDomainToggle = useCallback((domainValue: string) => {
     setSelectedDomains(prev =>
@@ -50,36 +51,49 @@ function QuizContent() {
   }, [])
 
   const handleStartQuiz = useCallback(async () => {
+    if (loading) return // Guard against double-submission
     setLoading(true)
     setError(null)
 
-    const result = await getQuizQuestions({
-      domains: selectedDomains.length > 0 ? selectedDomains : undefined,
-      count: questionCount
-    })
+    try {
+      const result = await getQuizQuestions({
+        domains: selectedDomains.length > 0 ? selectedDomains : undefined,
+        count: questionCount
+      })
 
-    if (result && 'error' in result) {
-      setError(result.error as string)
-    } else if (Array.isArray(result) && result.length > 0) {
-      setQuestions(result)
-      setCurrentIndex(0)
-      setAnswers([])
-      setSelectedAnswer(undefined)
-      setShowResult(false)
-      setQuizState('active')
-    } else {
-      setError('No questions found. Please try different settings or add some questions first.')
+      if (result && 'error' in result) {
+        setError(result.error as string)
+      } else if (Array.isArray(result) && result.length > 0) {
+        setQuestions(result)
+        setCurrentIndex(0)
+        setAnswers([])
+        setSelectedAnswer(undefined)
+        setShowResult(false)
+        setQuizState('active')
+      } else {
+        setError('No questions found. Please try different settings or add some questions first.')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to start quiz')
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
-  }, [selectedDomains, questionCount])
+  }, [selectedDomains, questionCount, loading])
 
   const handleAnswer = useCallback(async (selected: number) => {
+    if (submittingAnswer) return // Guard against double-submission
+    setSubmittingAnswer(true)
+
     const question = questions[currentIndex]
     const isCorrect = selected === question.correctAnswer
 
     // Update progress for this question's domain
-    await updateProgress(question.domain, isCorrect)
+    try {
+      await updateProgress(question.domain, isCorrect)
+    } catch (err) {
+      console.error('Failed to update progress:', err)
+      // Continue with quiz even if progress update fails
+    }
 
     // Record the answer
     setAnswers(prev => [...prev, {
@@ -91,7 +105,8 @@ function QuizContent() {
 
     setSelectedAnswer(selected)
     setShowResult(true)
-  }, [questions, currentIndex])
+    setSubmittingAnswer(false)
+  }, [questions, currentIndex, submittingAnswer])
 
   const handleNextQuestion = useCallback(() => {
     if (currentIndex < questions.length - 1) {
@@ -133,6 +148,7 @@ function QuizContent() {
                   <button
                     key={domain.value}
                     onClick={() => handleDomainToggle(domain.value)}
+                    aria-pressed={selectedDomains.includes(domain.value)}
                     className={`flex items-start gap-2 p-3 rounded-lg border text-left transition-colors ${
                       selectedDomains.includes(domain.value)
                         ? 'bg-primary text-primary-foreground border-primary'
