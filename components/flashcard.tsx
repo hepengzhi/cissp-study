@@ -17,18 +17,23 @@ export function Flashcard({ front, back, onRate }: FlashcardProps) {
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <Card
-        className={`relative w-full max-w-2xl h-64 cursor-pointer transition-transform duration-500 ${
-          isFlipped ? 'rotate-y-180' : ''
-        }`}
+      <div
+        className="relative w-full max-w-2xl h-64 cursor-pointer perspective-1000"
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        <div className="absolute inset-0 flex items-center justify-center p-8">
-          <p className="text-xl text-center">
-            {isFlipped ? back : front}
-          </p>
-        </div>
-      </Card>
+        <Card
+          className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${
+            isFlipped ? 'rotate-y-180' : ''
+          }`}
+        >
+          <div className="absolute inset-0 backface-hidden flex items-center justify-center p-8">
+            <p className="text-xl text-center">{front}</p>
+          </div>
+          <div className="absolute inset-0 backface-hidden rotate-y-180 flex items-center justify-center p-8">
+            <p className="text-xl text-center">{back}</p>
+          </div>
+        </Card>
+      </div>
 
       {isFlipped && (
         <div className="flex gap-4">
