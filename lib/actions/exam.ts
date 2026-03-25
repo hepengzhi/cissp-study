@@ -62,6 +62,11 @@ export async function submitExam(attemptId: string, answers: Map<string, number>
     })
   }
 
+  // Persist ExamAnswer records to database
+  await prisma.examAnswer.createMany({
+    data: examAnswers
+  })
+
   // Update progress for each domain
   for (const question of questions) {
     const answer = Array.from(answers.entries()).find(([qId]) => qId === question.id)
@@ -72,11 +77,17 @@ export async function submitExam(attemptId: string, answers: Map<string, number>
     await prisma.progress.upsert({
       where: { domain: question.domain },
       update: {
-        questionsAnswered: { increment: 1 },
-        correctCount: isCorrect ? { increment: 1 } : undefined
+        examQuestionsAnswered: { increment: 1 },
+        examCorrectCount: isCorrect ? { increment: 1 } : undefined,
+        lastStudied: new Date()
       },
       create: {
-        domain: question.domain
+        domain: question.domain,
+        quizQuestionsAnswered: 0,
+        examQuestionsAnswered: 1,
+        quizCorrectCount: 0,
+        examCorrectCount: isCorrect ? 1 : 0,
+        lastStudied: new Date()
       }
     })
   }

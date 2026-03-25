@@ -28,19 +28,21 @@ export async function updateProgress(domain: string, correct: boolean) {
   const progress = await prisma.progress.upsert({
     where: { domain: domain as any },
     update: {
-      questionsAnswered: { increment: 1 },
-      correctCount: correct ? { increment: 1 } : undefined,
+      quizQuestionsAnswered: { increment: 1 },
+      quizCorrectCount: correct ? { increment: 1 } : undefined,
       lastStudied: new Date()
     },
     create: {
       domain: domain as any,
-      questionsAnswered: 1,
-      correctCount: correct ? 1 : 0
+      quizQuestionsAnswered: 1,
+      examQuestionsAnswered: 0,
+      quizCorrectCount: correct ? 1 : 0,
+      examCorrectCount: 0
     }
   })
 
   return {
-    accuracy: progress.correctCount / progress.questionsAnswered,
-    total: progress.questionsAnswered
+    accuracy: (progress.quizCorrectCount + progress.examCorrectCount) / (progress.quizQuestionsAnswered + progress.examQuestionsAnswered),
+    total: progress.quizQuestionsAnswered + progress.examQuestionsAnswered
   }
 }

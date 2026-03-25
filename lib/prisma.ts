@@ -4,6 +4,16 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+let prismaInstance: PrismaClient | undefined = undefined
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    if (!prismaInstance) {
+      prismaInstance = globalForPrisma.prisma ?? new PrismaClient()
+      if (process.env.NODE_ENV !== 'production') {
+        globalForPrisma.prisma = prismaInstance
+      }
+    }
+    return prismaInstance[prop as keyof PrismaClient]
+  }
+})

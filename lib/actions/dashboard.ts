@@ -13,8 +13,8 @@ export async function getDashboardStats() {
   // Calculate overall accuracy
   let overallAccuracy = 0
   if (progress.length > 0) {
-    const totalCorrect = progress.reduce((sum, p) => sum + p.correctCount, 0)
-    const totalAnswered = progress.reduce((sum, p) => sum + p.questionsAnswered, 0)
+    const totalCorrect = progress.reduce((sum, p) => sum + p.quizCorrectCount + p.examCorrectCount, 0)
+    const totalAnswered = progress.reduce((sum, p) => sum + p.quizQuestionsAnswered + p.examQuestionsAnswered, 0)
     overallAccuracy = totalAnswered > 0 ? totalCorrect / totalAnswered : 0
   }
 

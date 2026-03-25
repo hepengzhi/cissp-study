@@ -45,11 +45,13 @@ model Flashcard {
 }
 
 model Progress {
-  id                String   @id @default(cuid())
-  domain            Domain   @unique
-  questionsAnswered Int      @default(0)
-  correctCount      Int      @default(0)
-  lastStudied       DateTime @default(now())
+  id                    String   @id @default(cuid())
+  domain                Domain   @unique
+  quizQuestionsAnswered Int      @default(0)
+  examQuestionsAnswered Int      @default(0)
+  quizCorrectCount      Int      @default(0)
+  examCorrectCount      Int      @default(0)
+  lastStudied           DateTime @default(now())
 }
 
 model ExamAttempt {
