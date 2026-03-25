@@ -19,38 +19,89 @@ const NoteSchema = z.object({
   tags: z.array(z.string()).default([])
 })
 
-export async function createNote(data: z.infer<typeof NoteSchema>) {
-  const validated = NoteSchema.parse(data)
+export type NoteDomain = z.infer<typeof NoteSchema>['domain']
 
-  return await prisma.note.create({
-    data: validated
-  })
+export async function createNote(data: z.infer<typeof NoteSchema>) {
+  try {
+    const validated = NoteSchema.parse(data)
+
+    return await prisma.note.create({
+      data: validated
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map(e => {
+        const path = e.path.length > 0 ? e.path.join('.') : 'unknown'
+        return `${path}: ${e.message}`
+      }).join(', ')
+      return { error: 'Validation failed: ' + errorMessages }
+    }
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
 }
 
-export async function getNotes(filters?: { domain?: string }) {
-  return await prisma.note.findMany({
-    where: filters?.domain ? { domain: filters.domain } : undefined,
-    orderBy: { updatedAt: 'desc' }
-  })
+export async function getNotes(filters?: { domain?: NoteDomain }) {
+  try {
+    return await prisma.note.findMany({
+      where: filters?.domain ? { domain: filters.domain } : undefined,
+      orderBy: { updatedAt: 'desc' }
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
 }
 
 export async function getNote(id: string) {
-  return await prisma.note.findUnique({
-    where: { id }
-  })
+  try {
+    return await prisma.note.findUnique({
+      where: { id }
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
 }
 
 export async function updateNote(id: string, data: z.infer<typeof NoteSchema>) {
-  const validated = NoteSchema.parse(data)
+  try {
+    const validated = NoteSchema.parse(data)
 
-  return await prisma.note.update({
-    where: { id },
-    data: validated
-  })
+    return await prisma.note.update({
+      where: { id },
+      data: validated
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map(e => {
+        const path = e.path.length > 0 ? e.path.join('.') : 'unknown'
+        return `${path}: ${e.message}`
+      }).join(', ')
+      return { error: 'Validation failed: ' + errorMessages }
+    }
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
 }
 
 export async function deleteNote(id: string) {
-  return await prisma.note.delete({
-    where: { id }
-  })
+  try {
+    return await prisma.note.delete({
+      where: { id }
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
 }

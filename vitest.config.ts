@@ -7,7 +7,6 @@ export default defineConfig({
     environment: 'node',
     include: ['tests/**/*.test.ts'],
     setupFiles: ['./tests/prisma-mock.ts'],
-    envDir: '.',
   },
   resolve: {
     alias: {
