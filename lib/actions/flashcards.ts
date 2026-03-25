@@ -131,3 +131,44 @@ export async function getAllFlashcards(domain?: FlashcardDomain) {
     return { error: 'Unknown error occurred' }
   }
 }
+
+export async function updateFlashcard(id: string, data: z.infer<typeof FlashcardSchema>) {
+  try {
+    const validated = FlashcardSchema.parse(data)
+
+    return await prisma.flashcard.update({
+      where: { id },
+      data: {
+        front: validated.front,
+        back: validated.back,
+        domain: validated.domain
+      }
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map(e => {
+        const path = e.path.length > 0 ? e.path.join('.') : 'unknown'
+        return `${path}: ${e.message}`
+      }).join(', ')
+      return { error: 'Validation failed: ' + errorMessages }
+    }
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
+}
+
+export async function deleteFlashcard(id: string) {
+  try {
+    await prisma.flashcard.delete({
+      where: { id }
+    })
+    return { success: true }
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
+}
