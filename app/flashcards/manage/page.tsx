@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { getAllFlashcards } from '@/lib/actions/flashcards'
 import { DomainFilter } from '@/components/domain-filter'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,10 +13,17 @@ export default async function FlashcardsManagePage({
 }) {
   const domain = searchParams.domain || 'all'
   const domainFilter = domain === 'all' ? undefined : domain as FlashcardDomain
-  const flashcards = await prisma.flashcard.findMany({
-    where: domainFilter ? { domain: domainFilter } : undefined,
-    orderBy: { createdAt: 'desc' }
-  })
+  const flashcardsResult = await getAllFlashcards(domainFilter)
+
+  if ('error' in flashcardsResult) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="text-center text-red-500">
+          Error loading flashcards: {flashcardsResult.error}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -31,7 +38,7 @@ export default async function FlashcardsManagePage({
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {flashcards.map((flashcard) => (
+        {flashcardsResult.map((flashcard) => (
           <Link key={flashcard.id} href={`/flashcards/${flashcard.id}`}>
             <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="pt-6">
@@ -52,7 +59,7 @@ export default async function FlashcardsManagePage({
           </Link>
         ))}
 
-        {flashcards.length === 0 && (
+        {flashcardsResult.length === 0 && (
           <div className="col-span-full text-center py-12 text-muted-foreground">
             No flashcards found. Create your first flashcard to get started!
           </div>
