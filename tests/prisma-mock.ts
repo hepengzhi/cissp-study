@@ -15,7 +15,10 @@ const mockPrisma = {
     findMany: vi.fn()
   },
   flashcard: {
-    create: vi.fn()
+    create: vi.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    update: vi.fn()
   },
   progress: {
     findMany: vi.fn(),
