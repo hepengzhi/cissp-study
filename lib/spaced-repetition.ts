@@ -8,6 +8,13 @@
  * 3 - Easy: Increase ease factor slightly
  */
 
+export enum SM2Quality {
+  AGAIN = 0,
+  HARD = 1,
+  GOOD = 2,
+  EASY = 3
+}
+
 export interface CardState {
   easeFactor: number;
   interval: number;
@@ -32,10 +39,24 @@ export interface CardWithReview {
  * @returns Updated card state with next review date
  */
 export function calculateNextReview(
-  params: CardState & { quality: number },
+  params: CardState & { quality: SM2Quality },
   now: Date = new Date()
 ): ReviewResult {
   const { quality, easeFactor, interval, repetitions } = params;
+
+  // Validate inputs
+  if (quality < 0 || quality > 3) {
+    throw new Error(`Quality must be between 0 and 3, got ${quality}`);
+  }
+  if (easeFactor < 1.3) {
+    throw new Error(`Ease factor must be at least 1.3, got ${easeFactor}`);
+  }
+  if (interval < 0) {
+    throw new Error(`Interval cannot be negative, got ${interval}`);
+  }
+  if (repetitions < 0) {
+    throw new Error(`Repetitions cannot be negative, got ${repetitions}`);
+  }
 
   let newEaseFactor = easeFactor;
   let newInterval = interval;
