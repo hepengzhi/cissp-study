@@ -25,7 +25,12 @@ const mockPrisma = {
     upsert: vi.fn()
   },
   examAttempt: {
-    create: vi.fn()
+    create: vi.fn(),
+    findUnique: vi.fn(),
+    update: vi.fn()
+  },
+  examAnswer: {
+    createMany: vi.fn()
   }
 }
 
