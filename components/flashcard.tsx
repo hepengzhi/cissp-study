@@ -41,7 +41,10 @@ export function Flashcard({ front, back, onRate }: FlashcardProps) {
             <Button
               key={rating.value}
               variant={rating.value === 0 ? 'destructive' : rating.value === 3 ? 'default' : 'outline'}
-              onClick={() => onRate(rating.value)}
+              onClick={(e) => {
+                e.stopPropagation()
+                onRate(rating.value)
+              }}
             >
               {rating.label}
             </Button>

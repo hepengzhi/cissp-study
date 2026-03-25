@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Pause, Play } from 'lucide-react'
 
@@ -14,6 +14,10 @@ export function Timer({ initialSeconds, onExpire, onPause }: TimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds)
   const [isRunning, setIsRunning] = useState(true)
 
+  // Store the onExpire callback in a ref to avoid unnecessary re-renders
+  const onExpireRef = useRef(onExpire)
+  onExpireRef.current = onExpire
+
   useEffect(() => {
     if (!isRunning) return
 
@@ -21,7 +25,7 @@ export function Timer({ initialSeconds, onExpire, onPause }: TimerProps) {
       setSeconds((prev) => {
         if (prev <= 1) {
           setIsRunning(false)
-          onExpire?.()
+          onExpireRef.current?.()
           return 0
         }
         return prev - 1
@@ -29,7 +33,7 @@ export function Timer({ initialSeconds, onExpire, onPause }: TimerProps) {
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [isRunning, onExpire])
+  }, [isRunning])
 
   const formatTime = useCallback((totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / 3600)
