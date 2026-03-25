@@ -1,0 +1,86 @@
+<h2>CISSP Study Platform - Application Structure</h2>
+<p class="subtitle">Monolithic Next.js with Vercel Postgres</p>
+
+<div class="section">
+  <h3>Core Pages</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>🏠 Dashboard</h3>
+        <p>Study overview, progress stats, recent activity, quick access to all features</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>📝 Notes</h3>
+        <p>Organized by CISSP domain (8 domains), rich text editing, search & tags</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>⏍ Flashcards</h3>
+        <p>Spaced repetition, categorized by domain, progress tracking</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>📊 Quiz</h3>
+        <p>Practice questions, instant feedback, review wrong answers</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>🎯 Exam Sim</h3>
+        <p>Full 4-hour simulation, 150 questions, timed, realistic scoring</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Architecture Overview</h3>
+  <div class="mockup">
+    <div class="mockup-header">Tech Stack</div>
+    <div class="mockup-body" style="padding: 20px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div style="padding: 16px; background: #f0f0f0; border-radius: 8px;">
+          <strong>Frontend</strong><br>
+          Next.js 14 (App Router)<br>
+          TypeScript<br>
+          Tailwind CSS<br>
+          shadcn/ui
+        </div>
+        <div style="padding: 16px; background: #f0f0f0; border-radius: 8px;">
+          <strong>Backend</strong><br>
+          Next.js API Routes<br>
+          Prisma ORM<br>
+          Server Actions
+        </div>
+        <div style="padding: 16px; background: #f0f0f0; border-radius: 8px;">
+          <strong>Database</strong><br>
+          Vercel Postgres<br>
+          (PostgreSQL)
+        </div>
+        <div style="padding: 16px; background: #f0f0f0; border-radius: 8px;">
+          <strong>Deployment</strong><br>
+          Vercel (CI/CD)<br>
+          GitHub integration
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Navigation Structure</h3>
+  <div class="mockup">
+    <div class="mockup-header">Site Navigation</div>
+    <div class="mockup-body">
+      <div class="mock-nav">CISSP Study | Dashboard | Notes | Flashcards | Quiz | Exam Sim</div>
+      <div style="margin-top: 12px; padding: 12px; background: #f8f8f8; border-radius: 4px;">
+        <strong>Secondary Nav (in Notes/Flashcards):</strong><br>
+        All 8 CISSP domains as filter tabs
+      </div>
+    </div>
+  </div>
+</div>

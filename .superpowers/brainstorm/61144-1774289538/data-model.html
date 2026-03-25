@@ -1,0 +1,82 @@
+<h2>Database Schema & Data Model</h2>
+<p class="subtitle">Prisma schema for Vercel Postgres</p>
+
+<div class="section">
+  <h3>Core Tables</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>Question</h3>
+        <p>Quiz/exam questions, answers, explanations</p>
+        <code style="display:block;margin-top:8px;padding:8px;background:#f4f4f4;border-radius:4px;font-size:12px;">
+          id, questionText, options[], correctAnswer, explanation, domain, difficulty, tags[]
+        </code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>Note</h3>
+        <p>Study notes by domain with rich content</p>
+        <code style="display:block;margin-top:8px;padding:8px;background:#f4f4f4;border-radius:4px;font-size:12px;">
+          id, title, content, domain, tags, createdAt, updatedAt
+        </code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>Flashcard</h3>
+        <p>Front/back cards for spaced repetition</p>
+        <code style="display:block;margin-top:8px;padding:8px;background:#f4f4f4;border-radius:4px;font-size:12px;">
+          id, front, back, domain, nextReview, interval, easeFactor
+        </code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>Progress</h3>
+        <p>Track study progress and stats</p>
+        <code style="display:block;margin-top:8px;padding:8px;background:#f4f4f4;border-radius:4px;font-size:12px;">
+          id, domain, questionsAnswered, correctCount, lastStudied
+        </code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>ExamAttempt</h3>
+        <p>Full exam simulation results</p>
+        <code style="display:block;margin-top:8px;padding:8px;background:#f4f4f4;border-radius:4px;font-size:12px;">
+          id, startedAt, completedAt, score, answers[], timeSpent
+        </code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>CISSP Domains (8 Total)</h3>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px;">
+    <div class="placeholder">1. Security & Risk Management</div>
+    <div class="placeholder">2. Asset Security</div>
+    <div class="placeholder">3. Security Architecture</div>
+    <div class="placeholder">4. Communication & Network Security</div>
+    <div class="placeholder">5. Identity & Access Management</div>
+    <div class="placeholder">6. Security Assessment</div>
+    <div class="placeholder">7. Security Operations</div>
+    <div class="placeholder">8. Software Development Security</div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Key Relationships</h3>
+  <div class="mockup">
+    <div class="mockup-header">Entity Relationships</div>
+    <div class="mockup-body" style="padding:16px;">
+      <div style="font-family:monospace;font-size:13px;line-height:1.8;">
+        Question 1───* Progress<br>
+        Flashcard 1───1 Progress (via domain)<br>
+        Note 1───1 Domain (enum)<br>
+        ExamAttempt *───* Question (answers)
+      </div>
+    </div>
+  </div>
+</div>
