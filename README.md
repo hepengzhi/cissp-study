@@ -7,13 +7,16 @@ A comprehensive study platform for CISSP (Certified Information Systems Security
 - **Dashboard** - Track your progress across all 8 CISSP domains
 - **Quiz Mode** - Practice questions with immediate feedback and explanations
 - **Exam Simulation** - Full 150-question, 3-hour exam simulation
-- **Spaced Repetition Flashcards** - SM-2 algorithm for optimal learning
+- **Spaced Repetition Flashcards** - SM-2 algorithm for optimal learning with progress reset capability
 - **Study Notes** - Create and organize notes by domain
+- **Bilingual Support** - Full Chinese (中文) and English interface
+- **Dark/Light Theme** - Theme toggle for comfortable studying
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
 - **Styling**: Tailwind CSS, shadcn/ui components
+- **Internationalization**: next-intl for bilingual support
 - **Database**: PostgreSQL with Prisma ORM
 - **Testing**: Vitest (unit), Playwright (E2E)
 
