@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useTranslations } from 'next-intl'
@@ -16,6 +16,11 @@ export function Flashcard({ front, back, onRate }: FlashcardProps) {
   const tFlashcards = useTranslations('flashcards')
   const t = useTranslations('common')
   const [isFlipped, setIsFlipped] = useState(false)
+
+  // Reset flip state when card content changes
+  useEffect(() => {
+    setIsFlipped(false)
+  }, [front, back])
 
   const ratings = [
     { value: 0, label: tFlashcards('ratings.again') },
