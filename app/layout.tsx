@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
-import { LanguageToggle } from "@/components/language-toggle"
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { getLocale } from 'next-intl/server'
@@ -45,7 +44,6 @@ export default async function RootLayout({
       <body className="min-h-screen bg-[#0d1117] antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Navbar />
-          <LanguageToggle />
           <main className="pt-14">
             {children}
           </main>
