@@ -15,9 +15,9 @@ import type { FlashcardDomain } from '@/lib/actions/flashcards'
 interface FlashcardData {
   id: string
   front: string
-  frontZh?: string
+  frontZh?: string | null
   back: string
-  backZh?: string
+  backZh?: string | null
   domain: string
   nextReview: Date
   interval: number
@@ -38,6 +38,8 @@ function FlashcardsContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [stats, setStats] = useState({ reviewed: 0, total: 0 })
+  const [isResetting, setIsResetting] = useState(false)
+  const [resetMessage, setResetMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   const loadCards = useCallback(async () => {
     setLoading(true)
