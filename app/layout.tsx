@@ -1,22 +1,54 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
-
-const inter = Inter({ subsets: ["latin"] })
+import { Navbar } from "@/components/navbar"
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import { getLocale } from 'next-intl/server'
 
 export const metadata: Metadata = {
   title: "CISSP Study Platform",
-  description: "Comprehensive study platform for CISSP certification",
+  description: "Master all 8 CISSP domains with interactive study tools",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang={locale} className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // Theme
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'light') {
+                    document.documentElement.classList.add('light-mode');
+                  }
+
+                  // Language
+                  var lang = localStorage.getItem('cissp-locale') || 'en';
+                  document.documentElement.lang = lang;
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-[#0d1117] antialiased">
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Navbar />
+          <main className="pt-14">
+            {children}
+          </main>
+        </NextIntlClientProvider>
+      </body>
     </html>
   )
 }

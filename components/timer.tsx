@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Pause, Play } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface TimerProps {
   initialSeconds: number
@@ -11,6 +12,7 @@ interface TimerProps {
 }
 
 export function Timer({ initialSeconds, onExpire, onPause }: TimerProps) {
+  const t = useTranslations('timer')
   const [seconds, setSeconds] = useState(initialSeconds)
   const [isRunning, setIsRunning] = useState(true)
 
@@ -60,7 +62,7 @@ export function Timer({ initialSeconds, onExpire, onPause }: TimerProps) {
         variant="outline"
         size="icon"
         onClick={togglePause}
-        aria-label={isRunning ? 'Pause' : 'Resume'}
+        aria-label={isRunning ? t('pause') : t('resume')}
       >
         {isRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
       </Button>

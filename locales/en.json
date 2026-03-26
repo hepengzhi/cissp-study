@@ -1,0 +1,222 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "all": "All",
+    "filter": "Filter",
+    "search": "Search",
+    "noData": "No data",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "notes": "Notes",
+    "flashcards": "Flashcards",
+    "quiz": "Quiz",
+    "exam": "Exam",
+    "logo": "CISSP Study",
+    "toggleLanguage": "Language"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Track your CISSP preparation progress",
+    "stats": {
+      "questions": "Questions",
+      "answered": "Answered",
+      "accuracy": "Accuracy",
+      "examsPassed": "Exams Passed"
+    },
+    "recentExams": {
+      "title": "Recent Exams",
+      "none": "No exam attempts yet"
+    },
+    "resources": {
+      "title": "Study Resources",
+      "notes": "Notes",
+      "flashcards": "Flashcards",
+      "questions": "Questions"
+    }
+  },
+  "notes": {
+    "title": "Study Notes",
+    "description": "notes across all domains",
+    "new": "New Note",
+    "create": "Create Note",
+    "edit": "Edit Note",
+    "none": "No notes yet",
+    "noneDescription": "Create your first note to start organizing your studies",
+    "updated": "Updated",
+    "fields": {
+      "title": "Title",
+      "titlePlaceholder": "Enter note title...",
+      "domain": "Domain",
+      "domainPlaceholder": "Select a domain...",
+      "content": "Content",
+      "contentPlaceholder": "Enter note content...",
+      "contentPlaceholderMarkdown": "Write your note content in Markdown...",
+      "tags": "Tags (comma-separated)",
+      "tagsPlaceholder": "e.g., encryption, access-control, risk"
+    },
+    "actions": {
+      "saveChanges": "Save Changes",
+      "createNote": "Create Note",
+      "saving": "Saving...",
+      "creating": "Creating...",
+      "cancel": "Cancel",
+      "delete": "Delete Note",
+      "backToNotes": "Back to Notes"
+    },
+    "markdown": {
+      "editor": "Markdown Editor",
+      "preview": "Preview",
+      "split": "Split",
+      "edit": "Edit",
+      "hidePreview": "Hide Preview",
+      "showPreview": "Show Preview"
+    }
+  },
+  "flashcards": {
+    "title": "Flashcards",
+    "description": "Spaced repetition for optimal learning",
+    "manage": "Manage Cards",
+    "new": "New Flashcard",
+    "create": "Create Flashcard",
+    "loading": "Loading flashcards...",
+    "session": {
+      "complete": "Session Complete!",
+      "reviewed": "You reviewed {count} card(s)",
+      "reviewAgain": "Review Again",
+      "browseAll": "Browse All Cards",
+      "allCaughtUp": "All caught up!",
+      "noCardsDue": "No flashcards due for review right now",
+      "cardOf": "Card {current} of {total} due"
+    },
+    "fields": {
+      "front": "Front",
+      "frontPlaceholder": "Question or prompt...",
+      "back": "Back",
+      "backPlaceholder": "Answer or explanation...",
+      "domain": "Domain"
+    },
+    "ratings": {
+      "again": "Again",
+      "hard": "Hard",
+      "good": "Good",
+      "easy": "Easy"
+    },
+    "flip": "Flip"
+  },
+  "quiz": {
+    "title": "Practice Quiz",
+    "description": "Test your CISSP knowledge with timed questions",
+    "setup": {
+      "selectDomains": "Select Domains (optional)",
+      "questionCount": "Number of Questions",
+      "question": "question",
+      "questions": "questions",
+      "start": "Start Quiz",
+      "starting": "Starting..."
+    },
+    "question": {
+      "of": "of",
+      "correct": "correct"
+    },
+    "actions": {
+      "submit": "Submit Answer",
+      "submitting": "Submitting...",
+      "next": "Next Question",
+      "seeResults": "See Results"
+    },
+    "results": {
+      "title": "Quiz Results",
+      "greatJob": "Great Job!",
+      "keepPracticing": "Keep Practicing!",
+      "score": "{correct} of {total} correct",
+      "accuracy": "Accuracy",
+      "performanceByDomain": "Performance by Domain",
+      "newQuiz": "New Quiz",
+      "dashboard": "Dashboard"
+    },
+    "explanation": "Explanation:"
+  },
+  "exam": {
+    "title": "CISSP Exam Simulation",
+    "description": "Simulate full CISSP exam experience",
+    "info": {
+      "timeLimit": "Time Limit",
+      "timeLimitValue": "3 hours (180 minutes)",
+      "questions": "Questions",
+      "questionsValue": "150 questions from all CISSP domains",
+      "passingScore": "Passing Score",
+      "passingScoreValue": "70% (105 or more correct)"
+    },
+    "important": {
+      "title": "Important",
+      "message": "Questions cannot be skipped or reviewed once answered. Navigate carefully."
+    },
+    "actions": {
+      "start": "Start Exam",
+      "starting": "Starting Exam...",
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit Exam",
+      "submitting": "Submitting..."
+    },
+    "navigator": {
+      "title": "Question Navigator",
+      "current": "Current",
+      "answered": "Answered",
+      "visited": "Visited",
+      "unvisited": "Unvisited",
+      "questionsAnswered": "questions answered"
+    },
+    "timer": {
+      "remaining": "Time Remaining",
+      "expired": "Time's up!"
+    },
+    "confirm": {
+      "title": "Submit Exam?",
+      "message": "Are you sure you want to submit your exam? This action cannot be undone.",
+      "questionsAnswered": "Questions answered:",
+      "timeRemaining": "Time remaining:"
+    },
+    "results": {
+      "congratulations": "Congratulations!",
+      "keepStudying": "Keep Studying!",
+      "passed": "You have passed the exam simulation",
+      "failed": "You did not reach the passing score this time",
+      "score": "Score",
+      "timeTaken": "Time Taken",
+      "questions": "Questions",
+      "questionsByDomain": "Questions by Domain",
+      "questionsLabel": "{count} questions",
+      "returnDashboard": "Return to Dashboard"
+    }
+  },
+  "theme": {
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "system": "System theme"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文",
+    "switchTo": "Switch to {language}"
+  },
+  "timer": {
+    "pause": "Pause",
+    "resume": "Resume"
+  },
+  "domainFilter": {
+    "allDomains": "All Domains"
+  }
+}

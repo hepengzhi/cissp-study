@@ -1,0 +1,222 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "back": "返回",
+    "all": "全部",
+    "filter": "筛选",
+    "search": "搜索",
+    "noData": "暂无数据",
+    "yes": "是",
+    "no": "否",
+    "confirm": "确认"
+  },
+  "nav": {
+    "dashboard": "仪表板",
+    "notes": "笔记",
+    "flashcards": "闪卡",
+    "quiz": "测验",
+    "exam": "考试",
+    "logo": "CISSP 学习",
+    "toggleLanguage": "语言"
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "description": "追踪您的 CISSP 备考进度",
+    "stats": {
+      "questions": "题目",
+      "answered": "已作答",
+      "accuracy": "准确率",
+      "examsPassed": "通过考试"
+    },
+    "recentExams": {
+      "title": "最近考试",
+      "none": "暂无考试记录"
+    },
+    "resources": {
+      "title": "学习资源",
+      "notes": "笔记",
+      "flashcards": "闪卡",
+      "questions": "题目"
+    }
+  },
+  "notes": {
+    "title": "学习笔记",
+    "description": "篇笔记覆盖所有领域",
+    "new": "新建笔记",
+    "create": "创建笔记",
+    "edit": "编辑笔记",
+    "none": "暂无笔记",
+    "noneDescription": "创建您的第一条笔记，开始整理学习内容",
+    "updated": "更新于",
+    "fields": {
+      "title": "标题",
+      "titlePlaceholder": "输入笔记标题...",
+      "domain": "领域",
+      "domainPlaceholder": "选择领域...",
+      "content": "内容",
+      "contentPlaceholder": "输入笔记内容...",
+      "contentPlaceholderMarkdown": "使用 Markdown 编写笔记内容...",
+      "tags": "标签（逗号分隔）",
+      "tagsPlaceholder": "例如：加密、访问控制、风险"
+    },
+    "actions": {
+      "saveChanges": "保存更改",
+      "createNote": "创建笔记",
+      "saving": "保存中...",
+      "creating": "创建中...",
+      "cancel": "取消",
+      "delete": "删除笔记",
+      "backToNotes": "返回笔记列表"
+    },
+    "markdown": {
+      "editor": "Markdown 编辑器",
+      "preview": "预览",
+      "split": "分屏",
+      "edit": "编辑",
+      "hidePreview": "隐藏预览",
+      "showPreview": "显示预览"
+    }
+  },
+  "flashcards": {
+    "title": "闪卡",
+    "description": "间隔重复实现最佳学习效果",
+    "manage": "管理卡片",
+    "new": "新建闪卡",
+    "create": "创建闪卡",
+    "loading": "加载闪卡中...",
+    "session": {
+      "complete": "学习完成！",
+      "reviewed": "您已复习 {count} 张卡片",
+      "reviewAgain": "再次复习",
+      "browseAll": "浏览所有卡片",
+      "allCaughtUp": "全部完成！",
+      "noCardsDue": "当前没有需要复习的闪卡",
+      "cardOf": "第 {current} 张，共 {total} 张待复习"
+    },
+    "fields": {
+      "front": "正面",
+      "frontPlaceholder": "问题或提示...",
+      "back": "背面",
+      "backPlaceholder": "答案或解释...",
+      "domain": "领域"
+    },
+    "ratings": {
+      "again": "重来",
+      "hard": "困难",
+      "good": "良好",
+      "easy": "简单"
+    },
+    "flip": "翻转"
+  },
+  "quiz": {
+    "title": "练习测验",
+    "description": "通过计时题目测试您的 CISSP 知识",
+    "setup": {
+      "selectDomains": "选择领域（可选）",
+      "questionCount": "题目数量",
+      "question": "题",
+      "questions": "题",
+      "start": "开始测验",
+      "starting": "开始中..."
+    },
+    "question": {
+      "of": "共",
+      "correct": "正确"
+    },
+    "actions": {
+      "submit": "提交答案",
+      "submitting": "提交中...",
+      "next": "下一题",
+      "seeResults": "查看结果"
+    },
+    "results": {
+      "title": "测验结果",
+      "greatJob": "做得好！",
+      "keepPracticing": "继续练习！",
+      "score": "答对 {correct} 题，共 {total} 题",
+      "accuracy": "准确率",
+      "performanceByDomain": "各领域表现",
+      "newQuiz": "新测验",
+      "dashboard": "仪表板"
+    },
+    "explanation": "解析："
+  },
+  "exam": {
+    "title": "CISSP 考试模拟",
+    "description": "模拟完整的 CISSP 考试体验",
+    "info": {
+      "timeLimit": "时间限制",
+      "timeLimitValue": "3 小时（180 分钟）",
+      "questions": "题目数量",
+      "questionsValue": "150 题，涵盖所有 CISSP 领域",
+      "passingScore": "及格分数",
+      "passingScoreValue": "70%（105 题或以上）"
+    },
+    "important": {
+      "title": "重要提示",
+      "message": "题目不能跳过或回头修改，请谨慎作答。"
+    },
+    "actions": {
+      "start": "开始考试",
+      "starting": "开始考试中...",
+      "previous": "上一题",
+      "next": "下一题",
+      "submit": "提交考试",
+      "submitting": "提交中..."
+    },
+    "navigator": {
+      "title": "题目导航",
+      "current": "当前",
+      "answered": "已作答",
+      "visited": "已浏览",
+      "unvisited": "未浏览",
+      "questionsAnswered": "题已作答"
+    },
+    "timer": {
+      "remaining": "剩余时间",
+      "expired": "时间到！"
+    },
+    "confirm": {
+      "title": "提交考试？",
+      "message": "确定要提交考试吗？此操作无法撤销。",
+      "questionsAnswered": "已答题数：",
+      "timeRemaining": "剩余时间："
+    },
+    "results": {
+      "congratulations": "恭喜！",
+      "keepStudying": "继续努力！",
+      "passed": "您已通过考试模拟",
+      "failed": "本次未达到及格分数",
+      "score": "得分",
+      "timeTaken": "用时",
+      "questions": "题目",
+      "questionsByDomain": "各领域题目",
+      "questionsLabel": "{count} 题",
+      "returnDashboard": "返回仪表板"
+    }
+  },
+  "theme": {
+    "light": "浅色主题",
+    "dark": "深色主题",
+    "system": "系统主题"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文",
+    "switchTo": "切换到 {language}"
+  },
+  "timer": {
+    "pause": "暂停",
+    "resume": "继续"
+  },
+  "domainFilter": {
+    "allDomains": "所有领域"
+  }
+}
