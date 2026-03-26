@@ -1,8 +1,10 @@
 'use client'
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CISSP_DOMAINS } from '@/lib/constants'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { getLocalizedDomains } from '@/lib/constants/i18n'
+import { useLocale, useTranslations } from 'next-intl'
+import type { SupportedLocale } from '@/lib/types/i18n'
+import { ChevronDown } from 'lucide-react'
 
 interface DomainFilterProps {
   value?: string
@@ -12,7 +14,11 @@ interface DomainFilterProps {
 export function DomainFilter({ value, onChange }: DomainFilterProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const locale = useLocale() as SupportedLocale
+  const t = useTranslations('domainFilter')
   const currentDomain = value || searchParams.get('domain') || 'all'
+
+  const domains = getLocalizedDomains(locale)
 
   const handleChange = (newValue: string) => {
     if (onChange) {
@@ -29,15 +35,20 @@ export function DomainFilter({ value, onChange }: DomainFilterProps) {
   }
 
   return (
-    <Tabs value={currentDomain} onValueChange={handleChange}>
-      <TabsList className="w-full justify-start overflow-x-auto">
-        <TabsTrigger value="all">All</TabsTrigger>
-        {CISSP_DOMAINS.map((domain) => (
-          <TabsTrigger key={domain.value} value={domain.value}>
+    <div className="relative inline-block">
+      <select
+        value={currentDomain}
+        onChange={(e) => handleChange(e.target.value)}
+        className="appearance-none bg-[#161b22] border border-[#30363d] text-white text-sm rounded-lg pl-3 pr-9 py-2.5 cursor-pointer hover:bg-[#1c2128] transition-colors focus:outline-none focus:ring-1 focus:ring-[#9fef00]/30 focus:border-[#9fef00]/50"
+      >
+        <option value="all">{t('allDomains')}</option>
+        {domains.map((domain) => (
+          <option key={domain.value} value={domain.value}>
             {domain.label}
-          </TabsTrigger>
+          </option>
         ))}
-      </TabsList>
-    </Tabs>
+      </select>
+      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] pointer-events-none" />
+    </div>
   )
 }

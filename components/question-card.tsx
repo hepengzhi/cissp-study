@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Question {
   id: string
@@ -21,6 +22,8 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question, onAnswer, showResult = false, selectedAnswer }: QuestionCardProps) {
+  const tQuiz = useTranslations('quiz')
+  const t = useTranslations('common')
   const [selected, setSelected] = useState<number | undefined>(selectedAnswer)
 
   useEffect(() => {
@@ -80,14 +83,14 @@ export function QuestionCard({ question, onAnswer, showResult = false, selectedA
 
         {showResult && (
           <div className="mt-6 p-4 bg-muted rounded-lg">
-            <p className="font-medium mb-2">Explanation:</p>
+            <p className="font-medium mb-2">{tQuiz('explanation')}</p>
             <p className="text-sm text-muted-foreground">{question.explanation}</p>
           </div>
         )}
 
         {!showResult && selected !== undefined && (
           <Button onClick={handleSubmit} className="w-full">
-            Submit Answer
+            {tQuiz('actions.submit')}
           </Button>
         )}
       </CardContent>

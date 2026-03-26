@@ -8,34 +8,41 @@ datasource db {
 }
 
 model Question {
-  id            String   @id @default(cuid())
-  questionText  String
-  options       String[]
-  correctAnswer Int
-  explanation   String
-  domain        Domain
-  difficulty    Difficulty
-  tags          String[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(cuid())
+  questionText    String
+  questionTextZh  String?
+  options         String[]
+  optionsZh       String[]
+  correctAnswer   Int
+  explanation     String
+  explanationZh   String?
+  domain          Domain
+  difficulty      Difficulty
+  tags            String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  examAnswers   ExamAnswer[]
+  examAnswers     ExamAnswer[]
 }
 
 model Note {
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  domain    Domain
-  tags      String[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  titleZh     String?
+  content     String
+  contentZh   String?
+  domain      Domain
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Flashcard {
   id          String   @id @default(cuid())
   front       String
+  frontZh     String?
   back        String
+  backZh      String?
   domain      Domain
   nextReview  DateTime @default(now())
   interval    Int      @default(0)

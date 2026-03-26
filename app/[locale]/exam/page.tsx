@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, Suspense, useEffect } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 import { startExam, submitExam } from '@/lib/actions/exam'
 import { QuestionCard } from '@/components/question-card'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
@@ -13,9 +14,12 @@ import Link from 'next/link'
 interface ExamQuestion {
   id: string
   questionText: string
+  questionTextZh?: string
   options: string[]
+  optionsZh?: string[]
   correctAnswer: number
   explanation: string
+  explanationZh?: string
   domain: DomainValue
 }
 
@@ -34,6 +38,10 @@ const TOTAL_QUESTIONS = 150
 const PASSING_COUNT = Math.ceil(TOTAL_QUESTIONS * (PASSING_SCORE / 100))
 
 function ExamContent() {
+  const locale = useLocale()
+  const tExam = useTranslations('exam')
+  const tCommon = useTranslations('common')
+  const tNav = useTranslations('nav')
   const [examState, setExamState] = useState<ExamState>('setup')
   const [questions, setQuestions] = useState<ExamQuestion[]>([])
   const [attemptId, setAttemptId] = useState<string>('')
@@ -51,6 +59,14 @@ function ExamContent() {
     timeSpent: number
   } | null>(null)
   const [timeRemaining, setTimeRemaining] = useState(EXAM_TIME_LIMIT)
+
+  // Get localized question data
+  const getLocalizedQuestion = useCallback((question: ExamQuestion) => ({
+    ...question,
+    questionText: locale === 'zh' && question.questionTextZh ? question.questionTextZh : question.questionText,
+    options: locale === 'zh' && question.optionsZh ? question.optionsZh : question.options,
+    explanation: locale === 'zh' && question.explanationZh ? question.explanationZh : question.explanation,
+  }), [locale])
 
   // Track visited questions
   useEffect(() => {
@@ -75,7 +91,7 @@ function ExamContent() {
         setError(result.error as string)
       } else if (result && 'attemptId' in result && 'questions' in result) {
         // Add placeholder values for correctAnswer and explanation
-        // These won't be shown during the exam (showResult is false)
+        // These won't be shown during exam (showResult is false)
         const examQuestions: ExamQuestion[] = result.questions.map(q => ({
           id: q.id,
           questionText: q.questionText,
@@ -202,9 +218,9 @@ function ExamContent() {
       <div className="container mx-auto py-8 max-w-3xl">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">CISSP Exam Simulation</CardTitle>
+            <CardTitle className="text-2xl">{tExam('title')}</CardTitle>
             <CardDescription>
-              Simulate the full CISSP exam experience
+              {tExam('description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -212,33 +228,33 @@ function ExamContent() {
               <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
                 <Clock className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold">Time Limit</h3>
-                  <p className="text-sm text-muted-foreground">3 hours (180 minutes)</p>
+                  <h3 className="font-semibold">{tExam('info.timeLimit')}</h3>
+                  <p className="text-sm text-muted-foreground">{tExam('info.timeLimitValue')}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
                 <AlertCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold">Questions</h3>
-                  <p className="text-sm text-muted-foreground">{TOTAL_QUESTIONS} questions from all CISSP domains</p>
+                  <h3 className="font-semibold">{tExam('info.questions')}</h3>
+                  <p className="text-sm text-muted-foreground">{tExam('info.questionsValue')}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
                 <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold">Passing Score</h3>
-                  <p className="text-sm text-muted-foreground">{PASSING_SCORE}% ({PASSING_COUNT} or more correct)</p>
+                  <h3 className="font-semibold">{tExam('info.passingScore')}</h3>
+                  <p className="text-sm text-muted-foreground">{tExam('info.passingScoreValue')}</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 p-4 bg-destructive/10 rounded-lg border border-destructive/20">
                 <XCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-destructive">Important</h3>
+                  <h3 className="font-semibold text-destructive">{tExam('important.title')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Questions cannot be skipped or reviewed after submission. Make sure you are ready before starting.
+                    {tExam('important.message')}
                   </p>
                 </div>
               </div>
@@ -257,7 +273,7 @@ function ExamContent() {
               className="w-full"
               size="lg"
             >
-              {loading ? 'Starting Exam...' : 'Start Exam'}
+              {loading ? tExam('actions.starting') : tExam('actions.start')}
             </Button>
           </CardFooter>
         </Card>
@@ -268,6 +284,7 @@ function ExamContent() {
   // Active exam screen
   if (examState === 'active' && questions.length > 0) {
     const currentQuestion = questions[currentIndex]
+    const localizedQuestion = getLocalizedQuestion(currentQuestion)
     const isAnswered = answers.has(currentQuestion.id)
 
     return (
@@ -276,9 +293,9 @@ function ExamContent() {
           {/* Header with timer and progress */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">CISSP Exam</h1>
+              <h1 className="text-2xl font-bold">{tExam('title')}</h1>
               <p className="text-muted-foreground">
-                Question {currentIndex + 1} of {questions.length}
+                {tExam('navigator.questionsAnswered')} {currentIndex + 1}
               </p>
             </div>
             <Timer
@@ -297,12 +314,12 @@ function ExamContent() {
 
           {/* Answered count */}
           <div className="text-sm text-muted-foreground text-center">
-            {getAnsweredCount()} of {questions.length} questions answered
+            {tExam('navigator.questionsAnswered')} {getAnsweredCount()}
           </div>
 
           {/* Question card */}
           <QuestionCard
-            question={currentQuestion}
+            question={localizedQuestion}
             onAnswer={handleAnswer}
             showResult={false}
             selectedAnswer={answers.get(currentQuestion.id)}
@@ -315,20 +332,20 @@ function ExamContent() {
               disabled={currentIndex === 0}
               variant="outline"
             >
-              Previous
+              {tExam('actions.previous')}
             </Button>
             <Button
               onClick={handleNext}
               disabled={currentIndex === questions.length - 1}
             >
-              Next
+              {tExam('actions.next')}
             </Button>
           </div>
 
           {/* Question navigator */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Question Navigator</CardTitle>
+              <CardTitle className="text-base">{tExam('navigator.title')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-20 gap-2">
@@ -358,19 +375,19 @@ function ExamContent() {
               <div className="mt-4 flex flex-wrap gap-4 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-primary" />
-                  <span>Current</span>
+                  <span>{tExam('navigator.current')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-green-500" />
-                  <span>Answered</span>
+                  <span>{tExam('navigator.answered')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-yellow-500" />
-                  <span>Visited</span>
+                  <span>{tExam('navigator.visited')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 rounded bg-muted" />
-                  <span>Unvisited</span>
+                  <span>{tExam('navigator.unvisited')}</span>
                 </div>
               </div>
             </CardContent>
@@ -385,10 +402,10 @@ function ExamContent() {
                 className="w-full"
                 disabled={getAnsweredCount() === 0}
               >
-                Submit Exam
+                {tExam('actions.submit')}
               </Button>
               <p className="text-xs text-muted-foreground text-center mt-2">
-                You have {formatTime(timeRemaining)} remaining
+                {tExam('timer.remaining')} {formatTime(timeRemaining)}
               </p>
             </CardContent>
           </Card>
@@ -398,18 +415,18 @@ function ExamContent() {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
               <Card className="max-w-md w-full">
                 <CardHeader>
-                  <CardTitle>Submit Exam?</CardTitle>
+                  <CardTitle>{tExam('confirm.title')}</CardTitle>
                   <CardDescription>
-                    Are you sure you want to submit your exam? This action cannot be undone.
+                    {tExam('confirm.message')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="p-4 bg-muted rounded-lg">
                     <p className="text-sm">
-                      <strong>Questions answered:</strong> {getAnsweredCount()} of {questions.length}
+                      <strong>{tExam('confirm.questionsAnswered')}</strong> {getAnsweredCount()} of {questions.length}
                     </p>
                     <p className="text-sm">
-                      <strong>Time remaining:</strong> {formatTime(timeRemaining)}
+                      <strong>{tExam('confirm.timeRemaining')}</strong> {formatTime(timeRemaining)}
                     </p>
                   </div>
                   {error && (
@@ -424,7 +441,7 @@ function ExamContent() {
                     disabled={loading}
                     className="flex-1"
                   >
-                    {loading ? 'Submitting...' : 'Submit Exam'}
+                    {loading ? tExam('actions.submitting') : tExam('actions.submit')}
                   </Button>
                   <Button
                     onClick={() => setShowSubmitConfirm(false)}
@@ -432,7 +449,7 @@ function ExamContent() {
                     disabled={loading}
                     className="flex-1"
                   >
-                    Cancel
+                    {tCommon('cancel')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -450,7 +467,7 @@ function ExamContent() {
         <Card className="max-w-md mx-auto">
           <CardContent className="py-12 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
-            <p className="text-lg font-medium">Submitting your exam...</p>
+            <p className="text-lg font-medium">{tExam('actions.submitting')}</p>
             <p className="text-sm text-muted-foreground mt-2">Please wait while we calculate your results.</p>
           </CardContent>
         </Card>
@@ -461,13 +478,10 @@ function ExamContent() {
   // Results screen
   if (examState === 'completed' && results) {
     // Group results by domain
-    // Note: We need to get the domain breakdown from the questions and results
     const domainResults = CISSP_DOMAINS.map(domain => {
       const domainQuestions = questions.filter(q => q.domain === domain.value)
       if (domainQuestions.length === 0) return null
 
-      // For now, we can't calculate per-domain accuracy without the detailed results
-      // The submitExam action only returns total score, not domain breakdown
       return {
         label: domain.label,
         total: domainQuestions.length,
@@ -489,12 +503,12 @@ function ExamContent() {
               )}
             </div>
             <CardTitle className="text-2xl">
-              {results.passed ? 'Congratulations!' : 'Keep Studying!'}
+              {results.passed ? tExam('results.congratulations') : tExam('results.keepStudying')}
             </CardTitle>
             <CardDescription>
               {results.passed
-                ? 'You have passed the exam simulation'
-                : 'You did not reach the passing score this time'}
+                ? tExam('results.passed')
+                : tExam('results.failed')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -508,24 +522,24 @@ function ExamContent() {
                 {results.correctCount} of {results.totalQuestions} correct
               </div>
               <div className="text-sm text-muted-foreground mt-2">
-                (Passing score: {PASSING_SCORE}%)
+                ({tExam('info.passingScore')}: {PASSING_SCORE}%)
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-muted rounded-lg text-center">
                 <div className="text-2xl font-bold">{formatTimeSpent(results.timeSpent)}</div>
-                <div className="text-sm text-muted-foreground">Time Taken</div>
+                <div className="text-sm text-muted-foreground">{tExam('results.timeTaken')}</div>
               </div>
               <div className="p-4 bg-muted rounded-lg text-center">
                 <div className="text-2xl font-bold">{results.totalQuestions}</div>
-                <div className="text-sm text-muted-foreground">Questions</div>
+                <div className="text-sm text-muted-foreground">{tExam('results.questions')}</div>
               </div>
             </div>
 
             {domainResults.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-semibold text-lg">Questions by Domain</h3>
+                <h3 className="font-semibold text-lg">{tExam('results.questionsByDomain')}</h3>
                 <div className="space-y-2">
                   {domainResults.map((result, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
@@ -543,9 +557,9 @@ function ExamContent() {
           </CardContent>
           <CardFooter className="flex gap-3">
             <Button variant="outline" asChild className="flex-1 gap-2">
-              <Link href="/">
+              <Link href={`/${locale}`}>
                 <Home className="h-4 w-4" />
-                Return to Dashboard
+                {tExam('results.returnDashboard')}
               </Link>
             </Button>
           </CardFooter>

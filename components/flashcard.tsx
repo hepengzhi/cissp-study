@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { FLASHCARD_RATINGS } from '@/lib/constants'
+import { useTranslations } from 'next-intl'
 import { RotateCw } from 'lucide-react'
 
 interface FlashcardProps {
@@ -13,7 +13,16 @@ interface FlashcardProps {
 }
 
 export function Flashcard({ front, back, onRate }: FlashcardProps) {
+  const tFlashcards = useTranslations('flashcards')
+  const t = useTranslations('common')
   const [isFlipped, setIsFlipped] = useState(false)
+
+  const ratings = [
+    { value: 0, label: tFlashcards('ratings.again') },
+    { value: 1, label: tFlashcards('ratings.hard') },
+    { value: 2, label: tFlashcards('ratings.good') },
+    { value: 3, label: tFlashcards('ratings.easy') }
+  ]
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -37,7 +46,7 @@ export function Flashcard({ front, back, onRate }: FlashcardProps) {
 
       {isFlipped && (
         <div className="flex gap-4">
-          {Object.values(FLASHCARD_RATINGS).map((rating) => (
+          {ratings.map((rating) => (
             <Button
               key={rating.value}
               variant={rating.value === 0 ? 'destructive' : rating.value === 3 ? 'default' : 'outline'}
