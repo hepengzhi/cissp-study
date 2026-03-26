@@ -237,7 +237,7 @@ function FlashcardsContent() {
               <h1 className="text-3xl font-bold text-white">{tFlashcards('title')}</h1>
             </div>
             <p className="text-[#a0aec0]">
-              {tFlashcards('cardOf', { current: currentIndex + 1, total: cards.length })}
+              {tFlashcards('session.cardOf', { current: currentIndex + 1, total: cards.length })}
             </p>
           </div>
           <div className="flex items-center gap-3">
