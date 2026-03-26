@@ -84,8 +84,6 @@ function FlashcardsContent() {
   }
 
   const handleReset = async () => {
-    const tCommon = useTranslations('common')
-
     if (!window.confirm(tFlashcards('resetConfirm') + '\n\n' + tFlashcards('resetConfirmMessage'))) {
       return
     }
@@ -99,7 +97,7 @@ function FlashcardsContent() {
     if (result && 'error' in result) {
       setResetMessage({
         type: 'error',
-        text: tFlashcards('resetError', { error: result.error })
+        text: tFlashcards('resetError', { error: result.error || 'Unknown error' })
       })
     } else {
       setResetMessage({
@@ -111,7 +109,7 @@ function FlashcardsContent() {
 
     setIsResetting(false)
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setResetMessage(null)
     }, 5000)
   }
