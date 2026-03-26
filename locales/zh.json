@@ -92,8 +92,8 @@
     "new": "新建闪卡",
     "create": "创建闪卡",
     "loading": "加载闪卡中...",
-    "cardOf": "第 {current} 张，共 {total} 张待复习",
     "session": {
+      "cardOf": "第 {current} 张，共 {total} 张待复习",
       "complete": "学习完成！",
       "reviewed": "您已复习 {count} 张卡片",
       "reviewAgain": "再次复习",
