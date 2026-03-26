@@ -83,6 +83,39 @@ function FlashcardsContent() {
     }
   }
 
+  const handleReset = async () => {
+    const tCommon = useTranslations('common')
+
+    if (!window.confirm(tFlashcards('resetConfirm') + '\n\n' + tFlashcards('resetConfirmMessage'))) {
+      return
+    }
+
+    setIsResetting(true)
+    setResetMessage(null)
+
+    const { resetAllFlashcardProgress } = await import('@/lib/actions/flashcards')
+    const result = await resetAllFlashcardProgress()
+
+    if (result && 'error' in result) {
+      setResetMessage({
+        type: 'error',
+        text: tFlashcards('resetError', { error: result.error })
+      })
+    } else {
+      setResetMessage({
+        type: 'success',
+        text: tFlashcards('resetSuccess', { count: result.count })
+      })
+      await loadCards()
+    }
+
+    setIsResetting(false)
+
+    setTimeout(() => {
+      setResetMessage(null)
+    }, 5000)
+  }
+
   // Get localized content for current card
   const getCurrentCardLocalized = () => {
     if (currentIndex >= cards.length) return null
