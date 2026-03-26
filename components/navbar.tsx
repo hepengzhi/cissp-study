@@ -6,7 +6,6 @@ import { Shield, FileText, Brain, ClipboardCheck, Trophy, Menu, X } from 'lucide
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './theme-toggle'
-import { LanguageToggle } from './language-toggle'
 import { useTranslations } from 'next-intl'
 
 const navItems = [
@@ -55,11 +54,8 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Right side - Language toggle, Theme toggle & Mobile menu */}
+          {/* Right side - Theme toggle & Mobile menu */}
           <div className="flex items-center gap-2">
-            <div className="hidden sm:block">
-              <LanguageToggle />
-            </div>
             <div className="hidden sm:block">
               <ThemeToggle />
             </div>
@@ -98,8 +94,7 @@ export function Navbar() {
                 )
               })}
             </div>
-            <div className="pt-2 border-t border-[#30363d] flex gap-2">
-              <LanguageToggle />
+            <div className="pt-2 border-t border-[#30363d]">
               <ThemeToggle />
             </div>
           </div>

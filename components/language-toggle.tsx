@@ -71,12 +71,14 @@ export function LanguageToggle() {
       onClick={handleToggle}
       disabled={switching || isAnimating}
       className={`
-        relative flex items-center gap-2 px-3 py-1.5
-        bg-[#161b22] border border-[#30363d] rounded-lg
+        fixed top-4 right-4 z-[100]
+        flex items-center gap-2 px-3 py-1.5
+        bg-[#161b22]/95 backdrop-blur-sm border border-[#30363d] rounded-lg
+        shadow-lg
         overflow-hidden
         transition-all duration-300 ease-in-out
         ${!switching
-          ? 'hover:border-[#9fef00]/50 hover:shadow-lg hover:shadow-[#9fef00]/10'
+          ? 'hover:border-[#9fef00]/50 hover:shadow-xl hover:shadow-[#9fef00]/20'
           : 'cursor-not-allowed opacity-70'}
         ${isAnimating ? 'scale-95' : 'scale-100'}
       `}
