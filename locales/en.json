@@ -15,7 +15,8 @@
     "noData": "No data",
     "yes": "Yes",
     "no": "No",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "reset": "Reset"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -113,7 +114,12 @@
       "good": "Good",
       "easy": "Easy"
     },
-    "flip": "Flip"
+    "flip": "Flip",
+    "resetProgress": "Reset Progress",
+    "resetConfirm": "Reset All Progress?",
+    "resetConfirmMessage": "This will reset the review progress of ALL flashcards to their initial values. This action cannot be undone.",
+    "resetSuccess": "Successfully reset {count} flashcards",
+    "resetError": "Failed to reset progress: {error}"
   },
   "quiz": {
     "title": "Practice Quiz",
