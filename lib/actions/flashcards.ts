@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/prisma/config'
 import { z } from 'zod'
 import { calculateNextReview, SM2Quality, type ReviewResult } from '@/lib/spaced-repetition'
 
@@ -165,6 +165,26 @@ export async function deleteFlashcard(id: string) {
       where: { id }
     })
     return { success: true }
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message }
+    }
+    return { error: 'Unknown error occurred' }
+  }
+}
+
+export async function resetAllFlashcardProgress() {
+  try {
+    const result = await prisma.flashcard.updateMany({
+      data: {
+        nextReview: new Date(),
+        interval: 0,
+        easeFactor: 2.5,
+        repetitions: 0
+      }
+    })
+
+    return { success: true, count: result.count }
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message }

@@ -1,4 +1,4 @@
-import { createFlashcard, getDueCards, rateFlashcard, getAllFlashcards } from '@/lib/actions/flashcards'
+import { createFlashcard, getDueCards, rateFlashcard, getAllFlashcards, resetAllFlashcardProgress } from '@/lib/actions/flashcards'
 import { SM2Quality } from '@/lib/spaced-repetition'
 import { beforeEach, vi, describe, it, expect } from 'vitest'
 import { mockPrisma } from '../prisma-mock'
@@ -531,6 +531,45 @@ describe('Flashcards Actions', () => {
 
       expect(result).toHaveProperty('error')
       expect(result.error).toBe('Database error')
+    })
+  })
+
+  describe('resetAllFlashcardProgress', () => {
+    it('should reset all flashcard progress to initial values', async () => {
+      const now = new Date()
+      const mockResult = { count: 5 }
+
+      mockPrisma.flashcard.updateMany.mockResolvedValue(mockResult)
+
+      const result = await resetAllFlashcardProgress()
+
+      expect(mockPrisma.flashcard.updateMany).toHaveBeenCalledWith({
+        data: {
+          nextReview: expect.any(Date),
+          interval: 0,
+          easeFactor: 2.5,
+          repetitions: 0
+        }
+      })
+      expect(result).toEqual({ success: true, count: 5 })
+    })
+
+    it('should return success with zero count when no cards exist', async () => {
+      const mockResult = { count: 0 }
+
+      mockPrisma.flashcard.updateMany.mockResolvedValue(mockResult)
+
+      const result = await resetAllFlashcardProgress()
+
+      expect(result).toEqual({ success: true, count: 0 })
+    })
+
+    it('should return error on database failure', async () => {
+      mockPrisma.flashcard.updateMany.mockRejectedValue(new Error('Connection lost'))
+
+      const result = await resetAllFlashcardProgress()
+
+      expect(result).toEqual({ error: 'Connection lost' })
     })
   })
 })

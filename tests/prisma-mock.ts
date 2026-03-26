@@ -18,7 +18,8 @@ const mockPrisma = {
     create: vi.fn(),
     findMany: vi.fn(),
     findUnique: vi.fn(),
-    update: vi.fn()
+    update: vi.fn(),
+    updateMany: vi.fn()
   },
   progress: {
     findMany: vi.fn(),
@@ -35,7 +36,7 @@ const mockPrisma = {
 }
 
 // Mock the prisma module
-vi.mock('@/lib/prisma', () => ({
+vi.mock('@/prisma/config', () => ({
   prisma: mockPrisma
 }))
 
