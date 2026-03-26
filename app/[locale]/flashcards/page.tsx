@@ -165,11 +165,21 @@ function FlashcardsContent() {
                   <p className="text-[#718096] text-sm">{tFlashcards('description')}</p>
                 </div>
               </div>
-              <Link href={`/${locale}/flashcards/manage`}>
-                <Button className="htb-button-outline text-sm">
-                  Manage Cards
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleReset}
+                  disabled={isResetting}
+                  variant="outline"
+                  className="htb-button-destructive text-sm border-red-500/50 text-red-400 hover:bg-red-500/10"
+                >
+                  {isResetting ? '...' : tFlashcards('resetProgress')}
                 </Button>
-              </Link>
+                <Link href={`/${locale}/flashcards/manage`}>
+                  <Button className="htb-button-outline text-sm">
+                    Manage Cards
+                  </Button>
+                </Link>
+              </div>
             </div>
             <DomainFilter value={domain} />
           </div>
@@ -230,7 +240,17 @@ function FlashcardsContent() {
               {tFlashcards('cardOf', { current: currentIndex + 1, total: cards.length })}
             </p>
           </div>
-          <DomainFilter value={domain} />
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleReset}
+              disabled={isResetting}
+              variant="outline"
+              className="htb-button-destructive text-sm border-red-500/50 text-red-400 hover:bg-red-500/10"
+            >
+              {isResetting ? '...' : tFlashcards('resetProgress')}
+            </Button>
+            <DomainFilter value={domain} />
+          </div>
         </div>
 
         {/* Progress Bar */}
