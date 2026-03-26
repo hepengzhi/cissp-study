@@ -12,28 +12,33 @@ export const dynamic = 'force-dynamic'
 export default async function ViewNotePage({
   params
 }: {
-  params: { id: string }
+  params: { id: string; locale: string }
 }) {
+  const { id, locale } = params
   const note = await prisma.note.findUnique({
-    where: { id: params.id }
+    where: { id }
   })
 
   if (!note) {
     notFound()
   }
 
+  // Get localized content
+  const title = locale === 'zh' && note.titleZh ? note.titleZh : note.title
+  const content = locale === 'zh' && note.contentZh ? note.contentZh : note.content
+
   return (
     <div className="min-h-screen page-bg">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <Link href="/notes">
+          <Link href={`/${locale}/notes`}>
             <Button variant="ghost">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Notes
             </Button>
           </Link>
-          <Link href={`/notes/${note.id}/edit`}>
+          <Link href={`/${locale}/notes/${note.id}/edit`}>
             <Button className="htb-button">
               <Edit className="h-4 w-4 mr-2" />
               Edit Note
@@ -46,7 +51,7 @@ export default async function ViewNotePage({
           <CardHeader>
             <div className="space-y-4">
               <h1 className="text-3xl font-bold page-title">
-                {note.title}
+                {title}
               </h1>
 
               <div className="flex flex-wrap items-center gap-3">
@@ -75,7 +80,7 @@ export default async function ViewNotePage({
           </CardHeader>
 
           <CardContent>
-            <MarkdownPreview content={note.content} />
+            <MarkdownPreview content={content} />
           </CardContent>
         </Card>
       </div>

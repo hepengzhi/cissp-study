@@ -91,14 +91,14 @@
     "new": "新建闪卡",
     "create": "创建闪卡",
     "loading": "加载闪卡中...",
+    "cardOf": "第 {current} 张，共 {total} 张待复习",
     "session": {
       "complete": "学习完成！",
       "reviewed": "您已复习 {count} 张卡片",
       "reviewAgain": "再次复习",
       "browseAll": "浏览所有卡片",
       "allCaughtUp": "全部完成！",
-      "noCardsDue": "当前没有需要复习的闪卡",
-      "cardOf": "第 {current} 张，共 {total} 张待复习"
+      "noCardsDue": "当前没有需要复习的闪卡"
     },
     "fields": {
       "front": "正面",

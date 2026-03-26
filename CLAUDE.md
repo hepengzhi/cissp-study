@@ -4,9 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a CISSP (Certified Information Systems Security Professional) study repository. The repository is currently in early development with minimal content.
+This is a CISSP (Certified Information Systems Security Professional) study platform built with Next.js 14, featuring bilingual (Chinese/English) support. The application includes interactive study tools like notes, flashcards, quizzes, and practice exams.
 
-## Notes
+## Architecture
 
-- This repository is new and does not yet contain study materials, code, or build configuration
-- Update this file as the repository structure develops
+- **Framework**: Next.js 14 with App Router
+- **Internationalization**: next-intl v4.8.3 for Chinese/English support
+- **UI Components**: Custom components with shadcn/ui styling
+- **Database**: Prisma ORM with PostgreSQL for storing study materials
+- **Styling**: CSS with CSS-in-JS approach using Tailwind CSS classes
+
+## Key Features
+
+1. **Dashboard** (`/`) - Overview of study progress and quick access to all features
+2. **Notes** (`/notes`) - Study notes management with bilingual content support
+3. **Flashcards** (`/flashcards`) - Interactive flashcards with spaced repetition
+4. **Quiz** (`/quiz`) - Practice questions with domain filtering and performance tracking
+5. **Exam** (`/exam`) - Full-length CISSP practice exam with timer (150 questions, 3 hours)
+6. **Language Toggle** - Switch between Chinese (中文) and English interfaces
+7. **Theme Toggle** - Dark/light theme support
+
+## Implementation Notes
+
+### Internationalization (i18n)
+- Uses next-intl for server-side and client-side translations
+- Supported locales: `en` (English) and `zh` (Chinese)
+- Translation files located in `locales/` directory
+- Dynamic routing with `[locale]` segments for language-specific URLs
+- All user-facing text uses translation keys (e.g., `tCommon('dashboard')`)
+
+### Database Schema
+- All content fields have bilingual variants (e.g., `front`, `frontZh` for flashcards)
+- Includes progress tracking, user statistics, and spaced repetition scheduling
+- Domain-based organization for CISSP 8 domains
+
+### Component Patterns
+- Components use `useTranslations()` for client-side translations
+- Server components use `getTranslations()` for server-side translations
+- Locale-aware data processing with `useLocale()` hook
+- Consistent UI patterns across all features
+
+### Recent Updates
+- Implemented full bilingual support for all pages (flashcards, quiz, exam)
+- Fixed translation key structure mismatches
+- Simplified language toggle component with better UX
+- Created comprehensive translation keys for all UI elements

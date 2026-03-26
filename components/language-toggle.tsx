@@ -16,7 +16,6 @@ export function LanguageToggle() {
   const [locale, setLocale] = useState<SupportedLocale>('en')
   const [mounted, setMounted] = useState(false)
   const [switching, setSwitching] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -25,42 +24,68 @@ export function LanguageToggle() {
   }, [])
 
   const handleToggle = async () => {
-    if (switching || isAnimating) return
+    if (switching) return
 
     const newLocale: SupportedLocale = locale === 'en' ? 'zh' : 'en'
     setSwitching(true)
-    setIsAnimating(true)
 
-    // Animate flag swap
-    await new Promise(resolve => setTimeout(resolve, 300))
+    // Save to localStorage and update state
+    LocaleService.setClientLocale(newLocale)
     setLocale(newLocale)
 
-    // Save to localStorage
-    LocaleService.setClientLocale(newLocale)
+    // Delay navigation for smooth UI transition
+    setTimeout(async () => {
+      // Sync with server (cookie) and navigate to new locale URL
+      try {
+        const response = await fetch('/api/locale', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ locale: newLocale })
+        })
 
-    // Sync with server (cookie)
-    try {
-      await fetch('/api/locale', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale: newLocale })
-      })
+        if (response.ok) {
+          // Navigate directly to new locale path based on current URL
+          const currentPath = window.location.pathname
+          const currentHasZhPrefix = currentPath.startsWith('/zh/')
+          const currentIsZhRoot = currentPath === '/zh'
 
-      // Add a small delay for visual feedback before reload
-      await new Promise(resolve => setTimeout(resolve, 500))
+          let newPath: string
 
-      // Reload to apply new locale across server components
-      window.location.reload()
-    } catch (error) {
-      console.error('Failed to sync locale:', error)
-      setSwitching(false)
-      setIsAnimating(false)
-    }
+          if (newLocale === 'en') {
+            // Switching to English: remove /zh prefix
+            if (currentHasZhPrefix) {
+              newPath = currentPath.replace(/^\/zh/, '')
+            } else if (currentIsZhRoot) {
+              newPath = '/'
+            } else {
+              newPath = currentPath
+            }
+          } else {
+            // Switching to Chinese: add /zh prefix (but don't duplicate)
+            if (currentHasZhPrefix || currentIsZhRoot) {
+              // Already on Chinese page, stay here
+              newPath = currentPath
+            } else if (currentPath === '/') {
+              newPath = '/zh'
+            } else {
+              newPath = `/zh${currentPath}`
+            }
+          }
+
+          window.location.href = newPath
+        } else {
+          throw new Error('Failed to set locale')
+        }
+      } catch (error) {
+        console.error('Failed to sync locale:', error)
+        setSwitching(false)
+      }
+    }, 200)
   }
 
   if (!mounted) {
     return (
-      <div className="w-20 h-9 rounded-lg bg-[#161b22] animate-pulse" />
+      <div className="w-20 h-9 rounded-lg bg-[#161b22]" />
     )
   }
 
@@ -69,7 +94,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={handleToggle}
-      disabled={switching || isAnimating}
+      disabled={switching}
       className={`
         relative flex items-center gap-2 px-3 py-1.5
         bg-[#161b22] border border-[#30363d] rounded-lg
@@ -78,29 +103,16 @@ export function LanguageToggle() {
         ${!switching
           ? 'hover:border-[#9fef00]/50 hover:shadow-lg hover:shadow-[#9fef00]/10'
           : 'cursor-not-allowed opacity-70'}
-        ${isAnimating ? 'scale-95' : 'scale-100'}
       `}
       title={tLanguage('switchTo', { language: locale === 'en' ? '中文' : 'English' })}
     >
-      {/* Background glow effect */}
-      <div className={`
-        absolute inset-0 rounded-lg transition-all duration-500 ease-in-out
-        ${isAnimating ? 'bg-[#9fef00]/10' : 'bg-transparent'}
-      `} />
-
-      {/* Globe icon with rotation animation */}
-      <div className={`
-        transition-transform duration-500 ease-in-out
-        ${isAnimating ? 'rotate-180 scale-110' : 'rotate-0 scale-100 hover:scale-110'}
-      `}>
+      {/* Globe icon */}
+      <div className="hover:scale-110 transition-transform duration-300">
         <Languages className={`h-5 w-5 transition-colors duration-300 ${switching ? 'text-[#9fef00]' : 'text-[#718096]'}`} />
       </div>
 
-      {/* Flag and label container */}
-      <div className={`
-        relative transition-all duration-300 ease-in-out
-        ${isAnimating ? 'opacity-0 -translate-x-4' : 'opacity-100 translate-x-0'}
-      `}>
+      {/* Flag and label */}
+      <div className="transition-opacity duration-300 ease-in-out">
         <span className="text-lg transition-all duration-300">
           {currentLang.flag}
         </span>
@@ -114,13 +126,6 @@ export function LanguageToggle() {
         <div className="absolute inset-0 flex items-center justify-center bg-[#161b22]/80 rounded-lg backdrop-blur-sm">
           <div className="h-4 w-4 border-2 border-[#9fef00] border-t-transparent rounded-full animate-spin" />
         </div>
-      )}
-
-      {/* Ripple effect on click */}
-      {!switching && !isAnimating && (
-        <span className="absolute inset-0 rounded-lg overflow-hidden pointer-events-none">
-          <span className="absolute inset-0 rounded-lg bg-[#9fef00]/20 animate-ping" />
-        </span>
       )}
     </button>
   )

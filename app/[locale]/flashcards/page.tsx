@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, Suspense } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 import { getDueCards, rateFlashcard } from '@/lib/actions/flashcards'
 import { Flashcard } from '@/components/flashcard'
 import { DomainFilter } from '@/components/domain-filter'
@@ -14,7 +15,9 @@ import type { FlashcardDomain } from '@/lib/actions/flashcards'
 interface FlashcardData {
   id: string
   front: string
+  frontZh?: string
   back: string
+  backZh?: string
   domain: string
   nextReview: Date
   interval: number
@@ -25,6 +28,8 @@ interface FlashcardData {
 }
 
 function FlashcardsContent() {
+  const locale = useLocale()
+  const tFlashcards = useTranslations('flashcards')
   const searchParams = useSearchParams()
   const domain = searchParams.get('domain') || 'all'
 
@@ -76,6 +81,18 @@ function FlashcardsContent() {
     }
   }
 
+  // Get localized content for current card
+  const getCurrentCardLocalized = () => {
+    if (currentIndex >= cards.length) return null
+    const card = cards[currentIndex]
+    return {
+      front: locale === 'zh' && card.frontZh ? card.frontZh : card.front,
+      back: locale === 'zh' && card.backZh ? card.backZh : card.back
+    }
+  }
+
+  const currentCardLocalized = getCurrentCardLocalized()
+
   if (loading) {
     return (
       <div className="min-h-screen hex-bg mesh-gradient">
@@ -111,11 +128,11 @@ function FlashcardsContent() {
               <div className="flex items-center gap-3">
                 <Brain className="h-6 w-6 text-[#9fef00]" />
                 <div>
-                  <h1 className="text-2xl font-bold text-white">Flashcards</h1>
-                  <p className="text-[#718096] text-sm">Spaced repetition for optimal learning</p>
+                  <h1 className="text-2xl font-bold text-white">{tFlashcards('title')}</h1>
+                  <p className="text-[#718096] text-sm">{tFlashcards('description')}</p>
                 </div>
               </div>
-              <Link href="/flashcards/manage">
+              <Link href={`/${locale}/flashcards/manage`}>
                 <Button className="htb-button-outline text-sm">
                   Manage Cards
                 </Button>
@@ -137,7 +154,7 @@ function FlashcardsContent() {
                     <RotateCcw className="h-4 w-4 mr-2" />
                     Review Again
                   </Button>
-                  <Link href="/flashcards/manage">
+                  <Link href={`/${locale}/flashcards/manage`}>
                     <Button className="htb-button">
                       Manage Cards
                       <ChevronRight className="h-4 w-4 ml-2" />
@@ -152,7 +169,7 @@ function FlashcardsContent() {
                 <p className="text-[#718096] mb-6">
                   No flashcards due for review right now
                 </p>
-                <Link href="/flashcards/manage">
+                <Link href={`/${locale}/flashcards/manage`}>
                   <Button className="htb-button">
                     Browse All Cards
                     <ChevronRight className="h-4 w-4 ml-2" />
@@ -174,10 +191,10 @@ function FlashcardsContent() {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <Brain className="h-8 w-8 text-[#9fef00]" />
-              <h1 className="text-3xl font-bold text-white">Flashcards</h1>
+              <h1 className="text-3xl font-bold text-white">{tFlashcards('title')}</h1>
             </div>
             <p className="text-[#a0aec0]">
-              Card {currentIndex + 1} of {cards.length} due
+              {tFlashcards('cardOf', { current: currentIndex + 1, total: cards.length })}
             </p>
           </div>
           <DomainFilter value={domain} />
@@ -193,13 +210,15 @@ function FlashcardsContent() {
 
         {/* Flashcard */}
         <div className="max-w-2xl mx-auto">
-          <div className="htb-card p-8">
-            <Flashcard
-              front={cards[currentIndex].front}
-              back={cards[currentIndex].back}
-              onRate={handleRate}
-            />
-          </div>
+          {currentCardLocalized && (
+            <div className="htb-card p-8">
+              <Flashcard
+                front={currentCardLocalized.front}
+                back={currentCardLocalized.back}
+                onRate={handleRate}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

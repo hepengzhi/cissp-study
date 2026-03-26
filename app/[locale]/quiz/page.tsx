@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, Suspense } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 import { getQuizQuestions, updateProgress } from '@/lib/actions/quiz'
 import { QuestionCard } from '@/components/question-card'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
@@ -14,9 +15,12 @@ import Link from 'next/link'
 interface Question {
   id: string
   questionText: string
+  questionTextZh?: string
   options: string[]
+  optionsZh?: string[]
   correctAnswer: number
   explanation: string
+  explanationZh?: string
   domain: string
 }
 
@@ -30,6 +34,10 @@ interface QuizAnswer {
 type QuizState = 'setup' | 'active' | 'completed'
 
 function QuizContent() {
+  const locale = useLocale()
+  const tQuiz = useTranslations('quiz')
+  const tCommon = useTranslations('common')
+  const tNav = useTranslations('nav')
   const [quizState, setQuizState] = useState<QuizState>('setup')
   const [selectedDomains, setSelectedDomains] = useState<string[]>([])
   const [questionCount, setQuestionCount] = useState(10)
@@ -41,6 +49,14 @@ function QuizContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [submittingAnswer, setSubmittingAnswer] = useState(false)
+
+  // Get localized question data
+  const getLocalizedQuestion = useCallback((question: Question) => ({
+    ...question,
+    questionText: locale === 'zh' && question.questionTextZh ? question.questionTextZh : question.questionText,
+    options: locale === 'zh' && question.optionsZh ? question.optionsZh : question.options,
+    explanation: locale === 'zh' && question.explanationZh ? question.explanationZh : question.explanation,
+  }), [locale])
 
   const handleDomainToggle = useCallback((domainValue: string) => {
     setSelectedDomains(prev =>
@@ -135,9 +151,9 @@ function QuizContent() {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <Target className="h-8 w-8 text-[#9fef00]" />
-              <h1 className="text-3xl font-bold text-white">Practice Quiz</h1>
+              <h1 className="text-3xl font-bold text-white">{tQuiz('title')}</h1>
             </div>
-            <p className="text-[#a0aec0]">Test your CISSP knowledge with timed questions</p>
+            <p className="text-[#a0aec0]">{tQuiz('description')}</p>
           </div>
 
           <div className="htb-card p-6 space-y-6">
@@ -145,7 +161,7 @@ function QuizContent() {
             <div className="space-y-3">
               <Label className="text-base text-white flex items-center gap-2">
                 <Zap className="h-4 w-4 text-[#9fef00]" />
-                Select Domains (optional)
+                {tQuiz('setup.selectDomains')}
               </Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {CISSP_DOMAINS.map((domain) => (
@@ -175,7 +191,7 @@ function QuizContent() {
 
             {/* Question Count */}
             <div className="space-y-2">
-              <Label htmlFor="questionCount" className="text-white">Number of Questions</Label>
+              <Label htmlFor="questionCount" className="text-white">{tQuiz('setup.questionCount')}</Label>
               <Select value={questionCount.toString()} onValueChange={(v) => setQuestionCount(parseInt(v))}>
                 <SelectTrigger id="questionCount" className="bg-[#161b22] border-[#30363d] text-white">
                   <SelectValue />
@@ -183,7 +199,7 @@ function QuizContent() {
                 <SelectContent className="bg-[#161b22] border-[#30363d]">
                   {[5, 10, 15, 20, 25, 30, 40, 50].map((count) => (
                     <SelectItem key={count} value={count.toString()} className="text-white hover:bg-[#30363d]">
-                      {count} question{count !== 1 ? 's' : ''}
+                      {count} {count !== 1 ? tQuiz('setup.questions') : tQuiz('setup.question')}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -191,7 +207,7 @@ function QuizContent() {
             </div>
 
             {error && (
-              <div className="p-4 bg-[#f85149]/10 border border-[#f85149]/30 rounded-lg text-[#f85149] text-sm">
+              <div className="p-4 bg-[#f85149]/10 border-[#f85149]/30 rounded-lg text-[#f85149] text-sm">
                 {error}
               </div>
             )}
@@ -204,12 +220,12 @@ function QuizContent() {
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-[#0d1117] border-t-transparent rounded-full animate-spin mr-2" />
-                  Starting...
+                  {tQuiz('setup.starting')}
                 </>
               ) : (
                 <>
                   <Play className="h-4 w-4 mr-2" />
-                  Start Quiz
+                  {tQuiz('setup.start')}
                 </>
               )}
             </Button>
@@ -221,6 +237,7 @@ function QuizContent() {
 
   if (quizState === 'active' && questions.length > 0) {
     const currentQuestion = questions[currentIndex]
+    const localizedQuestion = getLocalizedQuestion(currentQuestion)
 
     return (
       <div className="min-h-screen hex-bg mesh-gradient">
@@ -229,10 +246,10 @@ function QuizContent() {
             {/* Progress Header */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">Question {currentIndex + 1} of {questions.length}</h2>
+                <h2 className="text-lg font-semibold text-white">{tQuiz('question.of')} {currentIndex + 1}</h2>
                 <div className="flex items-center gap-2 text-[#9fef00]">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="font-mono">{answers.filter(a => a.isCorrect).length} correct</span>
+                  <span className="font-mono">{answers.filter(a => a.isCorrect).length} {tQuiz('question.correct')}</span>
                 </div>
               </div>
               <div className="htb-progress">
@@ -245,7 +262,7 @@ function QuizContent() {
 
             {/* Question Card */}
             <QuestionCard
-              question={currentQuestion}
+              question={localizedQuestion}
               onAnswer={handleAnswer}
               showResult={showResult}
               selectedAnswer={selectedAnswer}
@@ -261,12 +278,12 @@ function QuizContent() {
                 >
                   {currentIndex < questions.length - 1 ? (
                     <>
-                      Next Question
+                      {tQuiz('actions.next')}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </>
                   ) : (
                     <>
-                      See Results
+                      {tQuiz('actions.seeResults')}
                       <ChevronRight className="h-4 w-4 ml-2" />
                     </>
                   )}
@@ -307,13 +324,13 @@ function QuizContent() {
               <XCircle className="h-16 w-16 text-[#f85149] mx-auto mb-4" />
             )}
             <h2 className="text-3xl font-bold text-white mb-2">
-              {passed ? 'Great Job!' : 'Keep Practicing!'}
+              {passed ? tQuiz('results.greatJob') : tQuiz('results.keepPracticing')}
             </h2>
             <div className="text-5xl font-bold font-mono mb-2" style={{ color: passed ? '#9fef00' : '#f85149' }}>
               {percentage}%
             </div>
             <p className="text-[#718096]">
-              {correctCount} of {answers.length} correct
+              {tQuiz('results.score', { correct: correctCount, total: answers.length })}
             </p>
           </div>
 
@@ -322,7 +339,7 @@ function QuizContent() {
             <div className="htb-card p-6 space-y-4">
               <h3 className="font-semibold text-lg text-white flex items-center gap-2">
                 <Target className="h-5 w-5 text-[#9fef00]" />
-                Performance by Domain
+                {tQuiz('results.performanceByDomain')}
               </h3>
               <div className="space-y-3">
                 {domainResults.map((result, index) => (
@@ -357,12 +374,12 @@ function QuizContent() {
           <div className="flex gap-4">
             <Button onClick={handleNewQuiz} className="flex-1 htb-button">
               <Play className="h-4 w-4 mr-2" />
-              New Quiz
+              {tQuiz('results.newQuiz')}
             </Button>
             <Button variant="outline" asChild className="flex-1 htb-button-outline">
-              <Link href="/">
+              <Link href={`/${locale}`}>
                 <Home className="h-4 w-4 mr-2" />
-                Dashboard
+                {tQuiz('results.dashboard')}
               </Link>
             </Button>
           </div>

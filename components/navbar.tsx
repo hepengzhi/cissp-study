@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './theme-toggle'
 import { LanguageToggle } from './language-toggle'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 const navItems = [
   { href: '/', labelKey: 'dashboard', icon: Shield },
@@ -19,16 +19,22 @@ const navItems = [
 
 export function Navbar() {
   const pathname = usePathname()
+  const locale = useLocale()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const t = useTranslations('nav')
   const tCommon = useTranslations('common')
+
+  // Get base path with locale prefix
+  const getLocaleHref = (href: string) => {
+    return locale === 'en' ? href : `/zh${href === '/' ? '' : href}`
+  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0d1117]/95 dark:bg-[#0d1117]/95 backdrop-blur-sm border-b border-[#30363d]">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href={getLocaleHref('/')} className="flex items-center gap-2 group">
             <Shield className="h-6 w-6 text-[#9fef00] group-hover:scale-110 transition-transform" />
             <span className="font-bold text-white dark:text-white hidden sm:block">{t('logo')}</span>
           </Link>
@@ -36,13 +42,14 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href ||
-                (item.href !== '/' && pathname.startsWith(item.href))
+              const localeHref = getLocaleHref(item.href)
+              const isActive = pathname === localeHref ||
+                (item.href !== '/' && pathname.startsWith(localeHref))
 
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={localeHref}
                   className={cn(
                     'nav-link',
                     isActive && 'active'
@@ -79,13 +86,14 @@ export function Navbar() {
           <div className="md:hidden py-3 border-t border-[#30363d] space-y-3">
             <div className="flex flex-col gap-1">
               {navItems.map((item) => {
-                const isActive = pathname === item.href ||
-                  (item.href !== '/' && pathname.startsWith(item.href))
+                const localeHref = getLocaleHref(item.href)
+                const isActive = pathname === localeHref ||
+                  (item.href !== '/' && pathname.startsWith(localeHref))
 
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={localeHref}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
                       'nav-link-mobile',
