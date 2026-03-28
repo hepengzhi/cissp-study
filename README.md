@@ -9,6 +9,7 @@ A comprehensive study platform for CISSP (Certified Information Systems Security
 - **Exam Simulation** - Full 150-question, 3-hour exam simulation
 - **Spaced Repetition Flashcards** - SM-2 algorithm for optimal learning with progress reset capability
 - **Study Notes** - Create and organize notes by domain
+- **Admin Panel** - Manage questions with CRUD, batch import (JSON/CSV), export, search and filter
 - **Bilingual Support** - Full Chinese (中文) and English interface
 - **Dark/Light Theme** - Theme toggle for comfortable studying
 
@@ -88,12 +89,16 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   ├── notes/             # Notes pages
 │   ├── flashcards/        # Flashcard study & manage
 │   ├── quiz/              # Quiz practice
-│   └── exam/              # Exam simulation
+│   ├── exam/              # Exam simulation
+│   └── admin/             # Admin management panel
+│       ├── page.tsx       # Admin dashboard
+│       └── questions/     # Question CRUD, import/export
 ├── components/            # React components
 │   ├── ui/               # shadcn/ui components
+│   ├── admin-sidebar.tsx # Admin navigation sidebar
 │   └── *.tsx             # Custom components
 ├── lib/                   # Utilities and actions
-│   ├── actions/          # Server actions
+│   ├── actions/          # Server actions (questions, notes, etc.)
 │   ├── prisma.ts         # Prisma client
 │   └── constants.ts      # App constants
 ├── prisma/               # Database schema and seed
