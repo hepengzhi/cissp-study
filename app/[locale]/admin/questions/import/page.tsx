@@ -55,10 +55,10 @@ export default function ImportPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <Link href={`/${locale}/admin/questions`} className="text-[#8b949e] hover:text-[#f8fafc]">
+        <Link href={`/${locale}/admin/questions`} className="text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <h1 className="text-2xl font-bold text-[#f8fafc]">{t('import.title')}</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t('import.title')}</h1>
       </div>
 
       {/* Step 1: Upload */}
@@ -68,7 +68,7 @@ export default function ImportPage() {
             <button
               onClick={() => setFormat('json')}
               className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
-                format === 'json' ? 'border-[#9fef00] text-[#9fef00]' : 'border-[#30363d] text-[#8b949e]'
+                format === 'json' ? 'border-primary text-primary' : 'border-border text-muted-foreground'
               }`}
             >
               <FileJson className="h-4 w-4" /> JSON
@@ -76,7 +76,7 @@ export default function ImportPage() {
             <button
               onClick={() => setFormat('csv')}
               className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
-                format === 'csv' ? 'border-[#9fef00] text-[#9fef00]' : 'border-[#30363d] text-[#8b949e]'
+                format === 'csv' ? 'border-primary text-primary' : 'border-border text-muted-foreground'
               }`}
             >
               <FileSpreadsheet className="h-4 w-4" /> CSV
@@ -84,7 +84,7 @@ export default function ImportPage() {
           </div>
 
           <div
-            className="border-2 border-dashed border-[#30363d] rounded-lg p-12 text-center hover:border-[#9fef00] transition-colors cursor-pointer"
+            className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:border-primary transition-colors cursor-pointer"
             onClick={() => document.getElementById('file-input')?.click()}
             onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
             onDrop={(e) => {
@@ -92,9 +92,9 @@ export default function ImportPage() {
               if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0])
             }}
           >
-            <Upload className="h-10 w-10 mx-auto mb-3 text-[#8b949e]" />
-            <p className="text-[#8b949e]">{t('import.uploadHint')}</p>
-            {file && <p className="text-[#f8fafc] mt-2 text-sm">{file.name}</p>}
+            <Upload className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
+            <p className="text-muted-foreground">{t('import.uploadHint')}</p>
+            {file && <p className="text-foreground mt-2 text-sm">{file.name}</p>}
           </div>
           <input
             id="file-input"
@@ -105,7 +105,7 @@ export default function ImportPage() {
           />
 
           {file && (
-            <Button onClick={handleFileUpload} className="bg-[#9fef00] text-[#0d1117] hover:bg-[#9fef00]/90">
+            <Button onClick={handleFileUpload} className="bg-primary text-primary-foreground hover:bg-primary/90">
               {t('import.preview')}
             </Button>
           )}
@@ -116,14 +116,14 @@ export default function ImportPage() {
       {step === 'preview' && (
         <div className="space-y-4">
           <div className="flex items-center gap-4 text-sm">
-            <span className="text-[#9fef00]">{t('import.validRows', { count: total - errors })}</span>
-            {errors > 0 && <span className="text-[#f87171]">{t('import.invalidRows', { count: errors })}</span>}
+            <span className="text-primary">{t('import.validRows', { count: total - errors })}</span>
+            {errors > 0 && <span className="text-destructive">{t('import.invalidRows', { count: errors })}</span>}
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#30363d] text-[#8b949e]">
+                <tr className="border-b border-border text-muted-foreground">
                   <th className="p-2 text-left">Status</th>
                   <th className="p-2 text-left">Question</th>
                   <th className="p-2 text-left">Domain</th>
@@ -132,19 +132,19 @@ export default function ImportPage() {
               </thead>
               <tbody>
                 {rows.map((row, i) => (
-                  <tr key={i} className={`border-b border-[#30363d] ${row.valid ? '' : 'opacity-60'}`}>
+                  <tr key={i} className={`border-b border-border ${row.valid ? '' : 'opacity-60'}`}>
                     <td className="p-2">
                       {row.valid
-                        ? <CheckCircle className="h-4 w-4 text-[#9fef00]" />
-                        : <XCircle className="h-4 w-4 text-[#f87171]" />}
+                        ? <CheckCircle className="h-4 w-4 text-primary" />
+                        : <XCircle className="h-4 w-4 text-destructive" />}
                     </td>
-                    <td className="p-2 text-[#f8fafc] max-w-[300px] truncate">
+                    <td className="p-2 text-foreground max-w-[300px] truncate">
                       {row.data.questionText || '(empty)'}
                     </td>
-                    <td className="p-2 text-[#8b949e]">{row.data.domain}</td>
-                    <td className="p-2 text-[#8b949e]">{row.data.options?.length ?? 0}</td>
+                    <td className="p-2 text-muted-foreground">{row.data.domain}</td>
+                    <td className="p-2 text-muted-foreground">{row.data.options?.length ?? 0}</td>
                     {!row.valid && (
-                      <td className="p-2 text-[#f87171] text-xs">{row.error}</td>
+                      <td className="p-2 text-destructive text-xs">{row.error}</td>
                     )}
                   </tr>
                 ))}
@@ -153,10 +153,10 @@ export default function ImportPage() {
           </div>
 
           <div className="flex gap-3">
-            <Button onClick={handleImport} disabled={importing} className="bg-[#9fef00] text-[#0d1117]">
+            <Button onClick={handleImport} disabled={importing} className="bg-primary text-primary-foreground">
               {importing ? t('import.importing') : t('import.confirmImport')}
             </Button>
-            <Button variant="outline" onClick={() => setStep('upload')} className="border-[#30363d] text-[#8b949e]">
+            <Button variant="outline" onClick={() => setStep('upload')} className="border-border text-muted-foreground">
               {t('import.back')}
             </Button>
           </div>
@@ -166,11 +166,11 @@ export default function ImportPage() {
       {/* Step 3: Result */}
       {step === 'result' && importResult && (
         <div className="text-center space-y-4 py-8">
-          <div className="text-lg text-[#f8fafc]">
+          <div className="text-lg text-foreground">
             {t('import.importResult', { imported: importResult.imported, errors: importResult.errors })}
           </div>
           <Link href={`/${locale}/admin/questions`}>
-            <Button className="bg-[#9fef00] text-[#0d1117]">
+            <Button className="bg-primary text-primary-foreground">
               {t('import.back')}
             </Button>
           </Link>

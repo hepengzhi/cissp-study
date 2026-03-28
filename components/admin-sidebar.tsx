@@ -26,9 +26,9 @@ export function AdminSidebar() {
   }
 
   return (
-    <aside className="w-[180px] min-h-screen bg-[#1e293b] border-r border-[#334155] flex flex-col">
-      <div className="p-4 border-b border-[#334155]">
-        <h2 className="text-[#f8fafc] font-semibold text-sm">CISSP Admin</h2>
+    <aside className="w-[180px] min-h-screen bg-card border-r border-border flex flex-col">
+      <div className="p-4 border-b border-border">
+        <h2 className="text-foreground font-semibold text-sm">CISSP Admin</h2>
       </div>
 
       <nav className="flex-1 p-3 space-y-1">
@@ -44,8 +44,8 @@ export function AdminSidebar() {
               className={cn(
                 'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors',
                 isActive
-                  ? 'bg-[#334155] text-[#f8fafc]'
-                  : 'text-[#94a3b8] hover:text-[#f8fafc] hover:bg-[#334155]/50'
+                  ? 'bg-muted text-foreground'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -57,19 +57,19 @@ export function AdminSidebar() {
         {disabledItems.map((item) => (
           <div
             key={item.labelKey}
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-[#475569] cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground/50 cursor-not-allowed"
           >
             <item.icon className="h-4 w-4" />
             <span>{t(`sidebar.${item.labelKey}`)}</span>
-            <span className="text-[10px] ml-auto bg-[#334155] px-1.5 py-0.5 rounded">Soon</span>
+            <span className="text-[10px] ml-auto bg-muted px-1.5 py-0.5 rounded text-muted-foreground">Soon</span>
           </div>
         ))}
       </nav>
 
-      <div className="p-3 border-t border-[#334155]">
+      <div className="p-3 border-t border-border">
         <Link
           href={getHref('/')}
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-[#94a3b8] hover:text-[#f8fafc] transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>{t('sidebar.backToSite')}</span>

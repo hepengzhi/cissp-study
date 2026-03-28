@@ -66,37 +66,37 @@ export default function NewQuestionPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-[#f8fafc] mb-6">{t('questionForm.createTitle')}</h1>
+      <h1 className="text-2xl font-bold text-foreground mb-6">{t('questionForm.createTitle')}</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Question Text */}
         <div>
-          <label className="block text-sm font-medium text-[#c9cf0] mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             {t('questionForm.questionText')}
           </label>
           <textarea
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
-            className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-3 text-[#f8fafc] min-h-[80px]"
+            className="w-full bg-card border border-border rounded-md p-3 text-foreground min-h-[80px]"
             required
           />
         </div>
 
         {/* Chinese Question Text */}
         <div>
-          <label className="block text-sm font-medium text-[#8b949e] mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             {t('questionForm.questionTextZh')}
           </label>
           <textarea
             value={questionTextZh}
             onChange={(e) => setQuestionTextZh(e.target.value)}
-            className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-3 text-[#f8fafc] min-h-[60px]"
+            className="w-full bg-card border border-border rounded-md p-3 text-foreground min-h-[60px]"
           />
         </div>
 
         {/* Options */}
         <div>
-          <label className="block text-sm font-medium text-[#c9cf0] mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             {t('questionForm.options')}
           </label>
           <div className="space-y-2">
@@ -107,9 +107,9 @@ export default function NewQuestionPage() {
                   name="correctAnswer"
                   checked={correctAnswer === i}
                   onChange={() => setCorrectAnswer(i)}
-                  className="accent-[#9fef00]"
+                  className="accent-primary"
                 />
-                <span className="text-sm font-medium text-[#9fef00] w-6">
+                <span className="text-sm font-medium text-primary w-6">
                   {LETTERS[i]}.
                 </span>
                 <input
@@ -119,17 +119,17 @@ export default function NewQuestionPage() {
                     newOpts[i] = e.target.value
                     setOptions(newOpts)
                   }}
-                  className="flex-1 bg-[#161b22] border border-[#30363d] rounded-md p-2 text-[#f8fafc] text-sm"
+                  className="flex-1 bg-card border border-border rounded-md p-2 text-foreground text-sm"
                 />
                 {options.length > 2 && (
-                  <button type="button" onClick={() => handleRemoveOption(i)} className="text-[#f87171] hover:text-[#ef4444]">
+                  <button type="button" onClick={() => handleRemoveOption(i)} className="text-destructive hover:text-destructive/80">
                     {t('questionForm.removeOption')}
                   </button>
                 )}
               </div>
             ))}
             {options.length < 6 && (
-              <button type="button" onClick={handleAddOption} className="text-sm text-[#9fef00] hover:underline">
+              <button type="button" onClick={handleAddOption} className="text-sm text-primary hover:underline">
                 + {t('questionForm.addOption')}
               </button>
             )}
@@ -138,39 +138,39 @@ export default function NewQuestionPage() {
 
         {/* Explanation */}
         <div>
-          <label className="block text-sm font-medium text-[#c9cf0] mb-1">
+          <label className="block text-sm font-medium text-foreground mb-1">
             {t('questionForm.explanation')}
           </label>
           <textarea
             value={explanation}
             onChange={(e) => setExplanation(e.target.value)}
-            className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-3 text-[#f8fafc] min-h-[60px]"
+            className="w-full bg-card border border-border rounded-md p-3 text-foreground min-h-[60px]"
             required
           />
         </div>
 
         {/* Chinese Explanation */}
         <div>
-          <label className="block text-sm font-medium text-[#8b949e] mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             {t('questionForm.explanationZh')}
           </label>
           <textarea
             value={explanationZh}
             onChange={(e) => setExplanationZh(e.target.value)}
-            className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-3 text-[#f8fafc] min-h-[60px]"
+            className="w-full bg-card border border-border rounded-md p-3 text-foreground min-h-[60px]"
           />
         </div>
 
         {/* Domain & Difficulty */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[#c9cf0] mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               {t('questionForm.domain')}
             </label>
             <select
               value={domain}
               onChange={(e) => setDomain(e.target.value as Domain)}
-              className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-2 text-[#f8fafc]"
+              className="w-full bg-card border border-border rounded-md p-2 text-foreground"
             >
               {CISSP_DOMAINS.map(d => (
                 <option key={d.value} value={d.value}>{d.label}</option>
@@ -178,13 +178,13 @@ export default function NewQuestionPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#c9cf0] mb-1">
+            <label className="block text-sm font-medium text-foreground mb-1">
               {t('questionForm.difficulty')}
             </label>
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-              className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-2 text-[#f8fafc]"
+              className="w-full bg-card border border-border rounded-md p-2 text-foreground"
             >
               {DIFFICULTIES.map(d => (
                 <option key={d} value={d}>{d}</option>
@@ -195,19 +195,19 @@ export default function NewQuestionPage() {
 
         {/* Tags */}
         <div>
-          <label className="block text-sm font-medium text-[#8b949e] mb-1">
+          <label className="block text-sm font-medium text-muted-foreground mb-1">
             {t('questionForm.tags')}
           </label>
           <input
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            className="w-full bg-[#161b22] border border-[#30363d] rounded-md p-2 text-[#f8fafc]"
+            className="w-full bg-card border border-border rounded-md p-2 text-foreground"
           />
         </div>
 
         {/* Submit */}
         <div className="flex gap-3 pt-4">
-          <Button type="submit" disabled={saving} className="bg-[#9fef00] text-[#0d1117] hover:bg-[#9fef00]/90">
+          <Button type="submit" disabled={saving} className="bg-primary text-primary-foreground hover:bg-primary/90">
             {saving ? t('questionForm.saving') : t('questionForm.save')}
           </Button>
           <Button type="button" variant="outline" onClick={() => router.back()}>
