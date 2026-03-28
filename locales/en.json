@@ -224,5 +224,73 @@
   },
   "domainFilter": {
     "allDomains": "All Domains"
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "questions": "Questions",
+      "flashcards": "Flashcards",
+      "exams": "Exams",
+      "backToSite": "Back to Site"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "totalQuestions": "Total Questions",
+      "domains": "CISSP Domains",
+      "difficulties": "Difficulty Levels",
+      "quickActions": "Quick Actions",
+      "addQuestion": "Add Question",
+      "importQuestions": "Import Questions",
+      "manageQuestions": "Manage Questions"
+    },
+    "questions": {
+      "title": "Question Management",
+      "search": "Search questions...",
+      "allDomains": "All Domains",
+      "allDifficulty": "All Difficulty",
+      "add": "Add Question",
+      "import": "Import",
+      "export": "Export",
+      "batchDelete": "Delete Selected",
+      "noQuestions": "No questions found",
+      "confirmDelete": "Are you sure you want to delete this question?",
+      "confirmBatchDelete": "Are you sure you want to delete {count} selected questions?",
+      "selected": "{count} selected",
+      "total": "Total: {count} questions"
+    },
+    "questionForm": {
+      "createTitle": "Add New Question",
+      "editTitle": "Edit Question",
+      "questionText": "Question Text",
+      "questionTextZh": "Chinese Question Text",
+      "options": "Options",
+      "optionLetter": "Option {letter}",
+      "correctAnswer": "Correct Answer",
+      "explanation": "Explanation",
+      "explanationZh": "Chinese Explanation",
+      "domain": "Domain",
+      "difficulty": "Difficulty",
+      "tags": "Tags (comma-separated)",
+      "addOption": "Add Option",
+      "removeOption": "Remove",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saving": "Saving..."
+    },
+    "import": {
+      "title": "Import Questions",
+      "upload": "Upload File",
+      "uploadHint": "Drag & drop a JSON or CSV file, or click to browse",
+      "preview": "Preview",
+      "validRows": "{count} valid rows",
+      "invalidRows": "{count} invalid rows",
+      "confirmImport": "Confirm Import",
+      "importing": "Importing...",
+      "importResult": "Import complete: {imported} imported, {errors} errors",
+      "back": "Back to Questions",
+      "format": "Format",
+      "json": "JSON",
+      "csv": "CSV"
+    }
   }
 }

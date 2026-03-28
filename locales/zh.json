@@ -224,5 +224,73 @@
   },
   "domainFilter": {
     "allDomains": "所有领域"
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "仪表盘",
+      "questions": "题目管理",
+      "flashcards": "闪卡管理",
+      "exams": "试卷管理",
+      "backToSite": "返回前台"
+    },
+    "dashboard": {
+      "title": "管理后台",
+      "totalQuestions": "题目总数",
+      "domains": "CISSP 领域",
+      "difficulties": "难度级别",
+      "quickActions": "快捷操作",
+      "addQuestion": "添加题目",
+      "importQuestions": "导入题库",
+      "manageQuestions": "管理题目"
+    },
+    "questions": {
+      "title": "题目管理",
+      "search": "搜索题目...",
+      "allDomains": "所有领域",
+      "allDifficulty": "所有难度",
+      "add": "添加题目",
+      "import": "导入",
+      "export": "导出",
+      "batchDelete": "删除选中",
+      "noQuestions": "暂无题目",
+      "confirmDelete": "确定要删除这道题目吗？",
+      "confirmBatchDelete": "确定要删除选中的 {count} 道题目吗？",
+      "selected": "已选 {count} 题",
+      "total": "共 {count} 道题目"
+    },
+    "questionForm": {
+      "createTitle": "添加新题目",
+      "editTitle": "编辑题目",
+      "questionText": "英文题目",
+      "questionTextZh": "中文题目",
+      "options": "选项",
+      "optionLetter": "选项 {letter}",
+      "correctAnswer": "正确答案",
+      "explanation": "英文解析",
+      "explanationZh": "中文解析",
+      "domain": "领域",
+      "difficulty": "难度",
+      "tags": "标签（逗号分隔）",
+      "addOption": "添加选项",
+      "removeOption": "删除",
+      "save": "保存",
+      "cancel": "取消",
+      "saving": "保存中..."
+    },
+    "import": {
+      "title": "导入题库",
+      "upload": "上传文件",
+      "uploadHint": "拖拽 JSON 或 CSV 文件到此处，或点击浏览",
+      "preview": "预览",
+      "validRows": "{count} 条有效记录",
+      "invalidRows": "{count} 条无效记录",
+      "confirmImport": "确认导入",
+      "importing": "导入中...",
+      "importResult": "导入完成：{imported} 条成功，{errors} 条失败",
+      "back": "返回题目列表",
+      "format": "格式",
+      "json": "JSON",
+      "csv": "CSV"
+    }
   }
 }
