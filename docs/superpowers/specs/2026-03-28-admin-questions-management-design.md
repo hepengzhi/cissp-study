@@ -114,15 +114,17 @@ Follows existing pattern from `lib/actions/flashcards.ts`:
 ### CSV Format
 
 ```csv
-questionText,questionTextZh,options,optionsZh,correctAnswer,explanation,explanationZh,domain,difficulty,tags
-"What is X?","X是什么？","A|B|C|D","甲|乙|丙|丁",0,"Because...","因为...",SECURITY_RISK_MANAGEMENT,EASY,"tag1|tag2"
+questionText,questionTextZh,optionA,optionB,optionC,optionD,optionAZh,optionBZh,optionCZh,optionDZh,correctAnswer,explanation,explanationZh,domain,difficulty,tags
+"What is X?","X是什么？","Gamification","CBT","Content review","Live training","游戏化","基于计算机的培训","内容审查","在线培训",C,"Because...","因为...",SECURITY_RISK_MANAGEMENT,EASY,"tag1|tag2"
 ```
 
-- Options separated by `|`
+- Each option has separate column: `optionA`, `optionB`, `optionC`, `optionD` (up to `optionF` for 6 options)
+- Bilingual option columns: `optionAZh`, `optionBZh`, etc. (optional)
+- `correctAnswer` is letter string (A, B, C, D...) — consistent with JSON format
 - Tags separated by `|`
 - First row must be header
-- `optionsZh` and all `*Zh` fields optional
-- `correctAnswer` is 0-based index
+- All `*Zh` fields optional
+- Parser converts letter answer to 0-based index for DB storage, same as JSON
 
 ### JSON Format
 
