@@ -19,17 +19,15 @@ const QuestionSchema = z.object({
 })
 
 // Refine schema for correctAnswer validation
-const QuestionSchemaWithCorrectAnswer = QuestionSchema.refine({
-  correctAnswer: (val, ctx) => {
-    const options = ctx.parent.data.options as string[]
-    if (val < 0 || val >= options.length) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `correctAnswer must be a valid index (0-${options.length - 1})`,
-        path: ['correctAnswer']
-      })
-    return val
+const QuestionSchemaWithCorrectAnswer = QuestionSchema.refine((data, ctx) => {
+  if (data.correctAnswer < 0 || data.correctAnswer >= data.options.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `correctAnswer must be a valid index (0-${data.options.length - 1})`,
+      path: ['correctAnswer']
+    })
   }
+  return data
 })
 
 // Filter schema for getQuestions
