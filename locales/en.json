@@ -25,6 +25,7 @@
     "quiz": "Quiz",
     "exam": "Exam",
     "logo": "CISSP Study",
+    "admin": "Admin",
     "toggleLanguage": "Language"
   },
   "dashboard": {
