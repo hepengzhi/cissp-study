@@ -12,7 +12,12 @@ const mockPrisma = {
   },
   question: {
     create: vi.fn(),
-    findMany: vi.fn()
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    deleteMany: vi.fn(),
+    count: vi.fn()
   },
   flashcard: {
     create: vi.fn(),
