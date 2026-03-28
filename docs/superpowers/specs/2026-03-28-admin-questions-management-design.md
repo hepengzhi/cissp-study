@@ -58,7 +58,7 @@ File: `lib/actions/questions.ts`
 | `updateQuestion(id, data)` | Update question | `id + validated data` | `Question \| { error: string }` |
 | `deleteQuestion(id)` | Delete single question | `string` | `{ success: boolean } \| { error: string }` |
 | `deleteQuestions(ids)` | Batch delete | `string[]` | `{ deleted: number } \| { error: string }` |
-| `parseImportFile(content, format)` | Parse CSV/JSON to question array | `string + 'csv'\|'json'` | `Question[] \| { error: string }` |
+| `parseImportFile(content, format)` | Parse CSV/JSON to question array; converts JSON options object → array, letter answer → index | `string + 'csv'\|'json'` | `{ data: ParsedRow[], total: number, errors: ParseError[] } \| { error: string }` |
 | `importQuestions(data[])` | Write parsed questions to DB | `ParsedQuestion[]` | `{ imported: number, errors: number } \| { error: string }` |
 | `exportQuestions(filters, format)` | Export as JSON/CSV | `filters + 'csv'\|'json'` | `string (file content)` |
 
@@ -128,22 +128,38 @@ questionText,questionTextZh,options,optionsZh,correctAnswer,explanation,explanat
 
 ```json
 {
+  "total_questions": 401,
   "questions": [
     {
-      "questionText": "What is X?",
-      "questionTextZh": "X是什么？",
-      "options": ["A", "B", "C", "D"],
-      "optionsZh": ["甲", "乙", "丙", "丁"],
-      "correctAnswer": 0,
-      "explanation": "Because...",
-      "explanationZh": "因为...",
+      "question_id": "dc409adaef081694b5bb0c3adfdd6913",
       "domain": "SECURITY_RISK_MANAGEMENT",
+      "type": "single_choice",
+      "questionText": "english version",
+      "questionTextZh": "1.Alyssa负责她组织的安全意识程序...",
+      "options": {
+        "A": "游戏化",
+        "B": "基于计算机的培训",
+        "C": "内容审查",
+        "D": "在线培训"
+      },
+      "correctAnswer": "C",
+      "explanation": "游戏化使培训变得更加有趣...",
+      "question_images": ["data:image/jpeg;base64,<IMAGE_BASE64_CODE>"],
       "difficulty": "EASY",
       "tags": ["tag1", "tag2"]
     }
   ]
 }
 ```
+
+- `total_questions`: metadata, not strictly validated
+- `question_id`: optional external identifier (not used as DB primary key)
+- `type`: reserved for future use, only "single_choice" supported for now
+- `options`: object with letter keys (A-Z), values are option text (can be any language)
+- `correctAnswer`: letter string matching an option key (e.g., "C")
+- `question_images`: optional array of base64 data URLs, stored as-is (not in current DB schema — future enhancement)
+- `questionTextZh`, `explanationZh`: optional, for bilingual content
+- Parser converts `options` object → `string[]` array and `correctAnswer` letter → 0-based index for DB storage
 
 ## Question List Page
 
@@ -214,13 +230,16 @@ Follows existing patterns from `tests/actions/flashcards.test.ts`:
 - Handles database error
 
 **parseImportFile:**
-- Parses valid JSON array
+- Parses valid JSON with `total_questions` + `questions` array
 - Parses valid CSV with headers
+- Converts JSON `options` object `{A: "...", B: "..."}` → `string[]` array
+- Converts JSON `correctAnswer` letter "C" → 0-based index 2
 - Returns error for invalid JSON
 - Returns error for invalid CSV format
 - Returns error for missing required fields in rows
 - Handles mixed valid/invalid rows (valid ones parsed, invalid ones flagged)
 - Handles optional Zh fields gracefully
+- Ignores `question_id`, `type`, `total_questions` gracefully
 
 **importQuestions:**
 - Imports all valid questions
