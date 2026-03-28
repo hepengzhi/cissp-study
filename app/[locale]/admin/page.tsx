@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { FileQuestion, Upload, Plus } from 'lucide-react'
 import { getQuestions } from '@/lib/actions/questions'
-import { useLocale, useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
 
 export default async function AdminDashboardPage() {
-  const t = useTranslations('admin')
-  const locale = useLocale()
+  const t = await getTranslations('admin')
+  setRequestLocale('en')
 
   const result = await getQuestions({ page: 1, pageSize: 1 })
   const totalQuestions = 'total' in result ? result.total : 0
@@ -35,21 +36,21 @@ export default async function AdminDashboardPage() {
         <h2 className="text-lg font-semibold text-[#f8fafc]">{t('dashboard.quickActions')}</h2>
         <div className="flex gap-3">
           <Link
-            href={`/${locale}/admin/questions/new`}
+            href="/admin/questions/new"
             className="flex items-center gap-2 px-4 py-2 bg-[#9fef00] text-[#0d1117] rounded-md font-medium text-sm hover:bg-[#9fef00]/90 transition-colors"
           >
             <Plus className="h-4 w-4" />
             {t('dashboard.addQuestion')}
           </Link>
           <Link
-            href={`/${locale}/admin/questions/import`}
+            href="/admin/questions/import"
             className="flex items-center gap-2 px-4 py-2 bg-[#161b22] border border-[#30363d] text-[#f8fafc] rounded-md font-medium text-sm hover:border-[#9fef00] transition-colors"
           >
             <Upload className="h-4 w-4" />
             {t('dashboard.importQuestions')}
           </Link>
           <Link
-            href={`/${locale}/admin/questions`}
+            href="/admin/questions"
             className="flex items-center gap-2 px-4 py-2 bg-[#161b22] border border-[#30363d] text-[#f8fafc] rounded-md font-medium text-sm hover:border-[#9fef00] transition-colors"
           >
             <FileQuestion className="h-4 w-4" />
