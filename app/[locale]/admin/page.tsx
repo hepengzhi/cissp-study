@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FileQuestion, Upload, Plus } from 'lucide-react'
+import { FileQuestion, Download, Plus } from 'lucide-react'
 import { getQuestions } from '@/lib/actions/questions'
 import { getTranslations } from 'next-intl/server'
 
@@ -44,7 +44,7 @@ export default async function AdminDashboardPage() {
             href="/admin/questions/import"
             className="flex items-center gap-2 px-4 py-2 bg-card border border-border text-foreground rounded-md font-medium text-sm hover:border-primary transition-colors"
           >
-            <Upload className="h-4 w-4" />
+            <Download className="h-4 w-4" />
             {t('dashboard.importQuestions')}
           </Link>
           <Link

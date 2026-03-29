@@ -22,6 +22,7 @@ interface Question {
   explanation: string
   explanationZh?: string | null
   domain: string
+  questionImages?: string[]
 }
 
 interface QuizAnswer {

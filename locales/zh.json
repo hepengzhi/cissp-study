@@ -281,7 +281,7 @@
     "import": {
       "title": "导入题库",
       "upload": "上传文件",
-      "uploadHint": "拖拽 JSON 或 CSV 文件到此处，或点击浏览",
+      "uploadHint": "拖拽 JSON 或 CSV 文件到此处，或点击浏览（自动识别格式）",
       "preview": "预览",
       "validRows": "{count} 条有效记录",
       "invalidRows": "{count} 条无效记录",
@@ -291,7 +291,10 @@
       "back": "返回题目列表",
       "format": "格式",
       "json": "JSON",
-      "csv": "CSV"
+      "csv": "CSV",
+      "sampleFormat": "文件格式示例",
+      "sampleLabel": "示例",
+      "domainList": "可选的领域值："
     }
   }
 }

@@ -53,6 +53,7 @@ export default function NewQuestionPage() {
       explanationZh: explanationZh || undefined,
       domain,
       difficulty,
+      questionImages: [],
       tags: tags.split(',').map(t => t.trim()).filter(Boolean),
     })
 

@@ -15,6 +15,7 @@ const QuestionSchema = z.object({
   explanationZh: z.string().optional(),
   domain: z.nativeEnum(Domain),
   difficulty: z.nativeEnum(Difficulty),
+  questionImages: z.array(z.string()).optional().default([]),
   tags: z.array(z.string()).default([]),
 }).refine((data) => {
   return data.correctAnswer >= 0 && data.correctAnswer < data.options.length
@@ -175,6 +176,7 @@ function parseJSON(content: string): { data: ParsedRow[]; total: number; errors:
       explanationZh: q.explanationZh || undefined,
       domain: q.domain ?? '',
       difficulty: q.difficulty ?? '',
+      questionImages: q.question_images ?? [],
       tags: q.tags ?? [],
     }
 
@@ -311,7 +313,11 @@ export async function exportQuestions(filters: QuestionFilter, format: 'json' | 
     const questions = await prisma.question.findMany({ where, orderBy: { createdAt: 'desc' } })
 
     if (format === 'json') {
-      return JSON.stringify({ total_questions: questions.length, questions }, null, 2)
+      const exportData = questions.map(({ questionImages, ...q }) => ({
+        ...q,
+        question_images: questionImages,
+      }))
+      return JSON.stringify({ total_questions: questions.length, questions: exportData }, null, 2)
     }
 
     // CSV format

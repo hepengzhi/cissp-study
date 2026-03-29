@@ -122,7 +122,7 @@ describe('Questions Actions', () => {
 
       const result = await createQuestion(validInput)
 
-      expect(mockPrisma.question.create).toHaveBeenCalledWith({ data: validInput })
+      expect(mockPrisma.question.create).toHaveBeenCalledWith({ data: { ...validInput, questionImages: [] } })
       expect(result.questionText).toBe('What is X?')
     })
 

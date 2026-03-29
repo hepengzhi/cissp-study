@@ -21,6 +21,7 @@ interface ExamQuestion {
   explanation: string
   explanationZh?: string
   domain: DomainValue
+  questionImages?: string[]
 }
 
 type ExamState = 'setup' | 'active' | 'submitting' | 'completed'

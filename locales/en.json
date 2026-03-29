@@ -281,7 +281,7 @@
     "import": {
       "title": "Import Questions",
       "upload": "Upload File",
-      "uploadHint": "Drag & drop a JSON or CSV file, or click to browse",
+      "uploadHint": "Drag & drop a JSON or CSV file, or click to browse (auto-detected)",
       "preview": "Preview",
       "validRows": "{count} valid rows",
       "invalidRows": "{count} invalid rows",
@@ -291,7 +291,10 @@
       "back": "Back to Questions",
       "format": "Format",
       "json": "JSON",
-      "csv": "CSV"
+      "csv": "CSV",
+      "sampleFormat": "Sample Format",
+      "sampleLabel": "Sample",
+      "domainList": "Available domain values:"
     }
   }
 }

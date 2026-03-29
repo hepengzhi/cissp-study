@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { Plus, Upload, Download, Trash2, Edit2, Search } from 'lucide-react'
+import { Plus, Download, Trash2, Edit2, Search, ImageIcon } from 'lucide-react'
 import { getQuestions, deleteQuestion, deleteQuestions, exportQuestions } from '@/lib/actions/questions'
 import type { Domain as DomainType, Difficulty as DifficultyType } from '@prisma/client'
 import { CISSP_DOMAINS } from '@/lib/constants'
@@ -21,6 +21,7 @@ type Question = {
   domain: string
   difficulty: string
   tags: string[]
+  questionImages: string[]
   createdAt: Date
 }
 
@@ -109,7 +110,7 @@ export default function QuestionsPage() {
           </Link>
           <Link href={getHref('/admin/questions/import')}>
             <Button size="sm" variant="outline" className="border-border text-foreground hover:border-primary">
-              <Upload className="h-4 w-4 mr-1" /> {t('questions.import')}
+              <Download className="h-4 w-4 mr-1" /> {t('questions.import')}
             </Button>
           </Link>
         </div>
@@ -187,7 +188,14 @@ export default function QuestionsPage() {
                   <td className="p-3">
                     <input type="checkbox" checked={selected.has(q.id)} onChange={() => toggleSelect(q.id)} className="rounded" />
                   </td>
-                  <td className="p-3 text-foreground max-w-md truncate">{q.questionText}</td>
+                  <td className="p-3 text-foreground max-w-md truncate">
+                    <div className="flex items-center gap-1">
+                      {q.questionText}
+                      {q.questionImages && q.questionImages.length > 0 && (
+                        <ImageIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
+                      )}
+                    </div>
+                  </td>
                   <td className="p-3 text-muted-foreground text-xs">{q.domain.replace(/_/g, ' ').toLowerCase()}</td>
                   <td className="p-3">
                     <span className={`text-xs px-2 py-0.5 rounded ${

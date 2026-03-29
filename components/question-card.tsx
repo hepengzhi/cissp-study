@@ -12,6 +12,7 @@ interface Question {
   options: string[]
   correctAnswer: number
   explanation: string
+  questionImages?: string[]
 }
 
 interface QuestionCardProps {
@@ -47,6 +48,13 @@ export function QuestionCard({ question, onAnswer, showResult = false, selectedA
     <Card className="w-full max-w-3xl">
       <CardHeader>
         <CardTitle className="text-lg">{question.questionText}</CardTitle>
+        {question.questionImages && question.questionImages.length > 0 && (
+          <div className="mt-3 space-y-2">
+            {question.questionImages.map((img, i) => (
+              <img key={i} src={img} alt={`Question image ${i + 1}`} className="max-w-full rounded-md" />
+            ))}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
