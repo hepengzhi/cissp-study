@@ -43,10 +43,11 @@ async function deleteFlashcardAction(id: string) {
 export default async function FlashcardDetailPage({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const flashcard = await prisma.flashcard.findUnique({
-    where: { id: params.id }
+    where: { id }
   })
 
   if (!flashcard) {

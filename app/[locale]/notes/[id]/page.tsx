@@ -12,9 +12,9 @@ export const dynamic = 'force-dynamic'
 export default async function ViewNotePage({
   params
 }: {
-  params: { id: string; locale: string }
+  params: Promise<{ id: string; locale: string }>
 }) {
-  const { id, locale } = params
+  const { id, locale } = await params
   const note = await prisma.note.findUnique({
     where: { id }
   })

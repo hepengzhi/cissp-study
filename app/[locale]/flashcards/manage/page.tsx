@@ -9,9 +9,10 @@ import type { FlashcardDomain } from '@/lib/actions/flashcards'
 export default async function FlashcardsManagePage({
   searchParams
 }: {
-  searchParams: { domain?: string }
+  searchParams: Promise<{ domain?: string }>
 }) {
-  const domain = searchParams.domain || 'all'
+  const { domain: domainParam } = await searchParams
+  const domain = domainParam || 'all'
   const domainFilter = domain === 'all' ? undefined : domain as FlashcardDomain
   const flashcardsResult = await getAllFlashcards(domainFilter)
 

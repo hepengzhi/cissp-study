@@ -5,10 +5,11 @@ import { NoteEditor } from '@/components/note-editor'
 export default async function NotePage({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const note = await prisma.note.findUnique({
-    where: { id: params.id }
+    where: { id }
   })
 
   if (!note) {

@@ -13,13 +13,15 @@ export default async function NotesPage({
   params,
   searchParams
 }: {
-  params: { locale: string }
-  searchParams: { domain?: string }
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ domain?: string }>
 }) {
-  const { locale } = params
+  const { locale } = await params
+  const typedLocale = (locale === 'zh' ? 'zh' : 'en') as SupportedLocale
+  const { domain: domainParam } = await searchParams
   const t = await getTranslations('notes')
   const tCommon = await getTranslations('common')
-  const domain = searchParams.domain || 'all'
+  const domain = domainParam || 'all'
   const notes = await prisma.note.findMany({
     where: domain && domain !== 'all' ? { domain: domain as NoteDomain } : undefined,
     orderBy: { updatedAt: 'desc' }
@@ -64,7 +66,7 @@ export default async function NotesPage({
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     <span className={`domain-badge badge-${note.domain.split('_')[0].toLowerCase()}`}>
-                      {getDomainLabel(note.domain, locale)}
+                      {getDomainLabel(note.domain, typedLocale)}
                     </span>
                     {note.tags.slice(0, 2).map((tag) => (
                       <span key={tag} className="text-xs px-2 py-1 rounded tag-bg page-description">

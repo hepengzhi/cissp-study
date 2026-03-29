@@ -15,12 +15,12 @@ import Link from 'next/link'
 interface Question {
   id: string
   questionText: string
-  questionTextZh?: string
+  questionTextZh?: string | null
   options: string[]
   optionsZh?: string[]
   correctAnswer: number
   explanation: string
-  explanationZh?: string
+  explanationZh?: string | null
   domain: string
 }
 

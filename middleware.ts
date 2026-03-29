@@ -16,13 +16,16 @@ export default async function middleware(request: NextRequest) {
   // Use the cookie locale if valid, otherwise use default
   const locale = (savedLocale && isValidLocale(savedLocale)) ? savedLocale : defaultLocale
 
-  return createMiddleware({
+  const intlMiddleware = createMiddleware({
     locales,
     defaultLocale,
     localePrefix: 'as-needed',
-    localeDetection: false, // Disable automatic detection, use our logic
-    getRequestConfig: () => ({ locale })
-  })(request)
+    localeDetection: false,
+  })
+
+  const response = await intlMiddleware(request)
+  response.headers.set('x-locale', locale)
+  return response
 }
 
 export const config = {
