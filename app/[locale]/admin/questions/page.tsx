@@ -202,10 +202,7 @@ export default function QuestionsPage() {
                     </div>
                   </td>
                   <td className="p-3 text-muted-foreground text-xs">
-                    <div className="flex items-center gap-1.5">
-                      <DomainBadge domain={q.domain} />
-                      {q.domain.replace(/_/g, ' ').toLowerCase()}
-                    </div>
+                    <DomainBadge domain={q.domain} label={q.domain.replace(/_/g, ' ')} />
                   </td>
                   <td className="p-3">
                     <span className={`text-xs px-2 py-0.5 rounded ${

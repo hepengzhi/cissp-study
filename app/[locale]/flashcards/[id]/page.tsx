@@ -148,8 +148,7 @@ export default async function FlashcardDetailPage({
             <div>
               <p className="text-sm text-muted-foreground">Domain</p>
               <div className="flex items-center gap-1.5">
-                <DomainBadge domain={flashcard.domain} />
-                <Badge>{flashcard.domain.replace(/_/g, ' ')}</Badge>
+                <DomainBadge domain={flashcard.domain} label={flashcard.domain.replace(/_/g, ' ')} />
               </div>
             </div>
             <div>

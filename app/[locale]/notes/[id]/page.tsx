@@ -56,10 +56,7 @@ export default async function ViewNotePage({
               </h1>
 
               <div className="flex flex-wrap items-center gap-3">
-                <span className={`domain-badge badge-${note.domain.split('_')[0].toLowerCase()}`}>
-                  <DomainBadge domain={note.domain} className="mr-1.5" />
-                  {note.domain.replace(/_/g, ' ')}
-                </span>
+                <DomainBadge domain={note.domain} label={note.domain.replace(/_/g, ' ')} />
                 {note.tags.length > 0 && (
                   <div className="flex items-center gap-2 flex-wrap">
                     <Tag className="h-3 w-3 text-muted-foreground" />

@@ -66,10 +66,7 @@ export default async function NotesPage({
                     {content.substring(0, 150)}...
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <span className={`domain-badge badge-${note.domain.split('_')[0].toLowerCase()}`}>
-                      <DomainBadge domain={note.domain} className="mr-1.5" />
-                      {getDomainLabel(note.domain, typedLocale)}
-                    </span>
+                    <DomainBadge domain={note.domain} label={getDomainLabel(note.domain, typedLocale)} />
                     {note.tags.slice(0, 2).map((tag) => (
                       <span key={tag} className="text-xs px-2 py-1 rounded tag-bg page-description">
                         #{tag}
