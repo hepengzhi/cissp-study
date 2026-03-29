@@ -8,6 +8,8 @@ import { Plus, Download, Trash2, Edit2, Search, ImageIcon } from 'lucide-react'
 import { getQuestions, deleteQuestion, deleteQuestions, exportQuestions } from '@/lib/actions/questions'
 import type { Domain as DomainType, Difficulty as DifficultyType } from '@prisma/client'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
+import { getLocalizedText } from '@/lib/utils/localize'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
@@ -16,6 +18,7 @@ import { Card } from '@/components/ui/card'
 type Question = {
   id: string
   questionText: string
+  questionTextZh?: string | null
   options: string[]
   correctAnswer: string
   questionType: string
@@ -136,7 +139,7 @@ export default function QuestionsPage() {
         >
           <option value="">{t('questions.allDomains')}</option>
           {CISSP_DOMAINS.map(d => (
-            <option key={d.value} value={d.value}>{d.label}</option>
+            <option key={d.value} value={d.value}>{d.number}. {d.label}</option>
           ))}
         </select>
         <select
@@ -192,13 +195,18 @@ export default function QuestionsPage() {
                   </td>
                   <td className="p-3 text-foreground max-w-md truncate">
                     <div className="flex items-center gap-1">
-                      {q.questionText}
+                      {getLocalizedText(q.questionText, q.questionTextZh, locale)}
                       {q.questionImages && q.questionImages.length > 0 && (
                         <ImageIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
                       )}
                     </div>
                   </td>
-                  <td className="p-3 text-muted-foreground text-xs">{q.domain.replace(/_/g, ' ').toLowerCase()}</td>
+                  <td className="p-3 text-muted-foreground text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <DomainBadge domain={q.domain} />
+                      {q.domain.replace(/_/g, ' ').toLowerCase()}
+                    </div>
+                  </td>
                   <td className="p-3">
                     <span className={`text-xs px-2 py-0.5 rounded ${
                       q.difficulty === 'EASY' ? 'bg-primary/20 text-primary' :

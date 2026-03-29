@@ -1,6 +1,7 @@
 import { createFlashcard } from '@/lib/actions/flashcards'
 import { redirect } from 'next/navigation'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -70,7 +71,7 @@ export default function NewFlashcardPage() {
                 <option value="">Select a domain...</option>
                 {CISSP_DOMAINS.map((domain) => (
                   <option key={domain.value} value={domain.value}>
-                    {domain.label}
+                    {domain.number}. {domain.label}
                   </option>
                 ))}
               </select>

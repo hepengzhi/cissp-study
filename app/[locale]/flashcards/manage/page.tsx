@@ -1,5 +1,6 @@
 import { getAllFlashcards } from '@/lib/actions/flashcards'
 import { DomainFilter } from '@/components/domain-filter'
+import { DomainBadge } from '@/components/domain-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -45,7 +46,10 @@ export default async function FlashcardsManagePage({
               <CardContent className="pt-6">
                 <p className="text-lg line-clamp-4 mb-4">{flashcard.front}</p>
                 <div className="flex flex-wrap gap-2">
-                  <Badge>{flashcard.domain.replace(/_/g, ' ')}</Badge>
+                  <div className="flex items-center gap-1.5">
+                    <DomainBadge domain={flashcard.domain} />
+                    <Badge>{flashcard.domain.replace(/_/g, ' ')}</Badge>
+                  </div>
                   {flashcard.repetitions > 0 && (
                     <Badge variant="secondary">
                       {flashcard.repetitions} reviews

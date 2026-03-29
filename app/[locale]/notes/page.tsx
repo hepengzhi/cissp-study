@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server'
 import type { SupportedLocale } from '@/lib/types/i18n'
 import { getServerLocale } from '@/lib/utils/locale-server'
 import { getDomainLabel } from '@/lib/constants/i18n'
+import { DomainBadge } from '@/components/domain-badge'
 
 export default async function NotesPage({
   params,
@@ -66,6 +67,7 @@ export default async function NotesPage({
                   </p>
                   <div className="flex flex-wrap gap-2 mb-3">
                     <span className={`domain-badge badge-${note.domain.split('_')[0].toLowerCase()}`}>
+                      <DomainBadge domain={note.domain} className="mr-1.5" />
                       {getDomainLabel(note.domain, typedLocale)}
                     </span>
                     {note.tags.slice(0, 2).map((tag) => (

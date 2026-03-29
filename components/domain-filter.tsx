@@ -2,9 +2,11 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getLocalizedDomains } from '@/lib/constants/i18n'
+import { DOMAIN_NUMBER } from '@/lib/constants'
 import { useLocale, useTranslations } from 'next-intl'
 import type { SupportedLocale } from '@/lib/types/i18n'
 import { ChevronDown } from 'lucide-react'
+import { DomainBadge } from '@/components/domain-badge'
 
 interface DomainFilterProps {
   value?: string
@@ -44,7 +46,7 @@ export function DomainFilter({ value, onChange }: DomainFilterProps) {
         <option value="all">{t('allDomains')}</option>
         {domains.map((domain) => (
           <option key={domain.value} value={domain.value}>
-            {domain.label}
+            {DOMAIN_NUMBER[domain.value]}. {domain.label}
           </option>
         ))}
       </select>

@@ -10,6 +10,7 @@ import { MarkdownEditor } from '@/components/markdown-editor'
 import { createNote, type NoteDomain } from '@/lib/actions/notes'
 import { useRouter } from 'next/navigation'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 
 export function NewNoteForm() {
   const router = useRouter()
@@ -96,7 +97,7 @@ export function NewNoteForm() {
                 <option value="">Select a domain...</option>
                 {CISSP_DOMAINS.map((d) => (
                   <option key={d.value} value={d.value}>
-                    {d.label}
+                    {d.number}. {d.label}
                   </option>
                 ))}
               </select>

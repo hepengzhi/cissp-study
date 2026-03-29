@@ -11,6 +11,7 @@ import { MarkdownEditor } from '@/components/markdown-editor'
 import { updateNote, deleteNote, type NoteDomain } from '@/lib/actions/notes'
 import { useRouter } from 'next/navigation'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 
 interface Note {
   id: string
@@ -119,7 +120,7 @@ export function NoteEditor({ note }: NoteEditorProps) {
                 <option value="">Select a domain...</option>
                 {CISSP_DOMAINS.map((d) => (
                   <option key={d.value} value={d.value}>
-                    {d.label}
+                    {d.number}. {d.label}
                   </option>
                 ))}
               </select>

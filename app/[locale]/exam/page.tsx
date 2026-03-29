@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button'
 import { Timer } from '@/components/timer'
 import { CISSP_DOMAINS, DomainValue } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 import type { QuestionType } from '@prisma/client'
 import { CheckCircle2, XCircle, Home, AlertCircle, Clock } from 'lucide-react'
 import Link from 'next/link'
@@ -494,6 +495,7 @@ function ExamContent() {
       if (domainQuestions.length === 0) return null
 
       return {
+        value: domain.value,
         label: domain.label,
         total: domainQuestions.length,
         percentage: 0 // Can't calculate without detailed results
@@ -554,6 +556,7 @@ function ExamContent() {
                 <div className="space-y-2">
                   {domainResults.map((result, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                      <DomainBadge domain={result.value} />
                       <div className="flex-1">
                         <div className="font-medium text-sm">{result.label}</div>
                         <div className="text-xs text-muted-foreground">

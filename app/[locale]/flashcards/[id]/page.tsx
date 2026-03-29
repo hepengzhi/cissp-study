@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { updateFlashcard, deleteFlashcard } from '@/lib/actions/flashcards'
 import { redirect, notFound } from 'next/navigation'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -118,7 +119,7 @@ export default async function FlashcardDetailPage({
               >
                 {CISSP_DOMAINS.map((domain) => (
                   <option key={domain.value} value={domain.value}>
-                    {domain.label}
+                    {domain.number}. {domain.label}
                   </option>
                 ))}
               </select>
@@ -146,7 +147,10 @@ export default async function FlashcardDetailPage({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Domain</p>
-              <Badge>{flashcard.domain.replace(/_/g, ' ')}</Badge>
+              <div className="flex items-center gap-1.5">
+                <DomainBadge domain={flashcard.domain} />
+                <Badge>{flashcard.domain.replace(/_/g, ' ')}</Badge>
+              </div>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Repetitions</p>

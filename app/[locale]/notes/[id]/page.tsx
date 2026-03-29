@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { DomainBadge } from '@/components/domain-badge'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { MarkdownPreview } from '@/components/markdown-preview'
@@ -56,6 +57,7 @@ export default async function ViewNotePage({
 
               <div className="flex flex-wrap items-center gap-3">
                 <span className={`domain-badge badge-${note.domain.split('_')[0].toLowerCase()}`}>
+                  <DomainBadge domain={note.domain} className="mr-1.5" />
                   {note.domain.replace(/_/g, ' ')}
                 </span>
                 {note.tags.length > 0 && (

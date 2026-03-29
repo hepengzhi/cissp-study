@@ -575,6 +575,16 @@
     border: 1px solid;
   }
 
+  /* Domain number circle badges */
+  .badge-circle-security { background: hsl(0 70% 50%); color: #fff; }
+  .badge-circle-asset { background: hsl(30 80% 50%); color: #fff; }
+  .badge-circle-architecture { background: hsl(78 70% 40%); color: #fff; }
+  .badge-circle-network { background: hsl(190 80% 45%); color: #fff; }
+  .badge-circle-identity { background: hsl(270 60% 55%); color: #fff; }
+  .badge-circle-assessment { background: hsl(320 60% 50%); color: #fff; }
+  .badge-circle-operations { background: hsl(45 80% 45%); color: #fff; }
+  .badge-circle-software { background: hsl(200 80% 50%); color: #fff; }
+
   /* Quick link button */
   .quick-link {
     background: hsl(var(--card));

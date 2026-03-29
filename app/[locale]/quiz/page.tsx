@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 import { CheckCircle2, XCircle, ArrowRight, Home, Target, ChevronRight, Play, Zap } from 'lucide-react'
 import Link from 'next/link'
 
@@ -196,7 +197,10 @@ function QuizContent() {
                       className="mt-0.5 min-w-4 min-h-4 accent-[#9fef00]"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm leading-tight">{domain.label}</div>
+                      <div className="flex items-center gap-1.5 font-medium text-sm leading-tight">
+                        <DomainBadge domain={domain.value} />
+                        {domain.label}
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -320,6 +324,7 @@ function QuizContent() {
       if (domainAnswers.length === 0) return null
       const domainCorrect = domainAnswers.filter(a => a.isCorrect).length
       return {
+        value: domain.value,
         label: domain.label,
         correct: domainCorrect,
         total: domainAnswers.length,
@@ -372,7 +377,10 @@ function QuizContent() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm text-white truncate">{result.label}</div>
+                      <div className="flex items-center gap-1.5 font-medium text-sm text-white truncate">
+                        <DomainBadge domain={result.value} />
+                        {result.label}
+                      </div>
                       <div className="text-xs text-[#718096]">
                         {result.correct}/{result.total} correct
                       </div>

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl'
 import { createQuestion } from '@/lib/actions/questions'
 import type { Domain, Difficulty } from '@prisma/client'
 import { CISSP_DOMAINS } from '@/lib/constants'
+import { DomainBadge } from '@/components/domain-badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
@@ -177,7 +178,7 @@ export default function NewQuestionPage() {
               className="w-full bg-card border border-border rounded-md p-2 text-foreground"
             >
               {CISSP_DOMAINS.map(d => (
-                <option key={d.value} value={d.value}>{d.label}</option>
+                <option key={d.value} value={d.value}>{d.number}. {d.label}</option>
               ))}
             </select>
           </div>
