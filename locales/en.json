@@ -283,18 +283,30 @@
       "upload": "Upload File",
       "uploadHint": "Drag & drop a JSON or CSV file, or click to browse (auto-detected)",
       "preview": "Preview",
+      "parsing": "Parsing...",
       "validRows": "{count} valid rows",
       "invalidRows": "{count} invalid rows",
-      "confirmImport": "Confirm Import",
+      "startImport": "Start Import",
       "importing": "Importing...",
+      "progressLabel": "{imported} / {total} processed",
+      "imported": "Imported: {count}",
+      "failed": "Failed: {count}",
+      "importComplete": "Import Complete",
       "importResult": "Import complete: {imported} imported, {errors} errors",
       "back": "Back to Questions",
+      "reupload": "Re-upload",
       "format": "Format",
       "json": "JSON",
       "csv": "CSV",
       "sampleFormat": "Sample Format",
       "sampleLabel": "Sample",
-      "domainList": "Available domain values:"
+      "domainList": "Available domain values:",
+      "statTotal": "Total",
+      "statValid": "Valid",
+      "statDuplicates": "Skipped",
+      "statErrors": "Failed",
+      "statImages": "Images",
+      "hasErrors": "{count} rows have errors — click to expand"
     }
   }
 }

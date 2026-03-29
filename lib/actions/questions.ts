@@ -3,26 +3,12 @@
 import { prisma } from '@/prisma/config'
 import { z } from 'zod'
 import { Domain, Difficulty } from '@prisma/client'
+import { QuestionSchema, ImportQuestionSchema, type QuestionInput } from '@/lib/import-parser'
 
-// Zod schema for question validation
-const QuestionSchema = z.object({
-  questionText: z.string().min(1, 'Question text is required'),
-  questionTextZh: z.string().optional(),
-  options: z.array(z.string().min(1)).min(2).max(6),
-  optionsZh: z.array(z.string()).optional(),
-  correctAnswer: z.number().int().min(0),
-  explanation: z.string().min(1, 'Explanation is required'),
-  explanationZh: z.string().optional(),
-  domain: z.nativeEnum(Domain),
-  difficulty: z.nativeEnum(Difficulty),
-  questionImages: z.array(z.string()).optional().default([]),
-  tags: z.array(z.string()).default([]),
-}).refine((data) => {
-  return data.correctAnswer >= 0 && data.correctAnswer < data.options.length
-}, {
-  message: 'correctAnswer must be a valid index into options array',
-  path: ['correctAnswer'],
-})
+export type { QuestionInput } from '@/lib/import-parser'
+
+// Re-export ParsedRow for backward compat
+export type { ParsedRow } from '@/lib/import-parser'
 
 // Filter schema for getQuestions
 const GetQuestionsFilterSchema = z.object({
@@ -33,7 +19,6 @@ const GetQuestionsFilterSchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
 })
 
-export type QuestionInput = z.infer<typeof QuestionSchema>
 export type QuestionFilter = z.infer<typeof GetQuestionsFilterSchema>
 
 // --- READ ---
@@ -120,174 +105,50 @@ export async function deleteQuestions(ids: string[]) {
 
 // --- IMPORT / EXPORT ---
 
-export interface ParsedRow {
-  data: z.infer<typeof QuestionSchema>
-  valid: boolean
-  error?: string
-  sourceIndex: number
-}
-
-export async function parseImportFile(content: string, format: 'json' | 'csv') {
+export async function checkDuplicateQuestions(
+  questionTexts: string[],
+  questionTextsZh: string[],
+  explanations: string[],
+  explanationsZh: string[],
+) {
   try {
-    if (format === 'json') {
-      return parseJSON(content)
-    } else {
-      return parseCSV(content)
+    type Condition = { questionText: { in: string[] } } | { questionTextZh: { in: string[] } } | { explanation: { in: string[] } } | { explanationZh: { in: string[] } }
+    const conditions: Condition[] = []
+    if (questionTexts.length > 0) conditions.push({ questionText: { in: questionTexts } })
+    if (questionTextsZh.length > 0) conditions.push({ questionTextZh: { in: questionTextsZh } })
+    if (explanations.length > 0) conditions.push({ explanation: { in: explanations } })
+    if (explanationsZh.length > 0) conditions.push({ explanationZh: { in: explanationsZh } })
+
+    if (conditions.length === 0) return { en: [] as string[], zh: [] as string[], expEn: [] as string[], expZh: [] as string[] }
+
+    const existing = await prisma.question.findMany({
+      where: { OR: conditions },
+      select: { questionText: true, questionTextZh: true, explanation: true, explanationZh: true },
+    })
+    return {
+      en: existing.map(q => q.questionText),
+      zh: existing.map(q => q.questionTextZh).filter(Boolean) as string[],
+      expEn: existing.map(q => q.explanation),
+      expZh: existing.map(q => q.explanationZh).filter(Boolean) as string[],
     }
   } catch (error) {
     return handleError(error)
   }
 }
 
-function parseJSON(content: string): { data: ParsedRow[]; total: number; errors: number } {
-  const raw = JSON.parse(content)
-  const questions = raw.questions ?? []
-  const rows: ParsedRow[] = []
-
-  for (let i = 0; i < questions.length; i++) {
-    const q = questions[i]
-    // Convert options object {A: "...", B: "..."} → string[] and correctAnswer letter → index
-    let options: string[] = []
-    let optionsZh: string[] = []
-    let correctAnswer = 0
-
-    if (q.options && typeof q.options === 'object' && !Array.isArray(q.options)) {
-      const keys = Object.keys(q.options).sort()
-      options = keys.map(k => q.options[k])
-      // Convert correctAnswer letter to index
-      if (typeof q.correctAnswer === 'string') {
-        const letter = q.correctAnswer.toUpperCase()
-        correctAnswer = letter.charCodeAt(0) - 'A'.charCodeAt(0)
-      } else {
-        correctAnswer = q.correctAnswer ?? 0
-      }
-    } else if (Array.isArray(q.options)) {
-      options = q.options
-      correctAnswer = q.correctAnswer ?? 0
-    }
-
-    const questionData = {
-      questionText: q.questionText ?? '',
-      questionTextZh: q.questionTextZh || undefined,
-      options,
-      optionsZh: optionsZh.length > 0 ? optionsZh : undefined,
-      correctAnswer,
-      explanation: q.explanation ?? '',
-      explanationZh: q.explanationZh || undefined,
-      domain: q.domain ?? '',
-      difficulty: q.difficulty ?? '',
-      questionImages: q.question_images ?? [],
-      tags: q.tags ?? [],
-    }
-
-    const result = QuestionSchema.safeParse(questionData)
-    if (result.success) {
-      rows.push({ data: result.data, valid: true, sourceIndex: i })
-    } else {
-      const msgs = result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join('; ')
-      rows.push({ data: questionData as any, valid: false, error: msgs, sourceIndex: i })
-    }
-  }
-
-  const errors = rows.filter(r => !r.valid).length
-  return { data: rows, total: rows.length, errors }
-}
-
-function parseCSV(content: string): { data: ParsedRow[]; total: number; errors: number } {
-  const lines = content.trim().split('\n')
-  if (lines.length < 2) {
-    return { data: [], total: 0, errors: 0 }
-  }
-
-  const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase())
-  const rows: ParsedRow[] = []
-
-  for (let i = 1; i < lines.length; i++) {
-    const values = parseCSVLine(lines[i])
-    const row: Record<string, string> = {}
-    headers.forEach((h, idx) => { row[h] = (values[idx] ?? '').trim() })
-
-    // Build options array from optionA, optionB, etc.
-    const options: string[] = []
-    const optionsZh: string[] = []
-    for (let j = 0; j < 6; j++) {
-      const letter = String.fromCharCode(65 + j)
-      const optVal = row[`option${letter.toLowerCase()}`]
-      const optZhVal = row[`option${letter.toLowerCase()}zh`]
-      if (optVal) {
-        options.push(optVal)
-        if (optZhVal) optionsZh.push(optZhVal)
-      }
-    }
-
-    // Convert letter answer to index
-    let correctAnswer = 0
-    const answerStr = (row['correctanswer'] ?? '').toUpperCase().trim()
-    if (answerStr.length === 1 && answerStr >= 'A' && answerStr <= 'F') {
-      correctAnswer = answerStr.charCodeAt(0) - 'A'.charCodeAt(0)
-    }
-
-    // Parse tags
-    const tags = (row['tags'] ?? '').split('|').map(t => t.trim()).filter(Boolean)
-
-    const questionData = {
-      questionText: row['questiontext'] ?? '',
-      questionTextZh: row['questiontextzh'] || undefined,
-      options,
-      optionsZh: optionsZh.length > 0 ? optionsZh : undefined,
-      correctAnswer,
-      explanation: row['explanation'] ?? '',
-      explanationZh: row['explanationzh'] || undefined,
-      domain: row['domain'] ?? '',
-      difficulty: row['difficulty'] ?? '',
-      tags,
-    }
-
-    const result = QuestionSchema.safeParse(questionData)
-    if (result.success) {
-      rows.push({ data: result.data, valid: true, sourceIndex: i - 1 })
-    } else {
-      const msgs = result.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join('; ')
-      rows.push({ data: questionData as any, valid: false, error: msgs, sourceIndex: i - 1 })
-    }
-  }
-
-  const errors = rows.filter(r => !r.valid).length
-  return { data: rows, total: rows.length, errors }
-}
-
-function parseCSVLine(line: string): string[] {
-  const result: string[] = []
-  let current = ''
-  let inQuotes = false
-
-  for (let i = 0; i < line.length; i++) {
-    const ch = line[i]
-    if (ch === '"') {
-      inQuotes = !inQuotes
-    } else if (ch === ',' && !inQuotes) {
-      result.push(current)
-      current = ''
-    } else {
-      current += ch
-    }
-  }
-  result.push(current)
-  return result
-}
-
-export async function importQuestions(rows: ParsedRow[]) {
+export async function importQuestionBatch(rows: QuestionInput[]) {
   try {
     let imported = 0
     let errors = 0
 
-    for (const row of rows) {
-      if (!row.valid) {
+    for (const data of rows) {
+      const validated = ImportQuestionSchema.safeParse(data)
+      if (!validated.success) {
         errors++
         continue
       }
       try {
-        await prisma.question.create({ data: row.data })
+        await prisma.question.create({ data: validated.data })
         imported++
       } catch {
         errors++

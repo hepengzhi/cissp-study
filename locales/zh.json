@@ -283,18 +283,30 @@
       "upload": "上传文件",
       "uploadHint": "拖拽 JSON 或 CSV 文件到此处，或点击浏览（自动识别格式）",
       "preview": "预览",
+      "parsing": "解析中...",
       "validRows": "{count} 条有效记录",
       "invalidRows": "{count} 条无效记录",
-      "confirmImport": "确认导入",
+      "startImport": "开始导入",
       "importing": "导入中...",
+      "progressLabel": "已处理 {imported} / {total} 条",
+      "imported": "已导入：{count}",
+      "failed": "失败：{count}",
+      "importComplete": "导入完成",
       "importResult": "导入完成：{imported} 条成功，{errors} 条失败",
       "back": "返回题目列表",
+      "reupload": "重新上传",
       "format": "格式",
       "json": "JSON",
       "csv": "CSV",
       "sampleFormat": "文件格式示例",
       "sampleLabel": "示例",
-      "domainList": "可选的领域值："
+      "domainList": "可选的领域值：",
+      "statTotal": "总计",
+      "statValid": "有效",
+      "statDuplicates": "跳过(重复)",
+      "statErrors": "失败",
+      "statImages": "图片",
+      "hasErrors": "{count} 条记录有错误 — 点击展开详情"
     }
   }
 }

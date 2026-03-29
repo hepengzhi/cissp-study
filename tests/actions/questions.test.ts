@@ -5,11 +5,11 @@ import {
   updateQuestion,
   deleteQuestion,
   deleteQuestions,
-  parseImportFile,
-  importQuestions,
+  checkDuplicateQuestions,
+  importQuestionBatch,
   exportQuestions,
-  type ParsedRow,
 } from '@/lib/actions/questions'
+import { parseJSON, parseCSV } from '@/lib/import-parser'
 import { beforeEach, vi, describe, it, expect } from 'vitest'
 import { mockPrisma } from '../prisma-mock'
 import { Domain, Difficulty } from '@prisma/client'
@@ -253,149 +253,111 @@ describe('Questions Actions', () => {
     })
   })
 
-  // ---- parseImportFile ----
+  // ---- checkDuplicateQuestions ----
 
-  describe('parseImportFile', () => {
-    const validJSON = JSON.stringify({
-      total_questions: 2,
-      questions: [
-        {
-          question_id: 'q1',
-          domain: 'SECURITY_RISK_MANAGEMENT',
-          type: 'single_choice',
-          questionText: 'What is X?',
-          questionTextZh: 'X是什么？',
-          options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' },
-          correctAnswer: 'C',
-          explanation: 'Because...',
-          difficulty: 'EASY',
-          tags: ['tag1', 'tag2'],
-        },
-        {
-          domain: 'ASSET_SECURITY',
-          questionText: 'Another question?',
-          options: { A: 'Yes', B: 'No' },
-          correctAnswer: 'A',
-          explanation: 'Explanation here',
-          difficulty: 'MEDIUM',
-        },
-      ],
+  describe('checkDuplicateQuestions', () => {
+    it('should return texts that already exist (en + zh)', async () => {
+      mockPrisma.question.findMany.mockResolvedValue([
+        { questionText: 'What is X?', questionTextZh: 'X是什么？', explanation: 'Because...', explanationZh: '因为...' },
+      ])
+
+      const result = await checkDuplicateQuestions(['What is X?', 'What is Y?'], ['X是什么？', 'Y是什么？'], ['Because...'], ['因为...'])
+
+      expect(result.en).toEqual(['What is X?'])
+      expect(result.zh).toEqual(['X是什么？'])
+      expect(result.expEn).toEqual(['Because...'])
+      expect(result.expZh).toEqual(['因为...'])
     })
 
-    it('should parse valid JSON with total_questions', async () => {
-      const result = await parseImportFile(validJSON, 'json')
+    it('should return empty arrays when no duplicates', async () => {
+      mockPrisma.question.findMany.mockResolvedValue([])
 
-      expect(result.data).toHaveLength(2)
-      expect(result.total).toBe(2)
-      expect(result.errors).toBe(0)
+      const result = await checkDuplicateQuestions(['What is X?'], ['X是什么？'], ['Because...'], ['因为...'])
+
+      expect(result.en).toEqual([])
+      expect(result.zh).toEqual([])
+      expect(result.expEn).toEqual([])
+      expect(result.expZh).toEqual([])
     })
 
-    it('should convert options object to array', async () => {
-      const result = await parseImportFile(validJSON, 'json')
+    it('should return empty arrays for empty input', async () => {
+      const result = await checkDuplicateQuestions([], [], [], [])
 
-      expect(result.data[0].data.options).toEqual(['Option A', 'Option B', 'Option C', 'Option D'])
+      expect(result.en).toEqual([])
+      expect(result.zh).toEqual([])
+      expect(result.expEn).toEqual([])
+      expect(result.expZh).toEqual([])
     })
 
-    it('should convert correctAnswer letter to index', async () => {
-      const result = await parseImportFile(validJSON, 'json')
+    it('should filter out null zh fields', async () => {
+      mockPrisma.question.findMany.mockResolvedValue([
+        { questionText: 'Q1', questionTextZh: null, explanation: 'E1', explanationZh: null },
+      ])
 
-      expect(result.data[0].data.correctAnswer).toBe(2) // C → 2
-      expect(result.data[1].data.correctAnswer).toBe(0) // A → 0
+      const result = await checkDuplicateQuestions(['Q1'], [], ['E1'], [])
+
+      expect(result.en).toEqual(['Q1'])
+      expect(result.zh).toEqual([])
+      expect(result.expEn).toEqual(['E1'])
+      expect(result.expZh).toEqual([])
     })
 
-    it('should ignore question_id and type fields', async () => {
-      const result = await parseImportFile(validJSON, 'json')
+    it('should handle database error', async () => {
+      mockPrisma.question.findMany.mockRejectedValue(new Error('DB error'))
 
-      expect(result.data[0].valid).toBe(true)
-      // No error about unknown fields
-    })
-
-    it('should return error for invalid JSON', async () => {
-      const result = await parseImportFile('not valid json{{{', 'json')
+      const result = await checkDuplicateQuestions(['What is X?'], [], [], [])
 
       expect(result).toHaveProperty('error')
     })
-
-    it('should parse valid CSV with headers', async () => {
-      const csv = `questionText,optionA,optionB,optionC,optionD,correctAnswer,explanation,domain,difficulty,tags
-"What is X?","A","B","C","D",C,"Because...",SECURITY_RISK_MANAGEMENT,EASY,"tag1|tag2"`
-
-      const result = await parseImportFile(csv, 'csv')
-
-      expect(result.data).toHaveLength(1)
-      expect(result.data[0].data.options).toEqual(['A', 'B', 'C', 'D'])
-      expect(result.data[0].data.correctAnswer).toBe(2) // C → 2
-    })
-
-    it('should flag invalid rows while keeping valid ones', async () => {
-      const mixedJSON = JSON.stringify({
-        questions: [
-          {
-            questionText: 'Valid question',
-            options: { A: 'Yes', B: 'No' },
-            correctAnswer: 'A',
-            explanation: 'Ok',
-            domain: 'SECURITY_RISK_MANAGEMENT',
-            difficulty: 'EASY',
-          },
-          {
-            questionText: '',
-            options: {},
-            correctAnswer: 'Z',
-            explanation: '',
-            domain: 'INVALID',
-            difficulty: 'INVALID',
-          },
-        ],
-      })
-
-      const result = await parseImportFile(mixedJSON, 'json')
-
-      expect(result.data).toHaveLength(2)
-      expect(result.data[0].valid).toBe(true)
-      expect(result.data[1].valid).toBe(false)
-      expect(result.errors).toBe(1)
-    })
-
-    it('should handle optional Zh fields gracefully', async () => {
-      const result = await parseImportFile(validJSON, 'json')
-
-      expect(result.data[0].data.questionTextZh).toBe('X是什么？')
-      // Second question has no questionTextZh — that's fine
-      expect(result.data[1].valid).toBe(true)
-    })
   })
 
-  // ---- importQuestions ----
+  // ---- importQuestionBatch ----
 
-  describe('importQuestions', () => {
-    it('should import all valid questions', async () => {
+  describe('importQuestionBatch', () => {
+    it('should import all valid questions in batch', async () => {
       mockPrisma.question.create.mockResolvedValue(mockQuestion)
 
-      const rows: ParsedRow[] = [
-        { data: validInput as any, valid: true, sourceIndex: 0 },
-        { data: { ...validInput, questionText: 'Q2' } as any, valid: true, sourceIndex: 1 },
-      ]
+      const rows = [validInput, { ...validInput, questionText: 'Q2' }]
 
-      const result = await importQuestions(rows)
+      const result = await importQuestionBatch(rows)
 
       expect(result.imported).toBe(2)
       expect(result.errors).toBe(0)
       expect(mockPrisma.question.create).toHaveBeenCalledTimes(2)
     })
 
-    it('should skip invalid rows', async () => {
+    it('should skip rows that fail validation', async () => {
       mockPrisma.question.create.mockResolvedValue(mockQuestion)
 
-      const rows: ParsedRow[] = [
-        { data: validInput as any, valid: true, sourceIndex: 0 },
-        { data: {} as any, valid: false, error: 'Missing fields', sourceIndex: 1 },
+      const rows = [
+        validInput,
+        { ...validInput, questionText: '', explanation: '', questionTextZh: '', explanationZh: '' },
       ]
 
-      const result = await importQuestions(rows)
+      const result = await importQuestionBatch(rows)
 
       expect(result.imported).toBe(1)
       expect(result.errors).toBe(1)
+    })
+
+    it('should accept Chinese-only questions in batch', async () => {
+      mockPrisma.question.create.mockResolvedValue(mockQuestion)
+
+      const zhOnly = {
+        questionText: '',
+        questionTextZh: '什么是X？',
+        options: ['选项A', '选项B'],
+        correctAnswer: 0,
+        explanation: '',
+        explanationZh: '因为...',
+        domain: Domain.SECURITY_RISK_MANAGEMENT,
+        difficulty: Difficulty.EASY,
+      }
+
+      const result = await importQuestionBatch([zhOnly])
+
+      expect(result.imported).toBe(1)
+      expect(result.errors).toBe(0)
     })
 
     it('should handle partial database failure', async () => {
@@ -403,14 +365,27 @@ describe('Questions Actions', () => {
         .mockResolvedValueOnce(mockQuestion)
         .mockRejectedValueOnce(new Error('Unique constraint'))
 
-      const rows: ParsedRow[] = [
-        { data: validInput as any, valid: true, sourceIndex: 0 },
-        { data: validInput as any, valid: true, sourceIndex: 1 },
-      ]
+      const rows = [validInput, { ...validInput, questionText: 'Q2' }]
 
-      const result = await importQuestions(rows)
+      const result = await importQuestionBatch(rows)
 
       expect(result.imported).toBe(1)
+      expect(result.errors).toBe(1)
+    })
+
+    it('should handle empty batch', async () => {
+      const result = await importQuestionBatch([])
+
+      expect(result.imported).toBe(0)
+      expect(result.errors).toBe(0)
+    })
+
+    it('should handle database error', async () => {
+      mockPrisma.question.create.mockRejectedValue(new Error('DB down'))
+
+      const result = await importQuestionBatch([validInput])
+
+      expect(result.imported).toBe(0)
       expect(result.errors).toBe(1)
     })
   })
@@ -435,7 +410,6 @@ describe('Questions Actions', () => {
 
       expect(result).toContain('questionText')
       expect(result).toContain('correctAnswer')
-      // correctAnswer should be letter B (index 1)
       expect(result).toContain(',B,')
     })
 
@@ -446,6 +420,248 @@ describe('Questions Actions', () => {
       const parsed = JSON.parse(jsonResult)
       expect(parsed.total_questions).toBe(0)
       expect(parsed.questions).toHaveLength(0)
+    })
+  })
+})
+
+// ---- Import Parser (client-side, no mocks needed) ----
+
+describe('Import Parser', () => {
+  const validJSON = JSON.stringify({
+    total_questions: 2,
+    questions: [
+      {
+        question_id: 'q1',
+        domain: 'SECURITY_RISK_MANAGEMENT',
+        type: 'single_choice',
+        questionText: 'What is X?',
+        questionTextZh: 'X是什么？',
+        options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' },
+        correctAnswer: 'C',
+        explanation: 'Because...',
+        difficulty: 'EASY',
+        tags: ['tag1', 'tag2'],
+      },
+      {
+        domain: 'ASSET_SECURITY',
+        questionText: 'Another question?',
+        options: { A: 'Yes', B: 'No' },
+        correctAnswer: 'A',
+        explanation: 'Explanation here',
+        difficulty: 'MEDIUM',
+      },
+    ],
+  })
+
+  describe('parseJSON', () => {
+    it('should parse valid JSON with questions array', () => {
+      const result = parseJSON(validJSON)
+
+      expect(result.data).toHaveLength(2)
+      expect(result.total).toBe(2)
+      expect(result.errors).toBe(0)
+    })
+
+    it('should convert options object to array', () => {
+      const result = parseJSON(validJSON)
+
+      expect(result.data[0].data.options).toEqual(['Option A', 'Option B', 'Option C', 'Option D'])
+    })
+
+    it('should convert correctAnswer letter to index', () => {
+      const result = parseJSON(validJSON)
+
+      expect(result.data[0].data.correctAnswer).toBe(2) // C → 2
+      expect(result.data[1].data.correctAnswer).toBe(0) // A → 0
+    })
+
+    it('should ignore unknown fields like question_id', () => {
+      const result = parseJSON(validJSON)
+
+      expect(result.data[0].valid).toBe(true)
+    })
+
+    it('should throw on invalid JSON', () => {
+      expect(() => parseJSON('not valid json{{{')).toThrow()
+    })
+
+    it('should flag invalid rows while keeping valid ones', () => {
+      const mixedJSON = JSON.stringify({
+        questions: [
+          {
+            questionText: 'Valid question',
+            options: { A: 'Yes', B: 'No' },
+            correctAnswer: 'A',
+            explanation: 'Ok',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+          },
+          {
+            questionText: '',
+            options: {},
+            correctAnswer: 'Z',
+            explanation: '',
+            domain: 'INVALID',
+            difficulty: 'INVALID',
+          },
+        ],
+      })
+
+      const result = parseJSON(mixedJSON)
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data[0].valid).toBe(true)
+      expect(result.data[1].valid).toBe(false)
+      expect(result.errors).toBe(1)
+    })
+
+    it('should handle optional Zh fields', () => {
+      const result = parseJSON(validJSON)
+
+      expect(result.data[0].data.questionTextZh).toBe('X是什么？')
+      expect(result.data[1].valid).toBe(true)
+    })
+
+    it('should count images from question_images', () => {
+      const jsonWithImages = JSON.stringify({
+        questions: [
+          {
+            questionText: 'Q with image',
+            options: { A: 'A', B: 'B' },
+            correctAnswer: 'A',
+            explanation: 'ok',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+            question_images: ['img1', 'img2'],
+          },
+        ],
+      })
+
+      const result = parseJSON(jsonWithImages)
+
+      expect(result.data[0].data.questionImages).toHaveLength(2)
+    })
+
+    it('should handle empty questions array', () => {
+      const result = parseJSON('{"questions": []}')
+
+      expect(result.data).toHaveLength(0)
+      expect(result.total).toBe(0)
+    })
+  })
+
+  describe('parseCSV', () => {
+    it('should parse valid CSV with headers', () => {
+      const csv = `questionText,optionA,optionB,optionC,optionD,correctAnswer,explanation,domain,difficulty,tags
+"What is X?","A","B","C","D",C,"Because...",SECURITY_RISK_MANAGEMENT,EASY,"tag1|tag2"`
+
+      const result = parseCSV(csv)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].data.options).toEqual(['A', 'B', 'C', 'D'])
+      expect(result.data[0].data.correctAnswer).toBe(2)
+    })
+
+    it('should return empty for CSV with only headers', () => {
+      const csv = 'questionText,optionA,optionB,optionC,optionD,correctAnswer,explanation,domain,difficulty,tags'
+
+      const result = parseCSV(csv)
+
+      expect(result.data).toHaveLength(0)
+    })
+
+    it('should flag invalid CSV rows', () => {
+      const csv = `questionText,optionA,optionB,correctAnswer,explanation,domain,difficulty
+"Valid","A","B",A,"Ok",SECURITY_RISK_MANAGEMENT,EASY
+"","","",A,"",INVALID,INVALID`
+
+      const result = parseCSV(csv)
+
+      expect(result.data).toHaveLength(2)
+      expect(result.data[0].valid).toBe(true)
+      expect(result.data[1].valid).toBe(false)
+      expect(result.errors).toBe(1)
+    })
+
+    it('should accept Chinese-only questions (no English fields)', () => {
+      const zhOnlyJSON = JSON.stringify({
+        questions: [
+          {
+            questionTextZh: '什么是X？',
+            options: { A: '选项A', B: '选项B', C: '选项C', D: '选项D' },
+            correctAnswer: 'C',
+            explanationZh: '因为...',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+          },
+        ],
+      })
+
+      const result = parseJSON(zhOnlyJSON)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].valid).toBe(true)
+      expect(result.errors).toBe(0)
+    })
+
+    it('should accept English-only questions (no Chinese fields)', () => {
+      const enOnlyJSON = JSON.stringify({
+        questions: [
+          {
+            questionText: 'What is X?',
+            options: { A: 'A', B: 'B' },
+            correctAnswer: 'A',
+            explanation: 'Because...',
+            domain: 'ASSET_SECURITY',
+            difficulty: 'MEDIUM',
+          },
+        ],
+      })
+
+      const result = parseJSON(enOnlyJSON)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].valid).toBe(true)
+      expect(result.errors).toBe(0)
+    })
+
+    it('should reject questions with neither EN nor ZH question+explanation', () => {
+      const noLangJSON = JSON.stringify({
+        questions: [
+          {
+            options: { A: 'A', B: 'B' },
+            correctAnswer: 'A',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+          },
+        ],
+      })
+
+      const result = parseJSON(noLangJSON)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].valid).toBe(false)
+      expect(result.errors).toBe(1)
+    })
+
+    it('should reject question with only questionText but no explanation in either language', () => {
+      const partialJSON = JSON.stringify({
+        questions: [
+          {
+            questionText: 'Only question, no explanation',
+            options: { A: 'A', B: 'B' },
+            correctAnswer: 'A',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+          },
+        ],
+      })
+
+      const result = parseJSON(partialJSON)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].valid).toBe(false)
+      expect(result.errors).toBe(1)
     })
   })
 })
