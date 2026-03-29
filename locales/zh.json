@@ -153,7 +153,11 @@
       "newQuiz": "新测验",
       "dashboard": "仪表板"
     },
-    "explanation": "解析："
+    "explanation": "解析：",
+    "matchInstructions": "将左侧的每一项与右侧的正确选项进行匹配。",
+    "selectOption": "选择选项",
+    "correct": "正确",
+    "incorrect": "错误"
   },
   "exam": {
     "title": "CISSP 考试模拟",

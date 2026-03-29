@@ -7,13 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum QuestionType {
+  SINGLE_CHOICE
+  MATCHING
+}
+
 model Question {
-  id              String   @id @default(cuid())
+  id              String       @id @default(cuid())
   questionText    String
   questionTextZh  String?
   options         String[]
   optionsZh       String[]
-  correctAnswer   Int
+  correctAnswer   String
+  questionType    QuestionType @default(SINGLE_CHOICE)
+  matchItems      String[]     @default([])
+  matchItemsZh    String[]     @default([])
   explanation     String
   explanationZh   String?
   domain          Domain
@@ -76,7 +84,7 @@ model ExamAnswer {
   id            String      @id @default(cuid())
   attemptId     String
   questionId    String
-  selectedAnswer Int
+  selectedAnswer String
   isCorrect     Boolean
   attempt       ExamAttempt @relation(fields: [attemptId], references: [id])
   question      Question    @relation(fields: [questionId], references: [id])

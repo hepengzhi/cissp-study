@@ -3,7 +3,10 @@
 import { useState, useCallback, Suspense } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { getQuizQuestions, updateProgress } from '@/lib/actions/quiz'
+import { isAnswerCorrect } from '@/lib/utils/question-grading'
+import type { QuestionType } from '@prisma/client'
 import { QuestionCard } from '@/components/question-card'
+import { getLocalizedText, getLocalizedArray } from '@/lib/utils/localize'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -18,7 +21,10 @@ interface Question {
   questionTextZh?: string | null
   options: string[]
   optionsZh?: string[]
-  correctAnswer: number
+  correctAnswer: string // String: "0" for single, "[0,2,3,1]" for matching
+  questionType?: QuestionType
+  matchItems?: string[]
+  matchItemsZh?: string[]
   explanation: string
   explanationZh?: string | null
   domain: string
@@ -28,7 +34,7 @@ interface Question {
 interface QuizAnswer {
   questionId: string
   domain: string
-  selectedAnswer: number
+  selectedAnswer: string // JSON string for matching
   isCorrect: boolean
 }
 
@@ -45,18 +51,23 @@ function QuizContent() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState<QuizAnswer[]>([])
-  const [selectedAnswer, setSelectedAnswer] = useState<number | undefined>()
+  const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>()
   const [showResult, setShowResult] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [submittingAnswer, setSubmittingAnswer] = useState(false)
 
-  // Get localized question data
+  // Get localized question data with fallback
   const getLocalizedQuestion = useCallback((question: Question) => ({
     ...question,
-    questionText: locale === 'zh' && question.questionTextZh ? question.questionTextZh : question.questionText,
-    options: locale === 'zh' && question.optionsZh ? question.optionsZh : question.options,
-    explanation: locale === 'zh' && question.explanationZh ? question.explanationZh : question.explanation,
+    questionText: getLocalizedText(question.questionText, question.questionTextZh, locale),
+    questionTextZh: question.questionTextZh,
+    options: getLocalizedArray(question.options, question.optionsZh, locale),
+    optionsZh: question.optionsZh,
+    explanation: getLocalizedText(question.explanation, question.explanationZh, locale),
+    explanationZh: question.explanationZh,
+    matchItems: getLocalizedArray(question.matchItems, question.matchItemsZh, locale),
+    matchItemsZh: question.matchItemsZh,
   }), [locale])
 
   const handleDomainToggle = useCallback((domainValue: string) => {
@@ -97,12 +108,14 @@ function QuizContent() {
     }
   }, [selectedDomains, questionCount, loading])
 
-  const handleAnswer = useCallback(async (selected: number) => {
+  const handleAnswer = useCallback(async (selected: number | number[]) => {
     if (submittingAnswer) return
     setSubmittingAnswer(true)
 
     const question = questions[currentIndex]
-    const isCorrect = selected === question.correctAnswer
+    // Convert to string - single number or array
+    const answerStr = Array.isArray(selected) ? JSON.stringify(selected) : String(selected)
+    const isCorrect = isAnswerCorrect('SINGLE_CHOICE', question.correctAnswer, answerStr)
 
     try {
       await updateProgress(question.domain, isCorrect)
@@ -113,11 +126,11 @@ function QuizContent() {
     setAnswers(prev => [...prev, {
       questionId: question.id,
       domain: question.domain,
-      selectedAnswer: selected,
+      selectedAnswer: answerStr,
       isCorrect
     }])
 
-    setSelectedAnswer(selected)
+    setSelectedAnswer(answerStr)
     setShowResult(true)
     setSubmittingAnswer(false)
   }, [questions, currentIndex, submittingAnswer])

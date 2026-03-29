@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
+import { isAnswerCorrect } from '@/lib/utils/question-grading'
 
 export async function startExam() {
   try {
@@ -21,7 +22,12 @@ export async function startExam() {
       questions: shuffled.map(q => ({
         id: q.id,
         questionText: q.questionText,
+        questionTextZh: q.questionTextZh,
         options: q.options,
+        optionsZh: q.optionsZh,
+        questionType: q.questionType,
+        matchItems: q.matchItems,
+        matchItemsZh: q.matchItemsZh,
         domain: q.domain
       }))
     }
@@ -33,7 +39,7 @@ export async function startExam() {
   }
 }
 
-export async function submitExam(attemptId: string, answers: Map<string, number>) {
+export async function submitExam(attemptId: string, answers: Map<string, string>) {
   try {
     const attempt = await prisma.examAttempt.findUnique({
       where: { id: attemptId },
@@ -58,7 +64,7 @@ export async function submitExam(attemptId: string, answers: Map<string, number>
     const answerEntries = Array.from(answers.entries())
     for (const [questionId, selectedAnswer] of answerEntries) {
       const question = questionMap.get(questionId)!
-      const isCorrect = question.correctAnswer === selectedAnswer
+      const isCorrect = isAnswerCorrect(question.questionType, question.correctAnswer, selectedAnswer)
 
       if (isCorrect) correctCount++
 
@@ -80,7 +86,7 @@ export async function submitExam(attemptId: string, answers: Map<string, number>
       const answer = Array.from(answers.entries()).find(([qId]) => qId === question.id)
       if (!answer) continue
 
-      const isCorrect = question.correctAnswer === answer[1]
+      const isCorrect = isAnswerCorrect(question.questionType, question.correctAnswer, answer[1])
 
       await prisma.progress.upsert({
         where: { domain: question.domain },

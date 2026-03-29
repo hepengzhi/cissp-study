@@ -21,7 +21,7 @@ describe('Questions Actions', () => {
     questionTextZh: '(ISC)² 职业道德守则的第一条准则是什么？',
     options: ['Act honorably, honestly, justly', 'Protect society, the common good', 'Provide diligent service', 'Advance the profession'],
     optionsZh: ['正当地、诚实、公正地行动', '保护社会、公共利益', '提供勤勉的服务', '推进职业发展'],
-    correctAnswer: 1,
+    correctAnswer: '1',
     explanation: 'The first canon emphasizes protecting society.',
     explanationZh: '第一条准则强调保护社会。',
     domain: Domain.SECURITY_RISK_MANAGEMENT,
@@ -34,7 +34,7 @@ describe('Questions Actions', () => {
   const validInput = {
     questionText: 'What is X?',
     options: ['Option A', 'Option B', 'Option C', 'Option D'],
-    correctAnswer: 0,
+    correctAnswer: '0',
     explanation: 'Because...',
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -122,7 +122,7 @@ describe('Questions Actions', () => {
 
       const result = await createQuestion(validInput)
 
-      expect(mockPrisma.question.create).toHaveBeenCalledWith({ data: { ...validInput, questionImages: [] } })
+      expect(mockPrisma.question.create).toHaveBeenCalledWith({ data: { ...validInput, questionImages: [], questionType: 'SINGLE_CHOICE', matchItems: [], matchItemsZh: [] } })
       expect(result.questionText).toBe('What is X?')
     })
 
@@ -154,7 +154,7 @@ describe('Questions Actions', () => {
     })
 
     it('should return validation error for correctAnswer out of range', async () => {
-      const result = await createQuestion({ ...validInput, correctAnswer: 99 })
+      const result = await createQuestion({ ...validInput, correctAnswer: '99' })
 
       expect(result).toHaveProperty('error')
       expect(result.error).toContain('correctAnswer')
@@ -347,7 +347,7 @@ describe('Questions Actions', () => {
         questionText: '',
         questionTextZh: '什么是X？',
         options: ['选项A', '选项B'],
-        correctAnswer: 0,
+        correctAnswer: '0',
         explanation: '',
         explanationZh: '因为...',
         domain: Domain.SECURITY_RISK_MANAGEMENT,
@@ -468,11 +468,11 @@ describe('Import Parser', () => {
       expect(result.data[0].data.options).toEqual(['Option A', 'Option B', 'Option C', 'Option D'])
     })
 
-    it('should convert correctAnswer letter to index', () => {
+    it('should convert correctAnswer letter to index string', () => {
       const result = parseJSON(validJSON)
 
-      expect(result.data[0].data.correctAnswer).toBe(2) // C → 2
-      expect(result.data[1].data.correctAnswer).toBe(0) // A → 0
+      expect(result.data[0].data.correctAnswer).toBe('2') // C → "2"
+      expect(result.data[1].data.correctAnswer).toBe('0') // A → "0"
     })
 
     it('should ignore unknown fields like question_id', () => {
@@ -559,7 +559,7 @@ describe('Import Parser', () => {
 
       expect(result.data).toHaveLength(1)
       expect(result.data[0].data.options).toEqual(['A', 'B', 'C', 'D'])
-      expect(result.data[0].data.correctAnswer).toBe(2)
+      expect(result.data[0].data.correctAnswer).toBe('2')
     })
 
     it('should return empty for CSV with only headers', () => {
@@ -662,6 +662,84 @@ describe('Import Parser', () => {
       expect(result.data).toHaveLength(1)
       expect(result.data[0].valid).toBe(false)
       expect(result.errors).toBe(1)
+    })
+
+    it('should detect matching format and extract matchItems', () => {
+      const matchingJSON = JSON.stringify({
+        questions: [
+          {
+            questionTextZh: '将以下编号的法律或行业标准与其文字描述相匹配：法律和行业标准1.GLBA []2.PCI DSSS []3.HIPAA []4.SOX []',
+            options: {
+              A: '美国法律要求受保金融机构每年向客户提供隐私通知',
+              B: '要求进行内部控制评估的美国法律',
+              C: '涵盖处理信用卡的组织的行业标准',
+              D: '为医疗信息提供数据隐私和安全要求的美国法律',
+            },
+            correctAnswer: 'A,C,D,B',
+            explanationZh: '这是一道连线题。',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'MEDIUM',
+          },
+        ],
+      })
+
+      const result = parseJSON(matchingJSON)
+
+      expect(result.data).toHaveLength(1)
+      expect(result.data[0].valid).toBe(true)
+      expect(result.data[0].data.questionType).toBe('MATCHING')
+      expect(result.data[0].data.matchItems).toEqual(['GLBA', 'PCI DSSS', 'HIPAA', 'SOX'])
+      expect(result.data[0].data.correctAnswer).toBe('[0,2,3,1]')
+    })
+
+    it('should detect 6-item matching question', () => {
+      const matchingJSON = JSON.stringify({
+        questions: [
+          {
+            questionTextZh: '将以下每个编号的安全概念与适当的文字描述相匹配：\n安全概念：1.检查时间 2.隐蔽通道 3.使用时间 4.维护钩子 5.参数检查 6.竞争条件',
+            options: {
+              A: '通过一般不用于通信的路径传递信息的方法',
+              B: '利用系统行为对外部发生的事件序列的依赖性',
+              C: '主体检查对象是否可用的时间',
+              D: '主体可以访问对象的时间',
+              E: '只有系统开发人员知道的访问方法',
+              F: '一种有助于防止缓冲区溢出攻击的方法',
+            },
+            correctAnswer: 'C,A,D,E,F,B',
+            explanationZh: '这是安全概念的连线题。',
+            domain: 'SECURITY_ARCHITECTURE',
+            difficulty: 'HARD',
+          },
+        ],
+      })
+
+      const result = parseJSON(matchingJSON)
+
+      expect(result.data[0].valid).toBe(true)
+      expect(result.data[0].data.questionType).toBe('MATCHING')
+      expect(result.data[0].data.matchItems).toEqual(['检查时间', '隐蔽通道', '使用时间', '维护钩子', '参数检查', '竞争条件'])
+      expect(result.data[0].data.correctAnswer).toBe('[2,0,3,4,5,1]')
+    })
+
+    it('should treat single-choice as before when correctAnswer is a single letter', () => {
+      const singleJSON = JSON.stringify({
+        questions: [
+          {
+            questionText: 'What is X?',
+            options: { A: 'Option A', B: 'Option B', C: 'Option C', D: 'Option D' },
+            correctAnswer: 'B',
+            explanation: 'Because...',
+            domain: 'SECURITY_RISK_MANAGEMENT',
+            difficulty: 'EASY',
+          },
+        ],
+      })
+
+      const result = parseJSON(singleJSON)
+
+      expect(result.data[0].data.questionType).toBe('SINGLE_CHOICE')
+      expect(result.data[0].data.correctAnswer).toBe('1') // B → "1"
+      expect(result.data[0].data.matchItems).toEqual([])
     })
   })
 })

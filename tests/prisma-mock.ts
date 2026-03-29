@@ -40,8 +40,12 @@ const mockPrisma = {
   }
 }
 
-// Mock the prisma module
+// Mock the prisma module (both paths)
 vi.mock('@/prisma/config', () => ({
+  prisma: mockPrisma
+}))
+
+vi.mock('@/lib/prisma', () => ({
   prisma: mockPrisma
 }))
 

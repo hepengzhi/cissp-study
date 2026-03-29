@@ -182,14 +182,26 @@ export async function exportQuestions(filters: QuestionFilter, format: 'json' | 
     }
 
     // CSV format
-    const headers = 'questionText,questionTextZh,optionA,optionB,optionC,optionD,optionAZh,optionBZh,optionCZh,optionDZh,correctAnswer,explanation,explanationZh,domain,difficulty,tags'
+    const headers = 'questionText,questionTextZh,optionA,optionB,optionC,optionD,optionAZh,optionBZh,optionCZh,optionDZh,correctAnswer,explanation,explanationZh,domain,difficulty,tags,questionType,matchItems'
     const letterFromIndex = (i: number) => String.fromCharCode(65 + i)
 
     const rows = questions.map(q => {
       const opts = q.options
       const optsZh = q.optionsZh ?? []
-      const correctLetter = letterFromIndex(q.correctAnswer)
+
+      // Handle correctAnswer based on questionType
+      let correctLetter: string
+      if (q.questionType === 'MATCHING') {
+        // Convert "[0,2,3,1]" to "A,C,D,B"
+        const indices = JSON.parse(q.correctAnswer) as number[]
+        correctLetter = indices.map(idx => letterFromIndex(idx)).join(',')
+      } else {
+        // Single choice: convert "0" to "A"
+        correctLetter = letterFromIndex(parseInt(q.correctAnswer, 10))
+      }
+
       const tagsStr = (q.tags ?? []).join('|')
+      const matchItemsStr = (q.matchItems ?? []).join('|')
 
       const escapeCSV = (v: string) => {
         if (v.includes(',') || v.includes('"') || v.includes('\n')) {
@@ -211,6 +223,8 @@ export async function exportQuestions(filters: QuestionFilter, format: 'json' | 
         q.domain,
         q.difficulty,
         escapeCSV(tagsStr),
+        q.questionType,
+        escapeCSV(matchItemsStr),
       ].join(',')
     })
 

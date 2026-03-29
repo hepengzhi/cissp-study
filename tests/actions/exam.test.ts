@@ -14,9 +14,16 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'What is the primary goal of security?',
+          questionTextZh: null,
           options: ['Option A', 'Option B', 'Option C', 'Option D'],
-          correctAnswer: 0,
-          explanation: 'Test explanation'
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
+          explanation: 'Test explanation',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         }
       ]
 
@@ -52,16 +59,30 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'Question 1',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 0,
-          explanation: 'Explanation 1'
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
+          explanation: 'Explanation 1',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         },
         {
           id: 'question-2',
           questionText: 'Question 2',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 1,
-          explanation: 'Explanation 2'
+          optionsZh: [],
+          correctAnswer: '1',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
+          explanation: 'Explanation 2',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         }
       ]
 
@@ -85,9 +106,16 @@ describe('Exam Actions', () => {
       const mockQuestions = Array.from({ length: 150 }, (_, i) => ({
         id: `question-${i}`,
         questionText: `Question ${i}`,
+        questionTextZh: null,
         options: ['A', 'B', 'C', 'D'],
-        correctAnswer: 0,
-        explanation: `Explanation ${i}`
+        optionsZh: [],
+        correctAnswer: '0',
+        questionType: 'SINGLE_CHOICE',
+        matchItems: [],
+        matchItemsZh: [],
+        explanation: `Explanation ${i}`,
+        explanationZh: null,
+        domain: 'SECURITY_RISK_MANAGEMENT'
       }))
 
       const mockAttempt = {
@@ -122,8 +150,8 @@ describe('Exam Actions', () => {
   describe('submitExam', () => {
     it('should submit exam answers and calculate score', async () => {
       const answers = new Map([
-        ['question-1', 0], // Correct
-        ['question-2', 2]  // Incorrect
+        ['question-1', '0'], // Correct
+        ['question-2', '2']  // Incorrect
       ])
 
       const mockAttempt = {
@@ -139,16 +167,30 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'Question 1',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 0,
-          explanation: 'Explanation 1'
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
+          explanation: 'Explanation 1',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         },
         {
           id: 'question-2',
           questionText: 'Question 2',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 1,
-          explanation: 'Explanation 2'
+          optionsZh: [],
+          correctAnswer: '1',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
+          explanation: 'Explanation 2',
+          explanationZh: null,
+          domain: 'ASSET_SECURITY'
         }
       ]
 
@@ -177,13 +219,13 @@ describe('Exam Actions', () => {
           {
             attemptId: 'attempt-1',
             questionId: 'question-1',
-            selectedAnswer: 0,
+            selectedAnswer: '0',
             isCorrect: true
           },
           {
             attemptId: 'attempt-1',
             questionId: 'question-2',
-            selectedAnswer: 2,
+            selectedAnswer: '2',
             isCorrect: false
           }
         ]
@@ -207,7 +249,7 @@ describe('Exam Actions', () => {
 
     it('should update progress for each domain', async () => {
       const answers = new Map([
-        ['question-1', 0] // Correct
+        ['question-1', '0'] // Correct
       ])
 
       const mockAttempt = {
@@ -223,10 +265,16 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'Question 1',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 0,
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
           explanation: 'Explanation 1',
-          domain: 'SECURITY_RISK_MANAGEMENT' as const
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         }
       ]
 
@@ -263,7 +311,7 @@ describe('Exam Actions', () => {
 
     it('should not increment examCorrectCount for incorrect answers', async () => {
       const answers = new Map([
-        ['question-1', 1] // Incorrect (correct is 0)
+        ['question-1', '1'] // Incorrect (correct is '0')
       ])
 
       const mockAttempt = {
@@ -279,10 +327,16 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'Question 1',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 0,
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
           explanation: 'Explanation 1',
-          domain: 'SECURITY_RISK_MANAGEMENT' as const
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         }
       ]
 
@@ -320,7 +374,7 @@ describe('Exam Actions', () => {
     it('should return error for non-existent attempt', async () => {
       mockPrisma.examAttempt.findUnique.mockResolvedValue(null)
 
-      const answers = new Map([['question-1', 0]])
+      const answers = new Map([['question-1', '0']])
 
       const result = await submitExam('non-existent-attempt', answers)
 
@@ -331,7 +385,7 @@ describe('Exam Actions', () => {
     it('should return error on database failure', async () => {
       mockPrisma.examAttempt.findUnique.mockRejectedValue(new Error('Database connection failed'))
 
-      const answers = new Map([['question-1', 0]])
+      const answers = new Map([['question-1', '0']])
 
       const result = await submitExam('attempt-1', answers)
 
@@ -340,7 +394,7 @@ describe('Exam Actions', () => {
     })
 
     it('should calculate time spent correctly', async () => {
-      const answers = new Map([['question-1', 0]])
+      const answers = new Map([['question-1', '0']])
 
       const startTime = new Date(Date.now() - 7265000) // 2 hours, 1 minute, 5 seconds ago
       const mockAttempt = {
@@ -356,10 +410,16 @@ describe('Exam Actions', () => {
         {
           id: 'question-1',
           questionText: 'Question 1',
+          questionTextZh: null,
           options: ['A', 'B', 'C', 'D'],
-          correctAnswer: 0,
+          optionsZh: [],
+          correctAnswer: '0',
+          questionType: 'SINGLE_CHOICE',
+          matchItems: [],
+          matchItemsZh: [],
           explanation: 'Explanation 1',
-          domain: 'SECURITY_RISK_MANAGEMENT' as const
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
         }
       ]
 
@@ -383,6 +443,102 @@ describe('Exam Actions', () => {
 
       expect(result.timeSpent).toBe(7265) // 7265 seconds
       expect(capturedUpdateData.timeSpent).toBe(7265)
+    })
+
+    it('should correctly grade matching questions', async () => {
+      const answers = new Map([
+        ['question-1', '[0,2,3,1]'] // Correct matching answer
+      ])
+
+      const mockAttempt = {
+        id: 'attempt-1',
+        startedAt: new Date(),
+        completedAt: null,
+        score: null,
+        timeSpent: null,
+        answers: []
+      }
+
+      const mockQuestions = [
+        {
+          id: 'question-1',
+          questionText: 'Match the following:',
+          questionTextZh: null,
+          options: ['Description A', 'Description B', 'Description C', 'Description D'],
+          optionsZh: [],
+          correctAnswer: '[0,2,3,1]',
+          questionType: 'MATCHING',
+          matchItems: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+          matchItemsZh: [],
+          explanation: 'All items matched correctly',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
+        }
+      ]
+
+      mockPrisma.examAttempt.findUnique.mockResolvedValue(mockAttempt)
+      mockPrisma.question.findMany.mockResolvedValue(mockQuestions)
+      mockPrisma.examAnswer.createMany.mockResolvedValue({ count: 1 })
+      mockPrisma.progress.upsert.mockResolvedValue(mockQuestions[0] as any)
+      mockPrisma.examAttempt.update.mockResolvedValue({
+        ...mockAttempt,
+        completedAt: new Date(),
+        score: 100,
+        timeSpent: 60
+      })
+
+      const result = await submitExam('attempt-1', answers)
+
+      expect(result.correctCount).toBe(1)
+      expect(result.score).toBe(100)
+    })
+
+    it('should mark incorrect matching answer as wrong', async () => {
+      const answers = new Map([
+        ['question-1', '[0,2,3,0]'] // Wrong - last item incorrect
+      ])
+
+      const mockAttempt = {
+        id: 'attempt-1',
+        startedAt: new Date(),
+        completedAt: null,
+        score: null,
+        timeSpent: null,
+        answers: []
+      }
+
+      const mockQuestions = [
+        {
+          id: 'question-1',
+          questionText: 'Match the following:',
+          questionTextZh: null,
+          options: ['Description A', 'Description B', 'Description C', 'Description D'],
+          optionsZh: [],
+          correctAnswer: '[0,2,3,1]',
+          questionType: 'MATCHING',
+          matchItems: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
+          matchItemsZh: [],
+          explanation: 'All items matched correctly',
+          explanationZh: null,
+          domain: 'SECURITY_RISK_MANAGEMENT'
+        }
+      ]
+
+      mockPrisma.examAttempt.findUnique.mockResolvedValue(mockAttempt)
+      mockPrisma.question.findMany.mockResolvedValue(mockQuestions)
+      mockPrisma.examAnswer.createMany.mockResolvedValue({ count: 1 })
+      mockPrisma.progress.upsert.mockResolvedValue(mockQuestions[0] as any)
+      mockPrisma.examAttempt.update.mockResolvedValue({
+        ...mockAttempt,
+        completedAt: new Date(),
+        score: 0,
+        timeSpent: 60
+      })
+
+      const result = await submitExam('attempt-1', answers)
+
+      expect(result.correctCount).toBe(0)
+      expect(result.score).toBe(0)
     })
   })
 })

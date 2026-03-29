@@ -10,25 +10,40 @@ import { Button } from '@/components/ui/button'
 
 const BATCH_SIZE = 50
 
-const JSON_SAMPLE = `{
+const JSON_SAMPLE_SINGLE = `{
   "questions": [
     {
-      "questionText": "What is X?",
-      "questionTextZh": "X是什么？",
-      "options": { "A": "Option A", "B": "Option B", "C": "Option C", "D": "Option D" },
+      "questionText": "What is the primary goal of risk management?",
+      "questionTextZh": "风险管理的主要目标是什么？",
+      "options": ["Eliminate all risk", "Transfer risk to insurance", "Align risk with business objectives", "Ignore low-impact risk"],
+      "optionsZh": ["消除所有风险", "将风险转移给保险", "使风险与业务目标一致", "忽略低影响风险"],
       "correctAnswer": "C",
-      "explanation": "Because...",
-      "explanationZh": "因为...",
+      "explanation": "Risk management aims to align risk with business objectives, not eliminate all risk.",
+      "explanationZh": "风险管理的目的是使风险与业务目标一致，而非消除所有风险。",
       "domain": "SECURITY_RISK_MANAGEMENT",
       "difficulty": "EASY",
-      "question_images": ["data:image/jpeg;base64,..."],
-      "tags": ["tag1", "tag2"]
+      "tags": ["risk", "fundamentals"]
     }
   ]
 }`
 
-const CSV_SAMPLE = `questionText,optionA,optionB,optionC,optionD,correctAnswer,explanation,domain,difficulty,tags
-"What is X?","Option A","Option B","Option C","Option D","C","Because...","SECURITY_RISK_MANAGEMENT","EASY","tag1|tag2"`
+const JSON_SAMPLE_MATCHING = `{
+  "questions": [
+    {
+      "questionText": "Match the standard to its description:",
+      "questionTextZh": "法律和行业标准1.GLBA []2.PCI DSS []3.HIPAA []4.SOX []",
+      "options": ["Financial privacy", "Card data security", "Health data privacy", "Financial reporting"],
+      "correctAnswer": "A,C,D,B",
+      "explanation": "Match each regulation to its focus area.",
+      "domain": "SECURITY_ARCHITECTURE",
+      "difficulty": "MEDIUM",
+      "tags": ["compliance"]
+    }
+  ]
+}`
+
+const CSV_SAMPLE = `questionText,questionTextZh,optionA,optionB,optionC,optionD,optionAzh,optionBzh,optionCzh,optionDzh,correctAnswer,explanation,explanationZh,domain,difficulty,tags
+"What is the primary goal of risk management?","风险管理的主要目标是什么？","Eliminate all risk","Transfer risk to insurance","Align risk with business objectives","Ignore low-impact risk","消除所有风险","将风险转移给保险","使风险与业务目标一致","忽略低影响风险","C","Risk management aims to align risk with business objectives.","风险管理的目的是使风险与业务目标一致。","SECURITY_RISK_MANAGEMENT","EASY","risk|fundamentals"`
 
 type PreviewStats = {
   total: number
@@ -246,9 +261,15 @@ export default function ImportPage() {
             {showSample && (
               <div className="border-t border-border">
                 <div className="p-3">
-                  <p className="text-xs font-medium text-foreground mb-2">JSON {t('import.sampleLabel')}</p>
+                  <p className="text-xs font-medium text-foreground mb-2">JSON &mdash; Single Choice {t('import.sampleLabel')}</p>
                   <pre className="bg-muted/50 rounded-md p-3 text-xs text-foreground overflow-x-auto whitespace-pre-wrap">
-                    {JSON_SAMPLE}
+                    {JSON_SAMPLE_SINGLE}
+                  </pre>
+                </div>
+                <div className="p-3 border-t border-border">
+                  <p className="text-xs font-medium text-foreground mb-2">JSON &mdash; Matching {t('import.sampleLabel')}</p>
+                  <pre className="bg-muted/50 rounded-md p-3 text-xs text-foreground overflow-x-auto whitespace-pre-wrap">
+                    {JSON_SAMPLE_MATCHING}
                   </pre>
                 </div>
                 <div className="p-3 border-t border-border">
@@ -256,6 +277,32 @@ export default function ImportPage() {
                   <pre className="bg-muted/50 rounded-md p-3 text-xs text-foreground overflow-x-auto whitespace-pre-wrap">
                     {CSV_SAMPLE}
                   </pre>
+                </div>
+                <div className="p-3 border-t border-border">
+                  <p className="text-xs font-medium text-foreground mb-2">JSON Field Reference</p>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p><code className="text-foreground">questionText</code> <span className="text-primary">*</span> Question text (English)</p>
+                    <p><code className="text-foreground">questionTextZh</code> Question text (Chinese). For matching, include items as <code className="text-foreground">{`1.ITEM []2.ITEM []`}</code></p>
+                    <p><code className="text-foreground">options</code> <span className="text-primary">*</span> Array of strings, or object <code className="text-foreground">{`{"A":"...","B":"..."}`}</code></p>
+                    <p><code className="text-foreground">optionsZh</code> Chinese options (same format as options)</p>
+                    <p><code className="text-foreground">correctAnswer</code> <span className="text-primary">*</span> Letter <code className="text-foreground">A-F</code> for single choice, or <code className="text-foreground">A,C,D,B</code> (comma-separated) for matching</p>
+                    <p><code className="text-foreground">explanation</code> <span className="text-primary">*</span> Explanation (English; required if no Chinese)</p>
+                    <p><code className="text-foreground">explanationZh</code> Explanation (Chinese; required if no English)</p>
+                    <p><code className="text-foreground">domain</code> <span className="text-primary">*</span> See list below</p>
+                    <p><code className="text-foreground">difficulty</code> <span className="text-primary">*</span> EASY | MEDIUM | HARD</p>
+                    <p><code className="text-foreground">question_images</code> Array of base64 data URIs (<code className="text-foreground">data:image/jpeg;base64,...</code>)</p>
+                    <p><code className="text-foreground">tags</code> Array of tag strings</p>
+                    <p className="mt-2 text-primary">* At least one language pair (EN or ZH) is required for questionText + explanation.</p>
+                  </div>
+                </div>
+                <div className="p-3 border-t border-border">
+                  <p className="text-xs font-medium text-foreground mb-2">CSV Column Reference</p>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p><code className="text-foreground">questionText</code>, <code className="text-foreground">questionTextZh</code>, <code className="text-foreground">explanation</code>, <code className="text-foreground">explanationZh</code>, <code className="text-foreground">domain</code>, <code className="text-foreground">difficulty</code></p>
+                    <p><code className="text-foreground">optionA</code> &hellip; <code className="text-foreground">optionF</code> (2-6 options), <code className="text-foreground">optionAzh</code> &hellip; <code className="text-foreground">optionFzh</code> (Chinese options)</p>
+                    <p><code className="text-foreground">correctAnswer</code> Letter (A-F) or matching format <code className="text-foreground">A,C,D,B</code></p>
+                    <p><code className="text-foreground">tags</code> Pipe-separated: <code className="text-foreground">tag1|tag2</code></p>
+                  </div>
                 </div>
                 <div className="p-3 border-t border-border">
                   <p className="text-xs text-muted-foreground">{t('import.domainList')}</p>

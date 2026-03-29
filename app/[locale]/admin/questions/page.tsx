@@ -17,7 +17,9 @@ type Question = {
   id: string
   questionText: string
   options: string[]
-  correctAnswer: number
+  correctAnswer: string
+  questionType: string
+  matchItems: string[]
   domain: string
   difficulty: string
   tags: string[]

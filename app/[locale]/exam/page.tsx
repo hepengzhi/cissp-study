@@ -4,10 +4,12 @@ import { useState, useCallback, Suspense, useEffect } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { startExam, submitExam } from '@/lib/actions/exam'
 import { QuestionCard } from '@/components/question-card'
+import { getLocalizedText, getLocalizedArray } from '@/lib/utils/localize'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Timer } from '@/components/timer'
 import { CISSP_DOMAINS, DomainValue } from '@/lib/constants'
+import type { QuestionType } from '@prisma/client'
 import { CheckCircle2, XCircle, Home, AlertCircle, Clock } from 'lucide-react'
 import Link from 'next/link'
 
@@ -17,7 +19,10 @@ interface ExamQuestion {
   questionTextZh?: string
   options: string[]
   optionsZh?: string[]
-  correctAnswer: number
+  correctAnswer: string // Changed from number to string
+  questionType?: QuestionType
+  matchItems?: string[]
+  matchItemsZh?: string[]
   explanation: string
   explanationZh?: string
   domain: DomainValue
@@ -47,7 +52,7 @@ function ExamContent() {
   const [questions, setQuestions] = useState<ExamQuestion[]>([])
   const [attemptId, setAttemptId] = useState<string>('')
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [answers, setAnswers] = useState<Map<string, number>>(new Map())
+  const [answers, setAnswers] = useState<Map<string, string>>(new Map())
   const [visitedQuestions, setVisitedQuestions] = useState<Set<number>>(new Set())
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -61,12 +66,13 @@ function ExamContent() {
   } | null>(null)
   const [timeRemaining, setTimeRemaining] = useState(EXAM_TIME_LIMIT)
 
-  // Get localized question data
+  // Get localized question data with fallback
   const getLocalizedQuestion = useCallback((question: ExamQuestion) => ({
     ...question,
-    questionText: locale === 'zh' && question.questionTextZh ? question.questionTextZh : question.questionText,
-    options: locale === 'zh' && question.optionsZh ? question.optionsZh : question.options,
-    explanation: locale === 'zh' && question.explanationZh ? question.explanationZh : question.explanation,
+    questionText: getLocalizedText(question.questionText, question.questionTextZh, locale),
+    options: getLocalizedArray(question.options, question.optionsZh, locale),
+    explanation: getLocalizedText(question.explanation, question.explanationZh, locale),
+    matchItems: question.matchItems ? getLocalizedArray(question.matchItems, question.matchItemsZh, locale) : question.matchItems,
   }), [locale])
 
   // Track visited questions
@@ -97,7 +103,9 @@ function ExamContent() {
           id: q.id,
           questionText: q.questionText,
           options: q.options,
-          correctAnswer: 0, // Placeholder - not shown during exam
+          questionType: (q.questionType as QuestionType) || 'SINGLE_CHOICE',
+          matchItems: q.matchItems || [],
+          correctAnswer: '1', // Placeholder - not shown during exam
           explanation: '', // Placeholder - not shown during exam
           domain: q.domain as DomainValue
         }))
@@ -119,9 +127,11 @@ function ExamContent() {
     }
   }, [loading])
 
-  const handleAnswer = useCallback((selected: number) => {
+  const handleAnswer = useCallback((selected: number | number[]) => {
     const question = questions[currentIndex]
-    setAnswers(prev => new Map(prev).set(question.id, selected))
+    // Convert to string - single number or array
+    const answerStr = Array.isArray(selected) ? JSON.stringify(selected) : String(selected)
+    setAnswers(prev => new Map(prev).set(question.id, answerStr))
   }, [questions, currentIndex])
 
   const handlePrevious = useCallback(() => {

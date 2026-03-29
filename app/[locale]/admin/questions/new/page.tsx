@@ -22,7 +22,7 @@ export default function NewQuestionPage() {
   const [questionText, setQuestionText] = useState('')
   const [questionTextZh, setQuestionTextZh] = useState('')
   const [options, setOptions] = useState(['', '', '', ''])
-  const [correctAnswer, setCorrectAnswer] = useState(0)
+  const [correctAnswer, setCorrectAnswer] = useState('0')
   const [explanation, setExplanation] = useState('')
   const [explanationZh, setExplanationZh] = useState('')
   const [domain, setDomain] = useState<Domain>('SECURITY_RISK_MANAGEMENT')
@@ -36,7 +36,7 @@ export default function NewQuestionPage() {
   const handleRemoveOption = (index: number) => {
     if (options.length <= 2) return
     const newOptions = options.filter((_, i) => i !== index)
-    if (correctAnswer >= newOptions.length) setCorrectAnswer(newOptions.length - 1)
+    if (parseInt(correctAnswer) >= newOptions.length) setCorrectAnswer(String(newOptions.length - 1))
     setOptions(newOptions)
   }
 
@@ -49,6 +49,9 @@ export default function NewQuestionPage() {
       questionTextZh: questionTextZh || undefined,
       options: options.filter(Boolean),
       correctAnswer,
+      questionType: 'SINGLE_CHOICE',
+      matchItems: [],
+      matchItemsZh: [],
       explanation,
       explanationZh: explanationZh || undefined,
       domain,
@@ -106,8 +109,8 @@ export default function NewQuestionPage() {
                 <input
                   type="radio"
                   name="correctAnswer"
-                  checked={correctAnswer === i}
-                  onChange={() => setCorrectAnswer(i)}
+                  checked={parseInt(correctAnswer) === i}
+                  onChange={() => setCorrectAnswer(String(i))}
                   className="accent-primary"
                 />
                 <span className="text-sm font-medium text-primary w-6">

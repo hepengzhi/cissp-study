@@ -153,7 +153,11 @@
       "newQuiz": "New Quiz",
       "dashboard": "Dashboard"
     },
-    "explanation": "Explanation:"
+    "explanation": "Explanation:",
+    "matchInstructions": "Match each item on the left to the correct option on the right.",
+    "selectOption": "Select option",
+    "correct": "Correct",
+    "incorrect": "Incorrect"
   },
   "exam": {
     "title": "CISSP Exam Simulation",
