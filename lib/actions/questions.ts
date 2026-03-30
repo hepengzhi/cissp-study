@@ -85,7 +85,10 @@ export async function updateQuestion(id: string, data: QuestionInput) {
 
 export async function deleteQuestion(id: string) {
   try {
-    await prisma.question.delete({ where: { id } })
+    await prisma.$transaction([
+      prisma.examAnswer.deleteMany({ where: { questionId: id } }),
+      prisma.question.delete({ where: { id } }),
+    ])
     return { success: true }
   } catch (error) {
     return handleError(error)
@@ -94,8 +97,9 @@ export async function deleteQuestion(id: string) {
 
 export async function deleteQuestions(ids: string[]) {
   try {
-    const result = await prisma.question.deleteMany({
-      where: { id: { in: ids } },
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.examAnswer.deleteMany({ where: { questionId: { in: ids } } })
+      return tx.question.deleteMany({ where: { id: { in: ids } } })
     })
     return { deleted: result.count }
   } catch (error) {
@@ -229,6 +233,20 @@ export async function exportQuestions(filters: QuestionFilter, format: 'json' | 
     })
 
     return [headers, ...rows].join('\n')
+  } catch (error) {
+    return handleError(error)
+  }
+}
+
+// --- STATS ---
+
+export async function getDomainStats() {
+  try {
+    const counts = await prisma.question.groupBy({
+      by: ['domain'],
+      _count: true,
+    })
+    return counts.map(c => ({ domain: c.domain, count: c._count }))
   } catch (error) {
     return handleError(error)
   }

@@ -243,6 +243,8 @@
       "totalQuestions": "Total Questions",
       "domains": "CISSP Domains",
       "difficulties": "Difficulty Levels",
+      "domainBreakdown": "Domain Breakdown",
+      "questions": "questions",
       "quickActions": "Quick Actions",
       "addQuestion": "Add Question",
       "importQuestions": "Import Questions",

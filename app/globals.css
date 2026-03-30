@@ -594,7 +594,7 @@
     border-radius: 999px;
     font-size: 0.7rem;
     font-weight: 600;
-    border: 1px solid;
+    border: none;
     white-space: nowrap;
     cursor: default;
     transition: filter 0.15s;
@@ -612,21 +612,21 @@
     color: #fff;
     flex-shrink: 0;
   }
-  .pill-security { border-color: hsl(0 70% 50% / 0.4); background: hsl(0 70% 50% / 0.08); color: hsl(0 70% 65%); }
+  .pill-security { border-color: hsl(0 70% 50% / 0.12); background: hsl(0 70% 50% / 0.04); color: hsl(0 70% 65%); }
   .pill-security .domain-pill-num { background: hsl(0 70% 50%); }
-  .pill-asset { border-color: hsl(30 80% 50% / 0.4); background: hsl(30 80% 50% / 0.08); color: hsl(30 80% 65%); }
+  .pill-asset { border-color: hsl(30 80% 50% / 0.12); background: hsl(30 80% 50% / 0.04); color: hsl(30 80% 65%); }
   .pill-asset .domain-pill-num { background: hsl(30 80% 50%); }
-  .pill-architecture { border-color: hsl(78 70% 40% / 0.4); background: hsl(78 70% 40% / 0.08); color: hsl(78 80% 55%); }
+  .pill-architecture { border-color: hsl(78 70% 40% / 0.12); background: hsl(78 70% 40% / 0.04); color: hsl(78 80% 55%); }
   .pill-architecture .domain-pill-num { background: hsl(78 70% 40%); }
-  .pill-network { border-color: hsl(190 80% 45% / 0.4); background: hsl(190 80% 45% / 0.08); color: hsl(190 80% 60%); }
+  .pill-network { border-color: hsl(190 80% 45% / 0.12); background: hsl(190 80% 45% / 0.04); color: hsl(190 80% 60%); }
   .pill-network .domain-pill-num { background: hsl(190 80% 45%); }
-  .pill-identity { border-color: hsl(270 60% 55% / 0.4); background: hsl(270 60% 55% / 0.08); color: hsl(270 60% 70%); }
+  .pill-identity { border-color: hsl(270 60% 55% / 0.12); background: hsl(270 60% 55% / 0.04); color: hsl(270 60% 70%); }
   .pill-identity .domain-pill-num { background: hsl(270 60% 55%); }
-  .pill-assessment { border-color: hsl(320 60% 50% / 0.4); background: hsl(320 60% 50% / 0.08); color: hsl(320 60% 65%); }
+  .pill-assessment { border-color: hsl(320 60% 50% / 0.12); background: hsl(320 60% 50% / 0.04); color: hsl(320 60% 65%); }
   .pill-assessment .domain-pill-num { background: hsl(320 60% 50%); }
-  .pill-operations { border-color: hsl(45 80% 45% / 0.4); background: hsl(45 80% 45% / 0.08); color: hsl(45 80% 60%); }
+  .pill-operations { border-color: hsl(45 80% 45% / 0.12); background: hsl(45 80% 45% / 0.04); color: hsl(45 80% 60%); }
   .pill-operations .domain-pill-num { background: hsl(45 80% 45%); }
-  .pill-software { border-color: hsl(200 80% 50% / 0.4); background: hsl(200 80% 50% / 0.08); color: hsl(200 80% 65%); }
+  .pill-software { border-color: hsl(200 80% 50% / 0.12); background: hsl(200 80% 50% / 0.04); color: hsl(200 80% 65%); }
   .pill-software .domain-pill-num { background: hsl(200 80% 50%); }
 
   /* Light mode pill overrides */

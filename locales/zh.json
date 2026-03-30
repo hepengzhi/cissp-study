@@ -243,6 +243,8 @@
       "totalQuestions": "题目总数",
       "domains": "CISSP 领域",
       "difficulties": "难度级别",
+      "domainBreakdown": "各领域题目分布",
+      "questions": "题",
       "quickActions": "快捷操作",
       "addQuestion": "添加题目",
       "importQuestions": "导入题库",

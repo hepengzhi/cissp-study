@@ -36,8 +36,15 @@ const mockPrisma = {
     update: vi.fn()
   },
   examAnswer: {
-    createMany: vi.fn()
-  }
+    createMany: vi.fn(),
+    deleteMany: vi.fn()
+  },
+  $transaction: vi.fn((operations) => {
+    if (typeof operations === 'function') {
+      return operations(mockPrisma)
+    }
+    return Promise.all(operations)
+  })
 }
 
 // Mock the prisma module (both paths)

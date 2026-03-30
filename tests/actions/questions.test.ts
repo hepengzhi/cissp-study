@@ -208,15 +208,19 @@ describe('Questions Actions', () => {
   // ---- deleteQuestion ----
 
   describe('deleteQuestion', () => {
-    it('should delete successfully', async () => {
+    it('should delete exam answers then delete question', async () => {
+      mockPrisma.examAnswer.deleteMany.mockResolvedValue({ count: 2 })
       mockPrisma.question.delete.mockResolvedValue(mockQuestion)
 
       const result = await deleteQuestion('test-id-1')
 
       expect(result).toEqual({ success: true })
+      expect(mockPrisma.examAnswer.deleteMany).toHaveBeenCalledWith({ where: { questionId: 'test-id-1' } })
+      expect(mockPrisma.question.delete).toHaveBeenCalledWith({ where: { id: 'test-id-1' } })
     })
 
     it('should return error for non-existent id', async () => {
+      mockPrisma.examAnswer.deleteMany.mockResolvedValue({ count: 0 })
       mockPrisma.question.delete.mockRejectedValue(new Error('Record not found'))
 
       const result = await deleteQuestion('non-existent')
@@ -228,15 +232,18 @@ describe('Questions Actions', () => {
   // ---- deleteQuestions (batch) ----
 
   describe('deleteQuestions', () => {
-    it('should delete multiple by ids', async () => {
+    it('should delete exam answers then delete multiple questions', async () => {
+      mockPrisma.examAnswer.deleteMany.mockResolvedValue({ count: 5 })
       mockPrisma.question.deleteMany.mockResolvedValue({ count: 3 })
 
       const result = await deleteQuestions(['id1', 'id2', 'id3'])
 
       expect(result).toEqual({ deleted: 3 })
+      expect(mockPrisma.examAnswer.deleteMany).toHaveBeenCalledWith({ where: { questionId: { in: ['id1', 'id2', 'id3'] } } })
     })
 
     it('should handle empty ids array', async () => {
+      mockPrisma.examAnswer.deleteMany.mockResolvedValue({ count: 0 })
       mockPrisma.question.deleteMany.mockResolvedValue({ count: 0 })
 
       const result = await deleteQuestions([])
@@ -245,7 +252,7 @@ describe('Questions Actions', () => {
     })
 
     it('should handle database error', async () => {
-      mockPrisma.question.deleteMany.mockRejectedValue(new Error('DB error'))
+      mockPrisma.examAnswer.deleteMany.mockRejectedValue(new Error('DB error'))
 
       const result = await deleteQuestions(['id1'])
 
