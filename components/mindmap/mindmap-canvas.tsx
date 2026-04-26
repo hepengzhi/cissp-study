@@ -22,6 +22,7 @@ import { Plus, Trash2, Maximize } from 'lucide-react'
 import { createNode, updateNode, deleteNode, createEdge, deleteEdge } from '@/lib/actions/mindmaps'
 import { ConceptNode } from './concept-node'
 import { RelationEdge } from './relation-edge'
+import { NodeEditPanel } from './node-edit-panel'
 
 const nodeTypes = { conceptNode: ConceptNode }
 const edgeTypes = { relationEdge: RelationEdge }
@@ -40,6 +41,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
   const t = useTranslations('mindmaps')
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null)
+  const [editingNode, setEditingNode] = useState<Node | null>(null)
   const reactFlowInstanceRef = useRef<ReactFlowInstance | null>(null)
   const [isAddingNode, setIsAddingNode] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -249,6 +251,27 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
     setSelectedEdgeId(null)
   }, [])
 
+  // Double-click node → open edit panel
+  const onNodeDoubleClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    setEditingNode(node)
+    setSelectedNodeId(node.id)
+    setSelectedEdgeId(null)
+  }, [])
+
+  // After edit panel saves, refresh node data and close
+  const handleEditSaved = useCallback(() => {
+    if (editingNode) {
+      setNodes((nds) =>
+        nds.map((n) =>
+          n.id === editingNode.id
+            ? { ...n, data: editingNode.data }
+            : n
+        )
+      )
+    }
+    setEditingNode(null)
+  }, [editingNode, setNodes])
+
   const disableDelete = !selectedNodeId && !selectedEdgeId
 
   return (
@@ -298,6 +321,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
         onDoubleClick={onDoubleClick}
         onNodeDragStop={onNodeDragStop}
         onNodeClick={onNodeClick}
+        onNodeDoubleClick={onNodeDoubleClick}
         onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         onInit={(instance) => {
@@ -312,6 +336,13 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
         <Controls className="[&>button]:!bg-[#161b22] [&>button]:!border-[#30363d] [&>button]:!text-[#a0aec0]" />
         <MiniMap nodeColor="#9fef00" maskColor="rgba(13, 17, 23, 0.7)" />
       </ReactFlow>
+
+      {/* Node edit side panel */}
+      <NodeEditPanel
+        node={editingNode as any}
+        onClose={() => setEditingNode(null)}
+        onSaved={handleEditSaved}
+      />
     </div>
   )
 }
