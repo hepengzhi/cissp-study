@@ -2,6 +2,7 @@ import { getMindMapByDomain } from '@/lib/actions/mindmaps'
 import { Domain } from '@prisma/client'
 import { CISSP_DOMAINS } from '@/lib/constants'
 import { notFound } from 'next/navigation'
+import { MindMapCanvas } from '@/components/mindmap/mindmap-canvas'
 
 export function generateStaticParams() {
   return CISSP_DOMAINS.map(d => ({ domain: d.value }))
@@ -31,15 +32,9 @@ export default async function MindMapDomainPage({
     )
   }
 
-  // Placeholder until MindMapCanvas is built (Task 8)
   return (
-    <div className="min-h-screen page-bg">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold page-title">{domain} Mind Map</h1>
-        <p className="text-sm mt-1 text-muted">
-          Nodes: {result.nodes?.length || 0}, Edges: {result.edges?.length || 0}
-        </p>
-      </div>
+    <div className="mindmap-page">
+      <MindMapCanvas mindMap={result} locale={locale} />
     </div>
   )
 }
