@@ -26,7 +26,8 @@
     "exam": "考试",
     "logo": "CISSP 学习",
     "admin": "管理",
-    "toggleLanguage": "语言"
+    "toggleLanguage": "语言",
+    "mindmaps": "思维导图"
   },
   "dashboard": {
     "title": "仪表板",
@@ -314,5 +315,31 @@
       "statImages": "图片",
       "hasErrors": "{count} 条记录有错误 — 点击展开详情"
     }
+  },
+  "mindmaps": {
+    "title": "思维导图",
+    "description": "每个 CISSP 域的交互式知识图谱",
+    "nodes": "节点",
+    "edges": "连接",
+    "lastEdited": "最后编辑",
+    "addNode": "添加节点",
+    "editNode": "编辑节点",
+    "deleteNode": "删除节点",
+    "connectNodes": "连接节点",
+    "editEdge": "编辑连接",
+    "deleteEdge": "删除连接",
+    "autoLayout": "自动布局",
+    "fitView": "适应视图",
+    "label": "标签",
+    "labelZh": "标签 (中文)",
+    "description": "描述",
+    "descriptionZh": "描述 (中文)",
+    "color": "颜色",
+    "linkFlashcard": "关联闪卡",
+    "linkQuestion": "关联题目",
+    "confirmDeleteNode": "确定删除此节点及其所有连接？",
+    "confirmDeleteEdge": "确定删除此连接？",
+    "none": "暂无思维导图 — 点击一个域开始！",
+    "emptyDomain": "暂无节点。双击画布或使用工具栏添加概念。"
   }
 }

@@ -26,7 +26,8 @@
     "exam": "Exam",
     "logo": "CISSP Study",
     "admin": "Admin",
-    "toggleLanguage": "Language"
+    "toggleLanguage": "Language",
+    "mindmaps": "Mind Maps"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -314,5 +315,31 @@
       "statImages": "Images",
       "hasErrors": "{count} rows have errors — click to expand"
     }
+  },
+  "mindmaps": {
+    "title": "Mind Maps",
+    "description": "Interactive knowledge graphs for each CISSP domain",
+    "nodes": "nodes",
+    "edges": "connections",
+    "lastEdited": "Last edited",
+    "addNode": "Add Node",
+    "editNode": "Edit Node",
+    "deleteNode": "Delete Node",
+    "connectNodes": "Connect Nodes",
+    "editEdge": "Edit Connection",
+    "deleteEdge": "Delete Connection",
+    "autoLayout": "Auto Layout",
+    "fitView": "Fit View",
+    "label": "Label",
+    "labelZh": "Label (中文)",
+    "description": "Description",
+    "descriptionZh": "Description (中文)",
+    "color": "Color",
+    "linkFlashcard": "Link to Flashcard",
+    "linkQuestion": "Link to Question",
+    "confirmDeleteNode": "Delete this node and all its connections?",
+    "confirmDeleteEdge": "Delete this connection?",
+    "none": "No mind maps yet — start by clicking a domain!",
+    "emptyDomain": "No nodes yet. Double-click the canvas or use the toolbar to add a concept."
   }
 }
