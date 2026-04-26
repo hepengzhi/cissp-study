@@ -26,6 +26,25 @@ const mockPrisma = {
     update: vi.fn(),
     updateMany: vi.fn()
   },
+  mindMap: {
+    findUnique: vi.fn(),
+    create: vi.fn(),
+  },
+  mindMapNode: {
+    create: vi.fn(),
+    findMany: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+  },
+  mindMapEdge: {
+    create: vi.fn(),
+    findMany: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    count: vi.fn(),
+    findFirst: vi.fn(),
+  },
   progress: {
     findMany: vi.fn(),
     upsert: vi.fn()

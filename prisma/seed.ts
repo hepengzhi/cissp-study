@@ -25,7 +25,7 @@ const questions = [
       "Provide diligent and competent service to principals",
       "Advance and protect the profession"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The first canon of the (ISC)² Code of Ethics is to protect society, the common good, necessary public trust and confidence, and the infrastructure. This canon emphasizes putting the common good ahead of yourself.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -39,7 +39,7 @@ const questions = [
       "Identification, Authentication, Authorization, Auditing, and Accountability",
       "Planning, Implementation, Monitoring, Review, and Improvement"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The five pillars of information security are Confidentiality, Integrity, Availability (CIA triad), plus Authenticity and Nonrepudiation. These form the foundation of information security principles.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -53,7 +53,7 @@ const questions = [
       "Strategic Plan",
       "Business Continuity Plan"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "A Strategic Plan is a long-term plan useful for 5 years that defines the organization's security purpose. It should include a risk assessment and align with business objectives.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -67,7 +67,7 @@ const questions = [
       "To transfer risk to a third party",
       "To eliminate all security risks"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Due care refers to the reasonable steps taken to protect assets and ensure security. It demonstrates that an organization has acted responsibly in implementing security measures.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -81,7 +81,7 @@ const questions = [
       "Risk Avoidance",
       "Risk Transference"
     ],
-    correctAnswer: 3,
+    correctAnswer: "D",
     explanation: "Risk Transference involves shifting the potential impact of a risk to a third party, typically through insurance or contracts. This doesn't eliminate the risk but transfers the financial burden.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -95,7 +95,7 @@ const questions = [
       "ALE = Risk × Probability × Impact",
       "ALE = Total Loss / Number of Incidents"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "ALE = Single Loss Expectancy (SLE) × Annualized Rate of Occurrence (ARO). This helps organizations understand the expected annual financial impact of a risk.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -109,7 +109,7 @@ const questions = [
       "Calculates precise ROI for security investments",
       "Requires extensive historical data"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Qualitative risk assessment uses subjective judgment, ranking scales (high/medium/low), and scenario-based analysis rather than numerical values. It's useful when quantitative data is unavailable.",
     domain: Domain.SECURITY_RISK_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -125,7 +125,7 @@ const questions = [
       "To simplify data backup procedures",
       "To comply with retention policies"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Data classification ensures that data receives appropriate protection based on its sensitivity and business value. This enables organizations to allocate security resources effectively.",
     domain: Domain.ASSET_SECURITY,
     difficulty: Difficulty.EASY,
@@ -139,7 +139,7 @@ const questions = [
       "Data User",
       "Data Steward"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The Data Owner is responsible for the overall protection of data assets and determining access rights. They make decisions about classification and acceptable use.",
     domain: Domain.ASSET_SECURITY,
     difficulty: Difficulty.EASY,
@@ -153,7 +153,7 @@ const questions = [
       "Ensuring data is unrecoverable",
       "Maintaining an audit trail"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "The primary concern when disposing of storage media is ensuring that sensitive data cannot be recovered. This may require physical destruction, degaussing, or secure wiping procedures.",
     domain: Domain.ASSET_SECURITY,
     difficulty: Difficulty.EASY,
@@ -167,7 +167,7 @@ const questions = [
       "Purging, Clearing, Degaussing, Destruction",
       "Clearing, Degaussing, Purging, Destruction"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "From least to most effective: Clearing (overwriting), Purging (including degaussing), and Destruction (physical destruction) provides the highest level of assurance.",
     domain: Domain.ASSET_SECURITY,
     difficulty: Difficulty.HARD,
@@ -181,7 +181,7 @@ const questions = [
       "To encrypt all stored data",
       "To classify data by sensitivity"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Data retention policies define how long data must be kept based on legal, regulatory, and business requirements, and how it should be properly disposed of when no longer needed.",
     domain: Domain.ASSET_SECURITY,
     difficulty: Difficulty.EASY,
@@ -197,7 +197,7 @@ const questions = [
       "Clark-Wilson Model",
       "Harrison-Ruzzo-Ullman Model"
     ],
-    correctAnswer: 0,
+    correctAnswer: "A",
     explanation: "The Bell-LaPadula Model uses a matrix-based approach with subjects, objects, and access modes. It focuses on confidentiality with rules: No Read Up, No Write Down.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.HARD,
@@ -211,7 +211,7 @@ const questions = [
       "Availability",
       "Authentication"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The Biba model focuses on integrity, preventing unauthorized modification of data. It uses rules: No Read Down, No Write Up to maintain data integrity levels.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.MEDIUM,
@@ -225,7 +225,7 @@ const questions = [
       "Public key infrastructure",
       "Hash functions"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Symmetric cryptography uses the same key for both encryption and decryption. Examples include AES, DES, and 3DES. It's faster than asymmetric but requires secure key distribution.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.EASY,
@@ -239,7 +239,7 @@ const questions = [
       "Faster network connectivity",
       "Easier integration with cloud services"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "HSMs provide tamper-resistant hardware for storing cryptographic keys and performing cryptographic operations, offering higher security than software-based solutions.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.MEDIUM,
@@ -253,7 +253,7 @@ const questions = [
       "Presentation Layer",
       "Session Layer"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "The Presentation Layer (Layer 6) is responsible for data translation, encryption, decryption, and compression. It ensures data is in a usable format for the application layer.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.MEDIUM,
@@ -267,7 +267,7 @@ const questions = [
       "Peer-to-Peer Trust",
       "Mesh Trust"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "X.509 uses a hierarchical trust model with Certificate Authorities (CAs) at different levels. Root CAs certify intermediate CAs, which certify end entities.",
     domain: Domain.SECURITY_ARCHITECTURE,
     difficulty: Difficulty.MEDIUM,
@@ -283,7 +283,7 @@ const questions = [
       "VPN",
       "SNMP"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Virtual Private Network (VPN) creates a secure, encrypted tunnel over an unsecured network, allowing secure remote access to organizational resources.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.EASY,
@@ -297,7 +297,7 @@ const questions = [
       "Assigning IP addresses",
       "Resolving domain names"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "A firewall's primary function is to filter network traffic based on predetermined security rules, controlling traffic flow between network segments.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.EASY,
@@ -311,7 +311,7 @@ const questions = [
       "IPsec",
       "SSH"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "IPsec (Internet Protocol Security) operates at the Network layer (Layer 3) and provides authentication, integrity, and encryption for IP packets.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.MEDIUM,
@@ -325,7 +325,7 @@ const questions = [
       "To encrypt all internal traffic",
       "To monitor employee activity"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "A DMZ (Demilitarized Zone) is a network segment that hosts public-facing services while providing a buffer zone with limited access to the internal network.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.MEDIUM,
@@ -339,7 +339,7 @@ const questions = [
       "Transport Layer",
       "Application Layer"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "The TCP/IP Transport layer corresponds to the OSI Transport layer, providing end-to-end communication services including TCP and UDP protocols.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.MEDIUM,
@@ -353,7 +353,7 @@ const questions = [
       "Phishing",
       "SQL Injection"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "A Man-in-the-Middle (MITM) attack occurs when an attacker intercepts communications between two parties, potentially reading or modifying the data without detection.",
     domain: Domain.COMMUNICATION_NETWORK_SECURITY,
     difficulty: Difficulty.EASY,
@@ -369,7 +369,7 @@ const questions = [
       "Encryption, hashing, and tokenization",
       "Identification, authentication, and authorization"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The three factors of authentication are: Something you know (password), Something you have (token), and Something you are (biometric). Multi-factor authentication uses two or more.",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -383,7 +383,7 @@ const questions = [
       "Role-Based Access Control (RBAC)",
       "Rule-Based Access Control"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Role-Based Access Control (RBAC) assigns permissions based on the user's role in the organization, simplifying administration and ensuring consistent access for similar job functions.",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -397,7 +397,7 @@ const questions = [
       "To prevent password reuse",
       "To enforce multi-factor authentication"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "SSO allows users to authenticate once and gain access to multiple systems without re-authenticating, improving user experience while maintaining security.",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.EASY,
@@ -411,7 +411,7 @@ const questions = [
       "Kerberos",
       "SAML"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Kerberos is the default authentication protocol in Windows domains. It uses tickets and symmetric key cryptography to provide secure authentication.",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -425,7 +425,7 @@ const questions = [
       "Authentication happens before identification",
       "Identification requires biometrics"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Identification is the act of claiming an identity (e.g., entering a username), while authentication is proving that identity (e.g., entering a password or providing biometrics).",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -439,7 +439,7 @@ const questions = [
       "The user's discretion",
       "Network administrator settings"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "In MAC, access permissions are determined by security labels assigned by the operating system, not by users or owners. This model is used in high-security environments.",
     domain: Domain.IDENTITY_ACCESS_MANAGEMENT,
     difficulty: Difficulty.MEDIUM,
@@ -455,7 +455,7 @@ const questions = [
       "To test incident response procedures",
       "To audit user access rights"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "A vulnerability assessment identifies and prioritizes security vulnerabilities in systems and applications, helping organizations understand their security posture.",
     domain: Domain.SECURITY_ASSESSMENT,
     difficulty: Difficulty.EASY,
@@ -469,7 +469,7 @@ const questions = [
       "Vulnerability scans require more expertise",
       "Penetration tests are automated"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Penetration tests go beyond identifying vulnerabilities by attempting to actually exploit them, demonstrating real-world impact and validating findings.",
     domain: Domain.SECURITY_ASSESSMENT,
     difficulty: Difficulty.MEDIUM,
@@ -483,7 +483,7 @@ const questions = [
       "Black box testing",
       "Crystal box testing"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Black box testing provides no prior knowledge of the target, simulating an external attacker with no inside information about the organization's systems.",
     domain: Domain.SECURITY_ASSESSMENT,
     difficulty: Difficulty.EASY,
@@ -497,7 +497,7 @@ const questions = [
       "To test external attack scenarios",
       "To certify security compliance"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Internal audits verify that security controls and processes are functioning as intended, identifying gaps and areas for improvement within the organization.",
     domain: Domain.SECURITY_ASSESSMENT,
     difficulty: Difficulty.MEDIUM,
@@ -511,7 +511,7 @@ const questions = [
       "Code review",
       "Compliance audit"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Red team exercises simulate real-world attacks to test an organization's detection and response capabilities, providing a comprehensive assessment of security effectiveness.",
     domain: Domain.SECURITY_ASSESSMENT,
     difficulty: Difficulty.MEDIUM,
@@ -527,7 +527,7 @@ const questions = [
       "To prevent all future incidents",
       "To document security policies"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The primary goal of incident response is to minimize damage, preserve evidence, and restore normal operations as quickly as possible after a security incident.",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.EASY,
@@ -541,7 +541,7 @@ const questions = [
       "Preparation, Detection, Eradication, Containment, Recovery, Lessons Learned",
       "Detection, Containment, Preparation, Eradication, Recovery, Lessons Learned"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "The incident response lifecycle: Preparation, Detection/Analysis, Containment, Eradication, Recovery, and Lessons Learned (Post-Incident Activity).",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.MEDIUM,
@@ -555,7 +555,7 @@ const questions = [
       "Protecting human life and safety",
       "Restoring system availability"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "The first priority in any incident is always protecting human life and safety. This is a fundamental principle in emergency response and incident handling.",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.EASY,
@@ -569,7 +569,7 @@ const questions = [
       "Hot site",
       "Mobile site"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "A hot site is fully equipped and can take over operations immediately, providing the fastest recovery time but at the highest cost. It includes hardware, software, and data.",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.EASY,
@@ -583,7 +583,7 @@ const questions = [
       "To perform penetration testing",
       "To manage user access rights"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "A SOC is a centralized facility that monitors, detects, analyzes, and responds to security incidents 24/7, serving as the organization's security monitoring hub.",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.EASY,
@@ -597,7 +597,7 @@ const questions = [
       "MTTR",
       "MTBF"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Mean Time to Repair (MTTR) measures the average time to repair a failed component or system. Lower MTTR indicates better recovery capabilities.",
     domain: Domain.SECURITY_OPERATIONS,
     difficulty: Difficulty.MEDIUM,
@@ -613,7 +613,7 @@ const questions = [
       "To encrypt sensitive data",
       "To simplify user interface design"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Input validation ensures that data entering an application meets expected criteria, preventing injection attacks and other malicious input from being processed.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.EASY,
@@ -627,7 +627,7 @@ const questions = [
       "DevSecOps",
       "Rapid Application Development"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "DevSecOps integrates security practices throughout the entire development lifecycle, automating security testing and making security everyone's responsibility.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.EASY,
@@ -641,7 +641,7 @@ const questions = [
       "To reduce project costs",
       "To document code functionality"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Code review identifies security vulnerabilities, coding errors, and quality issues through manual or automated examination of source code before deployment.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.EASY,
@@ -655,7 +655,7 @@ const questions = [
       "Static analysis",
       "Code review"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Black box testing examines program behavior without access to source code, testing from an external perspective similar to how an attacker would approach the application.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.EASY,
@@ -669,7 +669,7 @@ const questions = [
       "A method for encrypting database connections",
       "A backup strategy for databases"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "SQL injection is an attack where malicious SQL queries are inserted through user input fields, potentially allowing attackers to access or manipulate database contents.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.EASY,
@@ -683,7 +683,7 @@ const questions = [
       "Insecure Deserialization",
       "Cross-Site Scripting"
     ],
-    correctAnswer: 2,
+    correctAnswer: "C",
     explanation: "Insecure Deserialization occurs when untrusted data is deserialized, potentially allowing attackers to execute arbitrary code or manipulate application logic.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.MEDIUM,
@@ -697,7 +697,7 @@ const questions = [
       "To measure code coverage",
       "To test user interface design"
     ],
-    correctAnswer: 1,
+    correctAnswer: "B",
     explanation: "Fuzz testing (fuzzing) provides invalid, unexpected, or random data as input to discover vulnerabilities, crashes, and unexpected behaviors in applications.",
     domain: Domain.SOFTWARE_DEVELOPMENT_SECURITY,
     difficulty: Difficulty.MEDIUM,

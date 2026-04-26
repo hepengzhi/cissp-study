@@ -1029,3 +1029,188 @@ html.light-mode .prose strong {
 html.light-mode .prose em {
   color: hsl(220 10% 45%);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Mind Map Styles
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Canvas */
+.mindmap-canvas {
+  background: hsl(220 20% 6%);
+}
+
+/* Toolbar */
+.mindmap-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(48, 54, 61, 0.6);
+  background: rgba(22, 27, 34, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #a0aec0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mindmap-toolbar-btn:hover:not(:disabled) {
+  background: rgba(159, 239, 0, 0.1);
+  border-color: rgba(159, 239, 0, 0.3);
+  color: #9fef00;
+}
+.mindmap-toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Concept Node */
+.mindmap-node {
+  background: var(--bg-card);
+  border: 2px solid #9fef00;
+  border-radius: 8px;
+  padding: 10px 18px;
+  min-width: 120px;
+  box-shadow: 0 0 8px rgba(159, 239, 0, 0.1);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.mindmap-node.selected {
+  box-shadow: 0 0 16px rgba(159, 239, 0, 0.25);
+  border-color: #00d4ff;
+}
+.mindmap-node-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-foreground);
+  text-align: center;
+  line-height: 1.3;
+  word-break: break-word;
+}
+.mindmap-node-badges {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 6px;
+}
+.mindmap-node-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+}
+.mindmap-node-badge.flashcard-linked {
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+}
+.mindmap-node-badge.question-linked {
+  background: rgba(159, 239, 0, 0.15);
+  color: #9fef00;
+}
+
+/* Relation Edge */
+.mindmap-edge .react-flow__edge-path {
+  stroke: #9fef00;
+  stroke-width: 2;
+}
+.mindmap-edge.selected .react-flow__edge-path {
+  stroke: #00d4ff;
+  stroke-width: 3;
+}
+.mindmap-edge-label {
+  font-size: 11px;
+  fill: #a0aec0;
+  background: rgba(13, 17, 23, 0.85);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Edit Panel */
+.mindmap-edit-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 380px;
+  height: calc(100vh - 56px);
+  background: rgba(22, 27, 34, 0.98);
+  border-left: 1px solid rgba(48, 54, 61, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 20;
+  overflow-y: auto;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
+  animation: slideInRight 0.2s ease-out;
+}
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.mindmap-edit-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.4);
+}
+.mindmap-edit-panel-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.mindmap-edit-panel label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.mindmap-edit-panel input,
+.mindmap-edit-panel textarea,
+.mindmap-edit-panel select {
+  width: 100%;
+  background: rgba(13, 17, 23, 0.6);
+  border: 1px solid rgba(48, 54, 61, 0.6);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--text-foreground);
+  transition: border-color 0.2s;
+}
+.mindmap-edit-panel input:focus,
+.mindmap-edit-panel textarea:focus,
+.mindmap-edit-panel select:focus {
+  outline: none;
+  border-color: #9fef00;
+}
+
+/* Color Preset Swatches */
+.mindmap-color-presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.mindmap-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.mindmap-color-swatch:hover {
+  transform: scale(1.15);
+}
+.mindmap-color-swatch.selected {
+  border-color: #fff;
+  transform: scale(1.1);
+}
