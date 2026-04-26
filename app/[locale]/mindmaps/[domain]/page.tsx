@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { CISSP_DOMAINS } from '@/lib/constants'
 import type { Domain } from '@prisma/client'
 import { notFound } from 'next/navigation'
+import { ReactFlowProvider } from '@xyflow/react'
 
 const VALID_DOMAINS = new Set(CISSP_DOMAINS.map((d) => d.value))
 
@@ -36,7 +37,9 @@ export default async function MindMapDomainPage({
   if (!result.nodes.length) {
     return (
       <div className="mindmap-canvas" style={{ height: 'calc(100vh - 56px)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <MindMapCanvas mindMap={result} locale={locale} />
+        <ReactFlowProvider>
+          <MindMapCanvas mindMap={result} locale={locale} />
+        </ReactFlowProvider>
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20" style={{ backgroundColor: 'rgba(13, 17, 23, 0.6)' }}>
           <div className="htb-card p-8 text-center pointer-events-auto" style={{ backgroundColor: 'rgba(22, 27, 34, 0.95)' }}>
             <p className="text-lg page-title mb-2">{t('emptyDomain')}</p>
@@ -46,5 +49,9 @@ export default async function MindMapDomainPage({
     )
   }
 
-  return <MindMapCanvas mindMap={result} locale={locale} />
+  return (
+    <ReactFlowProvider>
+      <MindMapCanvas mindMap={result} locale={locale} />
+    </ReactFlowProvider>
+  )
 }

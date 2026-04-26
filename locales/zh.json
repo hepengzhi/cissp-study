@@ -264,7 +264,8 @@
       "confirmDelete": "确定要删除这道题目吗？",
       "confirmBatchDelete": "确定要删除选中的 {count} 道题目吗？",
       "selected": "已选 {count} 题",
-      "total": "共 {count} 道题目"
+      "total": "共 {count} 道题目",
+      "view": "查看"
     },
     "questionForm": {
       "createTitle": "添加新题目",

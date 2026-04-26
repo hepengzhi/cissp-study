@@ -264,7 +264,8 @@
       "confirmDelete": "Are you sure you want to delete this question?",
       "confirmBatchDelete": "Are you sure you want to delete {count} selected questions?",
       "selected": "{count} selected",
-      "total": "Total: {count} questions"
+      "total": "Total: {count} questions",
+      "view": "View"
     },
     "questionForm": {
       "createTitle": "Add New Question",

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { Plus, Download, Trash2, Edit2, Search, ImageIcon } from 'lucide-react'
+import { Plus, Download, Trash2, Edit2, Search, ImageIcon, Eye } from 'lucide-react'
 import { getQuestions, deleteQuestion, deleteQuestions, exportQuestions } from '@/lib/actions/questions'
 import type { Domain as DomainType, Difficulty as DifficultyType } from '@prisma/client'
 import { CISSP_DOMAINS } from '@/lib/constants'
@@ -14,6 +14,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { Card } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
 
 type Question = {
   id: string
@@ -27,6 +35,8 @@ type Question = {
   difficulty: string
   tags: string[]
   questionImages: string[]
+  explanation: string
+  explanationZh?: string | null
   createdAt: Date
 }
 
@@ -43,6 +53,7 @@ export default function QuestionsPage() {
   const [difficulty, setDifficulty] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
+  const [viewingQuestion, setViewingQuestion] = useState<Question | null>(null)
 
   const pageSize = 20
 
@@ -194,12 +205,15 @@ export default function QuestionsPage() {
                     <input type="checkbox" checked={selected.has(q.id)} onChange={() => toggleSelect(q.id)} className="rounded" />
                   </td>
                   <td className="p-3 text-foreground max-w-md truncate">
-                    <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setViewingQuestion(q)}
+                      className="flex items-center gap-1 text-left hover:text-[#00d4ff] transition-colors cursor-pointer w-full"
+                    >
                       {getLocalizedText(q.questionText, q.questionTextZh, locale)}
                       {q.questionImages && q.questionImages.length > 0 && (
                         <ImageIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
                       )}
-                    </div>
+                    </button>
                   </td>
                   <td className="p-3 text-muted-foreground text-xs">
                     <DomainBadge domain={q.domain} label={q.domain.replace(/_/g, ' ')} />
@@ -213,6 +227,9 @@ export default function QuestionsPage() {
                   </td>
                   <td className="p-3">
                     <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-muted-foreground hover:text-[#00d4ff]" onClick={() => setViewingQuestion(q)} title={t('questions.view')}>
+                        <Eye className="h-3.5 w-3.5" />
+                      </Button>
                       <Link href={getHref(`/admin/questions/${q.id}`)}>
                         <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-muted-foreground hover:text-primary">
                           <Edit2 className="h-3.5 w-3.5" />
@@ -249,6 +266,106 @@ export default function QuestionsPage() {
           </div>
         </div>
       )}
+
+      {/* View question modal */}
+      <Dialog open={!!viewingQuestion} onOpenChange={(open) => { if (!open) setViewingQuestion(null) }}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto bg-[#0d1117] border-[#30363d] text-foreground">
+          {viewingQuestion && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-lg flex items-center gap-2">
+                  <Eye className="h-4 w-4 text-[#00d4ff]" />
+                  {t('questions.view')}
+                </DialogTitle>
+                <DialogDescription className="flex items-center gap-2 mt-2">
+                  <DomainBadge domain={viewingQuestion.domain} label={viewingQuestion.domain.replace(/_/g, ' ')} />
+                  <span className={`text-xs px-2 py-0.5 rounded ${
+                    viewingQuestion.difficulty === 'EASY' ? 'bg-primary/20 text-primary' :
+                    viewingQuestion.difficulty === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-500' :
+                    'bg-destructive/20 text-destructive'
+                  }`}>{viewingQuestion.difficulty}</span>
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 mt-2">
+                {/* Question text */}
+                <div>
+                  <p className="text-sm font-semibold text-[#9ca3af] mb-1">{t('questionForm.questionText')}</p>
+                  <p className="text-foreground">{viewingQuestion.questionText}</p>
+                  {viewingQuestion.questionTextZh && (
+                    <>
+                      <p className="text-sm font-semibold text-[#9ca3af] mb-1 mt-2">{t('questionForm.questionTextZh')}</p>
+                      <p className="text-foreground">{viewingQuestion.questionTextZh}</p>
+                    </>
+                  )}
+                </div>
+
+                {/* Options */}
+                <div>
+                  <p className="text-sm font-semibold text-[#9ca3af] mb-1">{t('questionForm.options')}</p>
+                  <div className="space-y-1.5">
+                    {viewingQuestion.options.map((opt: string, i: number) => {
+                      const isCorrect = String(i) === viewingQuestion.correctAnswer
+                      return (
+                        <div
+                          key={i}
+                          className={`flex items-center gap-2 p-2 rounded-md border ${
+                            isCorrect
+                              ? 'border-[#9fef00]/40 bg-[#9fef00]/10'
+                              : 'border-[#30363d] bg-[#161b22]'
+                          }`}
+                        >
+                          <span className={`text-sm font-mono w-6 ${isCorrect ? 'text-[#9fef00]' : 'text-[#a0aec0]'}`}>
+                            {String.fromCharCode(65 + i)}.
+                          </span>
+                          <span className={`text-sm ${isCorrect ? 'text-[#9fef00] font-medium' : 'text-foreground'}`}>
+                            {opt}
+                          </span>
+                          {isCorrect && (
+                            <span className="ml-auto text-xs text-[#9fef00]">✓ {t('questionForm.correctAnswer')}</span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Explanation */}
+                <div>
+                  <p className="text-sm font-semibold text-[#9ca3af] mb-1">{t('questionForm.explanation')}</p>
+                  <p className="text-sm text-foreground leading-relaxed">{viewingQuestion.explanation}</p>
+                  {viewingQuestion.explanationZh && (
+                    <>
+                      <p className="text-sm font-semibold text-[#9ca3af] mb-1 mt-2">{t('questionForm.explanationZh')}</p>
+                      <p className="text-sm text-foreground leading-relaxed">{viewingQuestion.explanationZh}</p>
+                    </>
+                  )}
+                </div>
+
+                {/* Tags */}
+                {viewingQuestion.tags && viewingQuestion.tags.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold text-[#9ca3af] mb-1">{t('questionForm.tags')}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {viewingQuestion.tags.map((tag: string) => (
+                        <span key={tag} className="text-xs px-2 py-0.5 rounded bg-[#30363d] text-[#a0aec0]">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <DialogFooter className="mt-4 gap-2">
+                <Link href={getHref(`/admin/questions/${viewingQuestion.id}`)}>
+                  <Button size="sm" variant="outline" className="border-[#30363d] text-[#9fef00] hover:border-[#9fef00]/50">
+                    <Edit2 className="h-3.5 w-3.5 mr-1" /> {t('questionForm.editTitle')}
+                  </Button>
+                </Link>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
