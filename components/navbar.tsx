@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Shield, FileText, Brain, ClipboardCheck, Trophy, Menu, X, Settings } from 'lucide-react'
+import { Shield, FileText, Brain, ClipboardCheck, Trophy, Menu, X, Settings, Network } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from './theme-toggle'
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/flashcards', labelKey: 'flashcards', icon: Brain },
   { href: '/quiz', labelKey: 'quiz', icon: ClipboardCheck },
   { href: '/exam', labelKey: 'exam', icon: Trophy },
+  { href: '/mindmaps', labelKey: 'mindmaps', icon: Network },
   { href: '/admin', labelKey: 'admin', icon: Settings },
 ]
 
