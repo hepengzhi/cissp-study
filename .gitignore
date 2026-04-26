@@ -40,3 +40,15 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 /playwright/.cache/
+
+# playwright MCP artifacts
+/.playwright-mcp/
+
+# superpowers brainstorming state
+/.superpowers/
+
+# local sqlite dev db
+/prisma/dev.db
+
+# screenshot artifacts
+*.png
