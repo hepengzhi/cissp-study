@@ -20,6 +20,11 @@ import '@xyflow/react/dist/style.css'
 import { useTranslations } from 'next-intl'
 import { Plus, Trash2, Maximize } from 'lucide-react'
 import { createNode, updateNode, deleteNode, createEdge, deleteEdge } from '@/lib/actions/mindmaps'
+import { ConceptNode } from './concept-node'
+import { RelationEdge } from './relation-edge'
+
+const nodeTypes = { conceptNode: ConceptNode }
+const edgeTypes = { relationEdge: RelationEdge }
 
 interface MindMapCanvasProps {
   mindMap: {
@@ -42,7 +47,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
   // Convert DB nodes/edges to ReactFlow format
   const initialNodes: Node[] = mindMap.nodes.map((n) => ({
     id: n.id,
-    type: 'default',
+    type: 'conceptNode',
     position: { x: n.positionX, y: n.positionY },
     data: {
       label: n.label,
@@ -61,7 +66,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
     target: e.targetNodeId,
     label: e.label || undefined,
     data: { labelZh: e.labelZh },
-    type: 'default',
+    type: 'relationEdge',
     animated: true,
   }))
 
@@ -95,7 +100,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
         if (!('error' in result)) {
           const newNode: Node = {
             id: result.id,
-            type: 'default',
+            type: 'conceptNode',
             position: { x: result.positionX, y: result.positionY },
             data: {
               label: result.label,
@@ -204,7 +209,7 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
       if (!('error' in result)) {
         const newNode: Node = {
           id: result.id,
-          type: 'default',
+          type: 'conceptNode',
           position: { x: result.positionX, y: result.positionY },
           data: {
             label: result.label,
@@ -285,6 +290,8 @@ export function MindMapCanvas({ mindMap, locale }: MindMapCanvasProps) {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
