@@ -32,6 +32,7 @@ model Question {
   updatedAt       DateTime @updatedAt
 
   examAnswers     ExamAnswer[]
+  mindMapNodes    MindMapNode[]
 }
 
 model Note {
@@ -59,6 +60,8 @@ model Flashcard {
   repetitions Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  mindMapNodes MindMapNode[]
 }
 
 model Progress {
@@ -105,4 +108,51 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+}
+
+model MindMap {
+  id        String   @id @default(cuid())
+  domain    Domain   @unique
+  nodes     MindMapNode[]
+  edges     MindMapEdge[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MindMapNode {
+  id                String    @id @default(cuid())
+  mindMapId         String
+  label             String
+  labelZh           String?
+  description       String?
+  descriptionZh     String?
+  positionX         Float
+  positionY         Float
+  color             String?
+  linkedFlashcardId String?
+  linkedQuestionId  String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  mindMap     MindMap    @relation(fields: [mindMapId], references: [id], onDelete: Cascade)
+  flashcard   Flashcard? @relation(fields: [linkedFlashcardId], references: [id], onDelete: SetNull)
+  question    Question?  @relation(fields: [linkedQuestionId], references: [id], onDelete: SetNull)
+  sourceEdges MindMapEdge[] @relation("SourceNode")
+  targetEdges MindMapEdge[] @relation("TargetNode")
+}
+
+model MindMapEdge {
+  id           String  @id @default(cuid())
+  mindMapId    String
+  sourceNodeId String
+  targetNodeId String
+  label        String?
+  labelZh      String?
+  createdAt    DateTime @default(now())
+
+  mindMap    MindMap      @relation(fields: [mindMapId], references: [id], onDelete: Cascade)
+  sourceNode MindMapNode  @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  targetNode MindMapNode  @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  @@unique([mindMapId, sourceNodeId, targetNodeId])
 }
